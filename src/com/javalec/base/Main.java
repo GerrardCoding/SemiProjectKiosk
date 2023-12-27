@@ -3,10 +3,13 @@ package com.javalec.base;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 public class Main {
 
 	private JFrame frame;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -36,8 +39,18 @@ public class Main {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setTitle("로그인");
+		frame.setBounds(100, 100, 486, 489);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.getContentPane().add(getLblNewLabel());
 	}
-
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("");
+			lblNewLabel.setIcon(new ImageIcon(Main.class.getResource("/com/javalec/images/로고.png")));
+			lblNewLabel.setBounds(115, 42, 236, 129);
+		}
+		return lblNewLabel;
+	}
 }
