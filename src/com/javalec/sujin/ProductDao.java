@@ -36,6 +36,12 @@ public class ProductDao {
 	
 	// Method
 	
+	public ProductDao(String modelnum) {
+		super();
+		this.modelnum = modelnum;
+	}
+
+
 	// 검색 결과를 Table로 보내자.
 	public ArrayList<ProductDto> selectList(){
 		ArrayList<ProductDto> dtoList = new ArrayList<ProductDto>();
@@ -74,7 +80,7 @@ public class ProductDao {
 	public ProductDto tableClick() {
 		ProductDto dto = null;
 		String where1 = "SELECT modelnum, brand, modelname, color, stosize, stoqty, stoprice, file FROM store";
-		String where2 = " where modelnum = "+ modelnum;
+		String where2 = " where modelnum = '"+ modelnum + "'";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -95,7 +101,7 @@ public class ProductDao {
 				ShareVar.filename = ShareVar.filename +1 ;
 				File file = new File(Integer.toString(ShareVar.filename));
 				FileOutputStream output = new FileOutputStream(file);
-				InputStream input = rs.getBinaryStream(7);
+				InputStream input = rs.getBinaryStream(8);
 				byte[] buffer = new byte[1024];
 				while(input.read(buffer) > 0 ) {
 					output.write(buffer);
