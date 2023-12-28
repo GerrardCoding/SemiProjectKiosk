@@ -26,6 +26,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,8 +41,8 @@ public class AdminSujin {
 
 	private JFrame frame;
 	private JRadioButton rdbtnSearch;
-	private JRadioButton rdbtnInsert;
 	private JRadioButton rdbtnUpdate;
+	private JRadioButton rdbtnInsert;
 	private JRadioButton rdbtnDelete;
 	private JScrollPane scrollPane;
 	private JComboBox cbSelect;
@@ -67,6 +70,7 @@ public class AdminSujin {
 	private JLabel lblNewLabel_2_1_1;
 	private JButton btnImage;
 	private JButton btnOK;
+	private int lastQty;
 	/**
 	 * Launch the application.
 	 */
@@ -108,8 +112,8 @@ public class AdminSujin {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(getRdbtnSearch());
-		frame.getContentPane().add(getRdbtnInsert());
 		frame.getContentPane().add(getRdbtnUpdate());
+		frame.getContentPane().add(getRdbtnInsert());
 		frame.getContentPane().add(getRdbtnDelete());
 		frame.getContentPane().add(getScrollPane());
 		frame.getContentPane().add(getCbSelect());
@@ -149,31 +153,31 @@ public class AdminSujin {
 		}
 		return rdbtnSearch;
 	}
-	private JRadioButton getRdbtnInsert() {
-		if (rdbtnInsert == null) {
-			rdbtnInsert = new JRadioButton("기존상품 추가");
-			rdbtnInsert.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					screenPartition();
-				}
-			});
-			rdbtnInsert.setBounds(656, 22, 117, 23);
-			buttonGroup.add(rdbtnInsert);
-		}
-		return rdbtnInsert;
-	}
 	private JRadioButton getRdbtnUpdate() {
 		if (rdbtnUpdate == null) {
-			rdbtnUpdate = new JRadioButton("새모델 추가");
+			rdbtnUpdate = new JRadioButton("기존상품 추가");
 			rdbtnUpdate.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					screenPartition();
 				}
 			});
-			rdbtnUpdate.setBounds(773, 22, 117, 23);
+			rdbtnUpdate.setBounds(656, 22, 117, 23);
 			buttonGroup.add(rdbtnUpdate);
 		}
 		return rdbtnUpdate;
+	}
+	private JRadioButton getRdbtnInsert() {
+		if (rdbtnInsert == null) {
+			rdbtnInsert = new JRadioButton("새모델 추가");
+			rdbtnInsert.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
+			rdbtnInsert.setBounds(773, 22, 117, 23);
+			buttonGroup.add(rdbtnInsert);
+		}
+		return rdbtnInsert;
 	}
 	private JRadioButton getRdbtnDelete() {
 		if (rdbtnDelete == null) {
@@ -344,7 +348,7 @@ public class AdminSujin {
 		if (lblImage == null) {
 			lblImage = new JLabel("");
 			lblImage.setBackground(Color.GRAY);
-			lblImage.setBounds(499, 320, 485, 256);
+			lblImage.setBounds(429, 307, 555, 269);
 		}
 		return lblImage;
 	}
@@ -378,6 +382,11 @@ public class AdminSujin {
 	private JButton getBtnOK() {
 		if (btnOK == null) {
 			btnOK = new JButton("OK");
+			btnOK.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					actionPartition();
+				}
+			});
 			btnOK.setBounds(143, 649, 117, 29);
 		}
 		return btnOK;
@@ -397,33 +406,33 @@ public class AdminSujin {
 		// 모델번호
 		int colNo = 0;
 		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
-		int width = 30;
+		int width = 100;
 		col.setPreferredWidth(width);
 		
 		// 브랜드
 		colNo = 1;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 100;
 		col.setPreferredWidth(width);
 
 		
 		// 모델명
 		colNo = 2;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 200;
 		col.setPreferredWidth(width);
 		
 		
 		// 색상
 		colNo = 3;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		// 사이즈
 		colNo = 4;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		
@@ -434,10 +443,10 @@ public class AdminSujin {
 		col.setPreferredWidth(width);
 		
 		
-		// 
+		// 가격
 		colNo = 6;
 		col = innerTable.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 150;
 		col.setPreferredWidth(width);
 		
 		
@@ -540,7 +549,7 @@ public class AdminSujin {
 		tfSize.setText(Integer.toString(dto.getStosize()));
 		tfQty.setText(Integer.toString(dto.getStoqty()));
 		tfPrice.setText(Integer.toString(dto.getStoprice()));
-
+		lastQty = dto.getStoqty();
 		// Image 처리 : fileName이 틀려야 보여주기가 가능.
 		String filePath = Integer.toString(ShareVar.filename);
 //		tfFilePath.setText(filePath);
@@ -549,11 +558,188 @@ public class AdminSujin {
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 	}	//End of tableClick()
 	
+	// 필드 체크.
+	private int insertFieldCheck() {
+		int i = 0;
+		
+		if(tfModelnum.getText().trim().length() == 0) {
+			i++;
+			tfModelnum.requestFocus();
+		}
+		if(tfBrand.getText().trim().length() == 0) {
+			i++;
+			tfBrand.requestFocus();
+		}
+		if(tfModelname.getText().trim().length() == 0) {
+			i++;
+			tfModelname.requestFocus();
+		}
+		if(tfColor.getText().trim().length() == 0) {
+			i++;
+			tfColor.requestFocus();
+		}
+		if(tfSize.getText().trim().length() == 0) {
+			i++;
+			tfSize.requestFocus();
+		}
+		if(tfQty.getText().trim().length() == 0) {
+			i++;
+			tfSize.requestFocus();
+		}
+		if(tfPrice.getText().trim().length() == 0) {
+			i++;
+			tfSize.requestFocus();
+		}
+		return i;
+	}
+	
+	//이미지 파일 체크
+	private boolean imageCheck() {
+		if(tfImage.getText().trim().length() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	// OK 버튼 눌렀을 때 액션.
+	private void actionPartition() {
+		// 검색일 경우
+		if(rdbtnSearch.isSelected() == true) {
+			screenPartition();
+		}
+		
+		// 기존제품 추가.
+		if(rdbtnUpdate.isSelected() == true) {
+			int i_chk = insertFieldCheck();
+			if(i_chk == 0) {
+				updateAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			}else {
+				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
+			}
+			
+			screenPartition();
+		}
+		// 새제품 추가.
+		if(rdbtnInsert.isSelected() == true) {
+			lblImage.setText("");
+			int i_chk = insertFieldCheck();
+			if(i_chk == 0) {
+				if(imageCheck()) {
+					insertAction();
+					tableInit();
+					searchAction();
+					clearColumn();
+				}else {
+					JOptionPane.showMessageDialog(null, "이미지를 넣어주세요");
+					tfImage.requestFocus();
+				}
+			}else {
+				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
+			}
+			
+			screenPartition();
+		}
+		// 삭제.
+		if(rdbtnDelete.isSelected() == true) {
+			int i_chk = insertFieldCheck();
+			if(i_chk == 0) {
+				deleteAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			}else {
+				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
+			}
+			
+			screenPartition();
+		}
+		
+	}
+	
+	
+	// 컬럼 내용 지우기.
+	private void clearColumn() {
+		tfModelnum.setText("");
+		tfBrand.setText("");
+		tfModelname.setText("");
+		tfColor.setText("");
+		tfSize.setText("");
+		tfQty.setText("");
+		tfPrice.setText("");
+		tfImage.setText("");
+		lblImage.setText("");
+	}
+	
+	// 기존제품 추가.
+	private void insertAction() {
+		String modelnum = tfModelnum.getText().trim();
+		String brand = tfBrand.getText().trim();
+		String modelname = tfModelname.getText().trim();
+		String color = tfColor.getText().trim();
+		int size = Integer.parseInt(tfSize.getText().trim());
+		int qty = Integer.parseInt(tfQty.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim());
+		
+		// Image File
+		FileInputStream input = null;
+		File file = new File(tfImage.getText());
+		try {
+			input = new FileInputStream(file);
+			
+		}catch(FileNotFoundException e) { 
+			e.printStackTrace();
+		}
+		
+		ProductDao dao = new ProductDao(modelnum, brand, modelname, color, size, qty, price, input);
+		boolean result = dao.insertAction();
+		
+		if(result == true) {
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText() + " 새상품이 "+ tfQty.getText().trim() +"등록 되었습니다.");
+		}else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+		}
+	}
+	
+	private void updateAction() {
+		String modelnum = tfModelnum.getText().trim();
+		String brand = tfBrand.getText().trim();
+		String modelname = tfModelname.getText().trim();
+		String color = tfColor.getText().trim();
+		int size = Integer.parseInt(tfSize.getText().trim());
+		int qty = Integer.parseInt(tfQty.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim());
+		
+		ProductDao dao = new ProductDao(modelnum,lastQty+qty);
+		boolean result = dao.updateAction();
+		
+		if(result == true) {
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText() + " 상품이 "+ tfQty.getText().trim() +"개 추가 되었습니다.");
+		}else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+		}
+	}
+	
+	private void deleteAction() {
+		String modelnum = tfModelnum.getText().trim(); 
+		
+		ProductDao dao = new ProductDao(modelnum);
+		boolean result = dao.deleteAction();
+		
+		if(result == true) {
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText() + " 상품이 삭제 되었습니다.");
+		}else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+		}
+	}
+	
 	// -----------------[[[ File ]]]]]]---------------------------------------------------
 
 	private void filePath() {
 		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "PNG", "BMP", "jpg", "png", "bmp");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "PNG", "BMP", "GIF", "jpg", "png", "bmp", "gifs");
 		chooser.setFileFilter(filter);
 		
 		int ret = chooser.showOpenDialog(null);
