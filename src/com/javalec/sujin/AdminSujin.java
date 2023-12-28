@@ -7,10 +7,19 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 import javax.swing.JButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTable;
 import javax.swing.ButtonGroup;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ListSelectionModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public class AdminSujin {
 
@@ -23,9 +32,9 @@ public class AdminSujin {
 	private JComboBox cbSelect;
 	private JTextField tfSelect;
 	private JButton btnSearch;
-	private JTable table;
+	private JTable innerTable;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-
+	private final DefaultTableModel outerTable = new DefaultTableModel();
 	/**
 	 * Launch the application.
 	 */
@@ -54,7 +63,15 @@ public class AdminSujin {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setTitle("관리자 등록 수정 삭제");
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				tableInit();
+				searchAction();
+				screenPartition();
+			}
+		});
+		frame.setTitle("관리자 상품 등록");
 		frame.setBounds(100, 100, 450, 545);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -70,33 +87,33 @@ public class AdminSujin {
 	private JRadioButton getRdbtnSearch() {
 		if (rdbtnSearch == null) {
 			rdbtnSearch = new JRadioButton("검색");
+			rdbtnSearch.setBounds(32, 40, 55, 23);
 			buttonGroup.add(rdbtnSearch);
 			rdbtnSearch.setSelected(true);
-			rdbtnSearch.setBounds(32, 40, 55, 23);
 		}
 		return rdbtnSearch;
 	}
 	private JRadioButton getRdbtnInsert() {
 		if (rdbtnInsert == null) {
-			rdbtnInsert = new JRadioButton("등록");
+			rdbtnInsert = new JRadioButton("기존상품 추가");
+			rdbtnInsert.setBounds(99, 40, 146, 23);
 			buttonGroup.add(rdbtnInsert);
-			rdbtnInsert.setBounds(107, 40, 55, 23);
 		}
 		return rdbtnInsert;
 	}
 	private JRadioButton getRdbtnUpdate() {
 		if (rdbtnUpdate == null) {
-			rdbtnUpdate = new JRadioButton("수정");
+			rdbtnUpdate = new JRadioButton("새모델 추가");
+			rdbtnUpdate.setBounds(216, 40, 117, 23);
 			buttonGroup.add(rdbtnUpdate);
-			rdbtnUpdate.setBounds(185, 40, 55, 23);
 		}
 		return rdbtnUpdate;
 	}
 	private JRadioButton getRdbtnDelete() {
 		if (rdbtnDelete == null) {
 			rdbtnDelete = new JRadioButton("삭제");
+			rdbtnDelete.setBounds(326, 40, 55, 23);
 			buttonGroup.add(rdbtnDelete);
-			rdbtnDelete.setBounds(265, 40, 55, 23);
 		}
 		return rdbtnDelete;
 	}
@@ -104,22 +121,22 @@ public class AdminSujin {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(32, 121, 368, 146);
-			scrollPane.setViewportView(getTable());
+			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
 	}
 	private JComboBox getCbSelect() {
 		if (cbSelect == null) {
 			cbSelect = new JComboBox();
-			cbSelect.setModel(new DefaultComboBoxModel(new String[] {"상품명", "브랜드", "모델번호", "사이즈", "색상", "재고갯수"}));
-			cbSelect.setBounds(32, 88, 74, 23);
+			cbSelect.setBounds(32, 88, 105, 23);
+			cbSelect.setModel(new DefaultComboBoxModel(new String[] {"상품명", "사이즈", "색상", "재고갯수"}));
 		}
 		return cbSelect;
 	}
 	private JTextField getTfSelect() {
 		if (tfSelect == null) {
 			tfSelect = new JTextField();
-			tfSelect.setBounds(118, 89, 142, 21);
+			tfSelect.setBounds(149, 87, 142, 21);
 			tfSelect.setColumns(10);
 		}
 		return tfSelect;
@@ -131,10 +148,133 @@ public class AdminSujin {
 		}
 		return btnSearch;
 	}
-	private JTable getTable() {
-		if (table == null) {
-			table = new JTable();
+	private JTable getInnerTable() {
+		if (innerTable == null) {
+			innerTable = new JTable();
+			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			innerTable.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton() == 1) {
+						tableClick();
+					}
+				}
+			});
+			innerTable.setModel(outerTable);
 		}
-		return table;
+		return innerTable;
 	}
-}
+	
+	//modelnum, brand, modelname, color, stosize, stoqty, stoprice, file
+	
+	
+	// ---- Function ------
+	private void tableInit() {
+		// Table Column 명 정하기.
+		outerTable.addColumn("모델번호");
+		outerTable.addColumn("브랜드");
+		outerTable.addColumn("모델명");
+		outerTable.addColumn("색상");
+		outerTable.addColumn("사이즈");
+		outerTable.addColumn("재고량");
+		outerTable.addColumn("가격");
+		outerTable.setColumnCount(7);
+		
+		int colNo = 0;
+		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
+		int width = 30;
+		col.setPreferredWidth(width);
+		
+		// 모델번호
+		colNo = 1;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 50;
+		col.setPreferredWidth(width);
+
+		
+		// 브랜드
+		colNo = 2;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		
+		// 모델명
+		colNo = 3;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 50;
+		col.setPreferredWidth(width);
+		
+		// 색상
+		colNo = 4;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 50;
+		col.setPreferredWidth(width);
+		
+		
+		// 사이
+		colNo = 5;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		
+		// 재고량
+		colNo = 6;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 50;
+		col.setPreferredWidth(width);
+		
+		// 가격
+		colNo = 7;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 50;
+		col.setPreferredWidth(width);
+		
+		// 테이블 내용 지우기.
+		int i = outerTable.getRowCount();
+		for(int j=0; j<i; j++) {
+			outerTable.removeRow(0);
+		}
+		
+		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
+	}	// End of tableInit()
+	
+	private void searchAction() {
+		ProductDao dao = new ProductDao();
+		ArrayList<ProductDto> dtoList = dao.selectList();
+		
+		int listCount = dtoList.size();
+		
+		for(int i=0; i<listCount; i++) {
+			String modelnum;
+			String brand;
+			String modelname;
+			String color;
+			int stosize;
+			int stoqty;
+			int stoprice;
+			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
+			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
+			String tmpPrice = Integer.toString(dtoList.get(i).getStoprice()); 
+			String[] qTxt = {dtoList.get(i).getModelnum(), dtoList.get(i).getBrand(), dtoList.get(i).getModelname(), dtoList.get(i).getColor(), tmpSize, tmpQty, tmpPrice};
+			outerTable.addRow(qTxt);
+		}
+	}	// End of searchAction()
+	private void screenPartition() {
+		// 검색일 경우
+		if(rdbtnSearch.isSelected() == true) {
+			btnOK.setVisible(false);
+			tfName.setEditable(false);
+			tfTelNo.setEditable(false);
+			tfAddress.setEditable(false);
+			tfEmail.setEditable(false);
+			tfRelation.setEditable(false);
+		}
+	}	// End of screenPartition()
+	private void tableClick() {
+		
+	}	//End of tableClick()
+	
+	
+}	//	End 
