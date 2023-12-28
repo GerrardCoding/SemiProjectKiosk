@@ -138,6 +138,11 @@ public class AdminSujin {
 	private JRadioButton getRdbtnSearch() {
 		if (rdbtnSearch == null) {
 			rdbtnSearch = new JRadioButton("검색");
+			rdbtnSearch.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
 			rdbtnSearch.setBounds(589, 22, 55, 23);
 			buttonGroup.add(rdbtnSearch);
 			rdbtnSearch.setSelected(true);
@@ -147,7 +152,12 @@ public class AdminSujin {
 	private JRadioButton getRdbtnInsert() {
 		if (rdbtnInsert == null) {
 			rdbtnInsert = new JRadioButton("기존상품 추가");
-			rdbtnInsert.setBounds(656, 22, 146, 23);
+			rdbtnInsert.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
+			rdbtnInsert.setBounds(656, 22, 117, 23);
 			buttonGroup.add(rdbtnInsert);
 		}
 		return rdbtnInsert;
@@ -155,6 +165,11 @@ public class AdminSujin {
 	private JRadioButton getRdbtnUpdate() {
 		if (rdbtnUpdate == null) {
 			rdbtnUpdate = new JRadioButton("새모델 추가");
+			rdbtnUpdate.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
 			rdbtnUpdate.setBounds(773, 22, 117, 23);
 			buttonGroup.add(rdbtnUpdate);
 		}
@@ -163,6 +178,11 @@ public class AdminSujin {
 	private JRadioButton getRdbtnDelete() {
 		if (rdbtnDelete == null) {
 			rdbtnDelete = new JRadioButton("삭제");
+			rdbtnDelete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					screenPartition();
+				}
+			});
 			rdbtnDelete.setBounds(883, 22, 55, 23);
 			buttonGroup.add(rdbtnDelete);
 		}
