@@ -31,6 +31,9 @@ public class Admin {
 	private JLabel lblNewLabel_1_1;
 	private JTextField textField_2;
 	private JPanel panel_1;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_2_1;
+	private JLabel lblNewLabel_2_2;
 
 	/**
 	 * Launch the application.
@@ -135,7 +138,7 @@ public class Admin {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(17, 62, 485, 301);
+			scrollPane.setBounds(17, 62, 512, 442);
 			scrollPane.setViewportView(getTable());
 		}
 		return scrollPane;
@@ -149,7 +152,7 @@ public class Admin {
 	private JTextField getTextField_1() {
 		if (textField_1 == null) {
 			textField_1 = new JTextField();
-			textField_1.setBounds(133, 517, 130, 26);
+			textField_1.setBounds(125, 516, 130, 26);
 			textField_1.setColumns(10);
 		}
 		return textField_1;
@@ -157,21 +160,21 @@ public class Admin {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("뒤로가기");
-			btnNewButton.setBounds(220, 577, 117, 29);
+			btnNewButton.setBounds(199, 577, 117, 29);
 		}
 		return btnNewButton;
 	}
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("베스트셀러:");
-			lblNewLabel_1.setBounds(56, 522, 61, 16);
+			lblNewLabel_1.setBounds(48, 521, 61, 16);
 		}
 		return lblNewLabel_1;
 	}
 	private JLabel getLblNewLabel_1_1() {
 		if (lblNewLabel_1_1 == null) {
 			lblNewLabel_1_1 = new JLabel("베스트고객:");
-			lblNewLabel_1_1.setBounds(293, 522, 61, 16);
+			lblNewLabel_1_1.setBounds(285, 521, 61, 16);
 		}
 		return lblNewLabel_1_1;
 	}
@@ -179,7 +182,7 @@ public class Admin {
 		if (textField_2 == null) {
 			textField_2 = new JTextField();
 			textField_2.setColumns(10);
-			textField_2.setBounds(370, 517, 130, 26);
+			textField_2.setBounds(362, 516, 130, 26);
 		}
 		return textField_2;
 	}
@@ -187,7 +190,31 @@ public class Admin {
 		if (panel_1 == null) {
 			panel_1 = new JPanel();
 			panel_1.setLayout(null);
+			panel_1.add(getLblNewLabel_2());
+			panel_1.add(getLblNewLabel_2_1());
+			panel_1.add(getLblNewLabel_2_2());
 		}
 		return panel_1;
+	}
+	private JLabel getLblNewLabel_2() {
+		if (lblNewLabel_2 == null) {
+			lblNewLabel_2 = new JLabel("재고수량");
+			lblNewLabel_2.setBounds(6, 6, 61, 16);
+		}
+		return lblNewLabel_2;
+	}
+	private JLabel getLblNewLabel_2_1() {
+		if (lblNewLabel_2_1 == null) {
+			lblNewLabel_2_1 = new JLabel("입고수량");
+			lblNewLabel_2_1.setBounds(6, 218, 61, 16);
+		}
+		return lblNewLabel_2_1;
+	}
+	private JLabel getLblNewLabel_2_2() {
+		if (lblNewLabel_2_2 == null) {
+			lblNewLabel_2_2 = new JLabel("출고수량");
+			lblNewLabel_2_2.setBounds(6, 417, 61, 16);
+		}
+		return lblNewLabel_2_2;
 	}
 }
