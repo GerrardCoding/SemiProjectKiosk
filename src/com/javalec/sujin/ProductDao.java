@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -19,29 +20,47 @@ public class ProductDao {
 	private final String id_mysql = ShareVar.dbUser;
 	private final String pw_mysql = ShareVar.dbPass;
 	
-	int stoprice;
-	int stoqty;
-	int stosize;
 	String modelnum;
 	String brand;
 	String modelname;
 	String color;
+	int stosize;
+	int stoqty;
+	int stoprice;
 	FileInputStream file;
+	
 	
 	// Constructor
 	public ProductDao() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	// Method
-	
+
 	public ProductDao(String modelnum) {
 		super();
 		this.modelnum = modelnum;
 	}
+	
+	public ProductDao(String modelnum, int stoqty) {
+		super();
+		this.modelnum = modelnum;
+		this.stoqty = stoqty;
+	}
 
+	public ProductDao(String modelnum, String brand, String modelname, String color, int stosize, int stoqty,
+			int stoprice, FileInputStream file) {
+		super();
+		this.modelnum = modelnum;
+		this.brand = brand;
+		this.modelname = modelname;
+		this.color = color;
+		this.stosize = stosize;
+		this.stoqty = stoqty;
+		this.stoprice = stoprice;
+		this.file = file;
+	}
 
+	
+	// Method
 	// 검색 결과를 Table로 보내자.
 	public ArrayList<ProductDto> selectList(){
 		ArrayList<ProductDto> dtoList = new ArrayList<ProductDto>();
@@ -118,4 +137,88 @@ public class ProductDao {
 		
 		return dto;
 	}
+	
+	// 새상품 추가.
+	public boolean insertAction() {
+		PreparedStatement ps = null; 
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			String A = "insert into store (modelnum, brand, modelname, color, stosize, stoqty, stoprice, file";
+			String B = ") values (?,?,?,?,?,?,?,?)";
+			
+			ps = conn_mysql.prepareStatement(A+B);
+			ps.setString(1, modelnum);
+			ps.setString(2, brand);
+			ps.setString(3, modelname);
+			ps.setString(4, color);
+			ps.setInt(5, stosize);
+			ps.setInt(6, stoqty);
+			ps.setInt(7, stoprice);
+			ps.setBinaryStream(8, file);
+			ps.executeUpdate();
+			
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+//			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	// 기존상품 업데이트.
+	public boolean updateAction() {
+		PreparedStatement ps = null; 
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			String A = "update store set stoqty = ?";
+			String B = " where modelnum = ?";
+			
+			ps = conn_mysql.prepareStatement(A+B);
+			ps.setInt(1, stoqty);
+			ps.setString(2, modelnum);
+			ps.executeUpdate();
+			
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+//			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	// 삭제
+	public boolean deleteAction() {
+		PreparedStatement ps = null; 
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			String A = "delete from store";
+			String B = " where modelnum = ?";
+			
+			ps = conn_mysql.prepareStatement(A+B);
+			ps.setString(1, modelnum);
+			ps.executeUpdate();
+			
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+//			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 }
