@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,8 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.javalec.base.Main;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class Sign extends JDialog {
 
@@ -235,7 +235,7 @@ public class Sign extends JDialog {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					// TextField에 숫자가 입력 되게한다
-					if(e.getKeyChar() >= '0' && e.getKeyChar() <= '9'|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_MINUS) {
+					if(e.getKeyChar() >= '0' && e.getKeyChar() <= '9'|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_SUBTRACT || e.getKeyCode() == KeyEvent.VK_MINUS) {
 						// Enter키로 다음 입력칸 이동!!
 					}else if(e.getKeyCode() == KeyEvent.VK_ENTER){
 						tfAddress.requestFocus();
@@ -271,7 +271,7 @@ public class Sign extends JDialog {
 						JOptionPane.showMessageDialog(null, "특수문자는 안됩니다.", "경고", JOptionPane.ERROR_MESSAGE);
 						tfAddress.setText("");
 					}else if(e.getKeyCode() == KeyEvent.VK_ENTER){
-						// 아직 작성 안함
+						insertAction();
 					}
 				}
 			});
@@ -282,9 +282,10 @@ public class Sign extends JDialog {
 	}
 	private JButton getBtnSign() {
 		if (btnSign == null) {
-			btnSign = new JButton("회원가입");
+			btnSign = new JButton("작성 완료");
 			btnSign.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					insertAction();
 				}
 			});
 			btnSign.setBounds(81, 416, 124, 53);
@@ -324,6 +325,7 @@ public class Sign extends JDialog {
 	        pfPassword1.setEchoChar('\u2022'); // 비밀번호 숨김
 	    }
 	}
+	
 	private void comparePassword() {
 		char[] pass1 = pfPassword1.getPassword();
 		String passString1 = new String(pass1);
@@ -382,13 +384,69 @@ public class Sign extends JDialog {
 		return "!@#$%^&*()-_=+`~/?,.<>{}[];:|\"'\\".indexOf(specialKey) != -1;
 	}
 	
-	
-	
 	private JButton getBtnIdSame() {
 		if (btnIdSame == null) {
 			btnIdSame = new JButton("중복 확인");
+			btnIdSame.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					sameCheckAction();
+				}
+			});
 			btnIdSame.setBounds(322, 126, 93, 23);
 		}
 		return btnIdSame;
 	}
+	
+	private void insertAction() {
+		// 입력 안했을시 체크 받기
+		int check = inputCheck();
+		if(check != 0) {
+			JOptionPane.showMessageDialog(null, "항목을 입력 하세요.");
+		}
+		
+		String custid = tfId.getText().trim();
+		char[] charcustpw = pfPassword1.getPassword();
+		String custpw = new String(charcustpw);
+		String custname = tfName.getText().trim();
+		String phone = tfPhone.getText().trim();
+		String address = tfAddress.getText().trim();
+		
+		SignLoginDao signLoginDao = new SignLoginDao(custid, custpw, custname, phone, address);
+		
+		boolean result = signLoginDao.insertAction(); // 회원가입 성공 여부 확인
+
+	    if (result) {
+	        // 회원가입 성공 시
+	        JOptionPane.showMessageDialog(null, custname + "님의 회원가입을 환영합니다!");
+	        // 홈 화면으로 전환
+	        homeScreen();
+	    } else {
+	        // 회원가입 실패 시
+	        JOptionPane.showMessageDialog(null, "회원가입에 실패하였습니다! 다시 작성하여 주세요");
+	        // 다시 맨 처음 화면
+	        this.setVisible(false);
+	        setVisible(true);
+	    }
+		
+	}
+	
+	private void sameCheckAction() {
+		String custid1 = tfId.getText().trim();
+		SignLoginDao signLoginDao = new SignLoginDao();
+		
+        boolean compareId = signLoginDao.sameCheckAction(custid1);
+        
+        String custid2 = tfId.getText().replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "");
+        
+        if(custid1.equals(custid2)) {
+        	JOptionPane.showMessageDialog(null, "아이디를 다시 입력하여 주세요.");
+        }else if (compareId) {
+        	JOptionPane.showMessageDialog(null, custid1 + "는 중복된 아이디입니다.");
+        }else {
+        	JOptionPane.showMessageDialog(null, custid1 + "는 사용할 수 있는 아이디입니다.");
+        }
+		
+	}
+	
+	
 } // End

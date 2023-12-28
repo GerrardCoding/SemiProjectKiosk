@@ -1,27 +1,28 @@
 package com.javalec.base;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import javax.swing.JTextField;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.JTabbedPane;
-import javax.swing.ButtonGroup;
-import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JCheckBox;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.javalec.daegeun.Sign;
+import com.javalec.daegeun.SignLoginDao;
 
 public class Main {
 
@@ -101,6 +102,11 @@ public class Main {
 	private JButton getBtnSign() {
 		if (btnSign == null) {
 			btnSign = new JButton("회원가입");
+			btnSign.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					signAction();
+				}
+			});
 			btnSign.setBounds(68, 364, 124, 53);
 		}
 		return btnSign;
@@ -228,6 +234,23 @@ public class Main {
 			JOptionPane.showMessageDialog(null, "항목을 입력 하세요.");
 		}
 		
+		String custid1 = tfId.getText();
+		char[] charcustpw = pfPassword.getPassword();
+		String custpw1 = new String(charcustpw);
+		
+		SignLoginDao signLoginDao = new SignLoginDao();
+		
+		boolean result = signLoginDao.loginCheckAction(custid1, custpw1); // 회원가입 성공 여부 확인
+
+	    if (result) {
+	        // 로그인 성공시 
+	        homeScreen();
+	    } else {
+	        // 로그인 실패 시
+	        tfId.setText("");
+	        pfPassword.setText("");
+	    }
+        
 	}
 	
 	private int inputCheck() {
@@ -249,6 +272,13 @@ public class Main {
 	private boolean specialCharacter(char specialKey) {
 		// ID에 특수 문자 체크
 		return "!@#$%^&*()-_=+`~/?,.<>{}[];:|\"'\\".indexOf(specialKey) != -1;
+	}
+	
+	// 회원가입 시
+	private void signAction() {
+		frame.setVisible(false);
+		Sign sign = new Sign();
+		sign.setVisible(true);
 	}
 	
 } // End
