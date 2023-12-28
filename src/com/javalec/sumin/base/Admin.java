@@ -1,6 +1,8 @@
 package com.javalec.sumin.base;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -20,9 +22,9 @@ public class Admin {
 	private JPanel panel;
 	private JLabel lblNewLabel;
 	private JTextField textField;
-	private JComboBox comboBox;
-	private JComboBox comboBox_1;
-	private JComboBox comboBox_2;
+	private JComboBox cbYear;
+	private JComboBox cbMonth;
+	private JComboBox cbDay;
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JTextField textField_1;
@@ -34,7 +36,22 @@ public class Admin {
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_2_1;
 	private JLabel lblNewLabel_2_2;
-
+	
+	// ----- 날짜 시작 -----------------------------------------
+	// 날짜 배열 선언
+	ArrayList<String> arrYear;
+	ArrayList<String> arrMonth;
+	ArrayList<String> arrDay;
+	
+	// 현재 날짜, 시간 등의 정보 받아오기.
+	Calendar calendar = Calendar.getInstance();
+	
+	// 현재 날짜
+	int toYear = calendar.get(Calendar.YEAR);
+	int toMonth = calendar.get(Calendar.MONTH)+1;
+	int toDay = calendar.get(Calendar.DAY_OF_MONTH);
+	// ----- 날짜 끝 -----------------------------------------
+	
 	/**
 	 * Launch the application.
 	 */
@@ -84,9 +101,9 @@ public class Admin {
 			panel.setLayout(null);
 			panel.add(getLblNewLabel());
 			panel.add(getTextField());
-			panel.add(getComboBox());
-			panel.add(getComboBox_1());
-			panel.add(getComboBox_2());
+			panel.add(getCbYear());
+			panel.add(getCbMonth());
+			panel.add(getCbDay());
 			panel.add(getScrollPane());
 			panel.add(getTextField_1());
 			panel.add(getBtnNewButton());
@@ -111,29 +128,49 @@ public class Admin {
 		}
 		return textField;
 	}
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setBounds(41, 28, 77, 27);
-			comboBox.setModel(new DefaultComboBoxModel(new String[] {"년도"}));
+	private JComboBox getCbYear() {
+		if (cbYear == null) {
+			// 년도
+			arrYear = new ArrayList<String>();
+			
+			for (int i = toYear +10; i>=toYear-10; i--) {
+				arrYear.add(String.valueOf(i));
+			}
+			
+			cbYear = new JComboBox<String>(arrYear.toArray(new String[arrYear.size()]));
+			cbYear.setBounds(41, 28, 77, 27);
+			cbYear.setSelectedItem(String.valueOf(toYear));
 		}
-		return comboBox;
+		return cbYear;
 	}
-	private JComboBox getComboBox_1() {
-		if (comboBox_1 == null) {
-			comboBox_1 = new JComboBox();
-			comboBox_1.setBounds(119, 28, 77, 27);
-			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"월"}));
+	private JComboBox getCbMonth() {
+		if (cbMonth == null) {
+			// 월
+			arrMonth = new ArrayList<String>();
+			
+			for (int i=1; i <=12; i++) {
+				arrMonth.add(addZeroString(i));
+			}
+			cbMonth = new JComboBox<String>(arrMonth.toArray(new String[arrMonth.size()]));
+			cbMonth.setBounds(119, 28, 77, 27);
+			String mcom = toMonth >= 10?String.valueOf(toMonth):"0"+toMonth;
+			cbMonth.setSelectedItem(mcom);
 		}
-		return comboBox_1;
+		return cbMonth;
 	}
-	private JComboBox getComboBox_2() {
-		if (comboBox_2 == null) {
-			comboBox_2 = new JComboBox();
-			comboBox_2.setBounds(199, 28, 77, 27);
-			comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"일"}));
+	private JComboBox getCbDay() {
+		if (cbDay == null) {
+			// 일    
+			arrDay = new ArrayList<String>();
+			for(int i = 1; i <= 31; i++){
+				arrDay.add(addZeroString(i));
+			}
+			cbDay = new JComboBox<String>(arrDay.toArray(new String[arrDay.size()]));
+			cbDay.setBounds(199, 28, 77, 27);
+			String dcom = toDay >= 10?String.valueOf(toDay):"0"+toDay;
+			cbDay.setSelectedItem(dcom);
 		}
-		return comboBox_2;
+		return cbDay;
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -216,5 +253,16 @@ public class Admin {
 			lblNewLabel_2_2.setBounds(6, 417, 61, 16);
 		}
 		return lblNewLabel_2_2;
+	}
+	
+	
+	// ---- Method -----
+	// 한자리 숫자 앞에 + 0 예) 7일 -> 07일  
+	private String addZeroString(int k){
+		String value=Integer.toString(k);
+		if(value.length()==1) {
+			value="0"+value;
+		}
+		return value;
 	}
 }
