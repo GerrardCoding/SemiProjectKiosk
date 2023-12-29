@@ -59,7 +59,7 @@ public class SignLoginDao {
 			String A = "insert into customer (custid, custpw, custname, phone, address";
 			String B = ") values (?,?,?,?,?)";
 
-			Sign sign = new Sign();
+//			Sign sign = new Sign();
 
 			ps = conn_mysql.prepareStatement(A + B);
 			ps.setString(1, custid);
@@ -97,7 +97,7 @@ public class SignLoginDao {
 			// PreparedStatement 준비
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, custid1);
-
+			
 //			ResultSet rst = ps.executeQuery(sqlstr);
 
 			// 쿼리 실행 및 결과 가져오기
@@ -105,11 +105,20 @@ public class SignLoginDao {
 
 			// 결과 확인
 			if (rs.next()) {
-				// 아이디가 이미 존재하는 경우
-				available = true;
-			} else {
-				// 아이디가 존재하지 않는 경우
+				// 아이디가 존재하는 경우 false
 				available = false;
+//				if(custid1.trim() == custid1) {
+				// 공백 제거를 받아서 중복 된 아이디 확인
+				JOptionPane.showMessageDialog(null, custid1 + "는 중복된 아이디입니다.");
+			} else {
+				// 아이디가 존재하지 않는 경우 true
+				available = true;
+				// 공백만 입력 받았을때 처리
+				if(custid1.length() == 0) {
+					JOptionPane.showMessageDialog(null, "잘못된 아이디입니다.");
+				}else {
+				JOptionPane.showMessageDialog(null, custid1 + "는 사용할 수 있는 아이디입니다.");
+				}
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -143,8 +152,6 @@ public class SignLoginDao {
 			// 데이터베이스 연결
 			conn = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 
-//			Statement stmt_mysql = conn_mysql.createStatement(); // 갖고오는것
-
 			// SQL 문장
 			String query = "select custid, custpw from customer "; // 뒤에 띄어쓰기 한칸 할것
 			String query1 = " where custid = ? and custpw = ?";
@@ -156,7 +163,7 @@ public class SignLoginDao {
 
 			// 쿼리 실행 및 결과 가져오기
 			rs = ps.executeQuery();
-
+			
 			if (rs.next()) {
 				// 아이디와 비밀번호가 이미 존재하는 경우
 				available = true;
@@ -164,7 +171,7 @@ public class SignLoginDao {
 			} else {
 				// 아이디와 비밀번호가 존재하지 않는 경우
 				available = false;
-				JOptionPane.showMessageDialog(null, "고객님의 정보가 없습니다. 다시 입력하여 주세요.");
+				
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
