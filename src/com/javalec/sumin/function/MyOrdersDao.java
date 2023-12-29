@@ -86,7 +86,6 @@ public class MyOrdersDao {
 	
 
 	
-	//고객 정보를 보내자 
 		
 		
 	

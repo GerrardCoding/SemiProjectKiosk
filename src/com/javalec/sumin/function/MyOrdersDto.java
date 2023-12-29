@@ -1,5 +1,7 @@
 package com.javalec.sumin.function;
 
+import java.io.FileInputStream;
+
 public class MyOrdersDto {
 	
 	//Field
@@ -9,10 +11,26 @@ public class MyOrdersDto {
 	int stgsize;
 	int stgqty;
 	String stgdate; 
+
 	
 	
 	
 	
+
+	
+	
+	
+
+	public MyOrdersDto(int stgseqno, String stomodelnum, int stgsize, int stgqty, String stgdate,
+			FileInputStream file2) {
+		super();
+		this.stgseqno = stgseqno;
+		this.stomodelnum = stomodelnum;
+		this.stgsize = stgsize;
+		this.stgqty = stgqty;
+		this.stgdate = stgdate;
+	
+	}
 
 	public MyOrdersDto(int stgseqno, String stomodelnum, int stgsize, int stgqty, String stgdate) {
 		super();
