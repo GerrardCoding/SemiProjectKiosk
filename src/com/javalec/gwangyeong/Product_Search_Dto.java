@@ -6,6 +6,7 @@ public class Product_Search_Dto {
 	String brand;
 	String modelname;
 	String color;
+	String filename;
 	
 	int stosize;
 	int stoprice;
@@ -18,23 +19,24 @@ public class Product_Search_Dto {
 	}
 	
 	
-	public Product_Search_Dto(String modelnum, String brand, String modelname, String color, int stosize) {
+	public Product_Search_Dto(String brand, String modelname, String color, String filename, int stosize) {
 		super();
-		this.modelnum = modelnum;
 		this.brand = brand;
 		this.modelname = modelname;
 		this.color = color;
+		this.filename = filename;
 		this.stosize = stosize;
 	}
 	
 	
-	public Product_Search_Dto(String modelnum, String brand, String modelname, String color,
-							  int stosize, int stoprice, int stoqty) {
+	public Product_Search_Dto(String modelnum, String brand, String modelname, String color, String filename,
+			int stosize, int stoprice, int stoqty) {
 		super();
 		this.modelnum = modelnum;
 		this.brand = brand;
 		this.modelname = modelname;
 		this.color = color;
+		this.filename = filename;
 		this.stosize = stosize;
 		this.stoprice = stoprice;
 		this.stoqty = stoqty;
