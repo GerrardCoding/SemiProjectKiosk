@@ -1,5 +1,7 @@
 package com.javalec.sumin.function;
 
+import java.io.FileInputStream;
+
 public class MyCartDto {
 	
 	//Field
@@ -9,8 +11,9 @@ public class MyCartDto {
 	int cartqty;
 	int stoprice; 
 	String color; 
+	FileInputStream file;
 	
-
+	//CONSTRUCTOR
 	public MyCartDto() {
 		// TODO Auto-generated constructor stub
 	}
@@ -40,15 +43,9 @@ public class MyCartDto {
 
 
 
-
-
-
 	public int getCartseqno() {
 		return cartseqno;
 	}
-
-
-
 
 
 
@@ -60,15 +57,9 @@ public class MyCartDto {
 
 
 
-
-
-
 	public String getModelnum() {
 		return modelnum;
 	}
-
-
-
 
 
 
@@ -80,15 +71,9 @@ public class MyCartDto {
 
 
 
-
-
-
 	public int getStosize() {
 		return stosize;
 	}
-
-
-
 
 
 
@@ -100,15 +85,9 @@ public class MyCartDto {
 
 
 
-
-
-
 	public int getCartqty() {
 		return cartqty;
 	}
-
-
-
 
 
 
@@ -120,15 +99,9 @@ public class MyCartDto {
 
 
 
-
-
-
 	public int getStoprice() {
 		return stoprice;
 	}
-
-
-
 
 
 
@@ -140,15 +113,9 @@ public class MyCartDto {
 
 
 
-
-
-
 	public String getColor() {
 		return color;
 	}
-
-
-
 
 
 
@@ -160,10 +127,24 @@ public class MyCartDto {
 
 
 
+	public FileInputStream getFile() {
+		return file;
+	}
 
 
 
 
+	public void setFile(FileInputStream file) {
+		this.file = file;
+	}
+
+
+
+
+
+
+
+	
 
 
 
