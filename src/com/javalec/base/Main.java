@@ -25,6 +25,7 @@ import com.javalec.common.ShareVar;
 import com.javalec.daegeun.AdminDao;
 import com.javalec.daegeun.Sign;
 import com.javalec.daegeun.SignLoginDao;
+import com.javalec.gwangyeong.Product_Search;
 
 public class Main {
 
@@ -71,7 +72,7 @@ public class Main {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(7, 7, 7));
 		frame.setTitle("로그인");
-		frame.setBounds(100, 100, 486, 489);
+		frame.setBounds(500, 250 , 500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(getLblLogo());
@@ -272,7 +273,9 @@ public class Main {
 				if (result) {
 					// 로그인 성공시
 					ShareVar.loginID = id1;
-					homeScreen();
+					frame.setVisible(false);
+					Product_Search ps = new Product_Search();
+					ps.main(null);
 				} else {
 					// 로그인 실패 시
 					JOptionPane.showMessageDialog(null, "고객님의 정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");
@@ -299,7 +302,6 @@ public class Main {
 				}
 			}
 		}
-
 	}
 
 	private int inputCheck() {
