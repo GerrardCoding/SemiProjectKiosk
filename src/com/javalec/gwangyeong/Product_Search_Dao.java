@@ -1,6 +1,7 @@
 package com.javalec.gwangyeong;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -23,6 +24,10 @@ public class Product_Search_Dao {
 	String modelname;
 	String color;
 	int stosize;
+	
+	String filename;
+	
+	FileInputStream file;
 	
 	String searchName;
 	String searchText;
@@ -57,23 +62,36 @@ public class Product_Search_Dao {
 	public ArrayList<Product_Search_Dto> selectList() {
 		
 		ArrayList<Product_Search_Dto> dtoList = new ArrayList<Product_Search_Dto>();
-		String whereDefault = "select modelnum, brand, modelname, color, stosize from store";
+		String where1 = "select file, brand, modelname, color, stosize, filename from store ";
+		String where2 = "order by modelnum asc";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(whereDefault);
+			ResultSet rs = stmt_mysql.executeQuery(where1 + where2);
 			
 			while(rs.next()) {
-				String wkModelnum = rs.getString(1);
+				
 				String wkBrand = rs.getString(2);
 				String wkModelname = rs.getString(3);
 				String wkColor = rs.getString(4);
 				int wkStosize = rs.getInt(5);
+				String wkFilename = rs.getString(6);
 				
-				Product_Search_Dto dto = new Product_Search_Dto(wkModelnum, wkBrand, wkModelname, wkColor, wkStosize);
+				// File
+				File file = new File("./" + wkFilename);
+				FileOutputStream output = new FileOutputStream(file);
+				InputStream input = rs.getBinaryStream(1);
+				
+				byte[] buffer = new byte[1024];
+				
+				while(input.read(buffer) > 0) {
+					output.write(buffer);
+				}
+				
+				Product_Search_Dto dto = new Product_Search_Dto(wkBrand, wkModelname, wkColor, wkFilename, wkStosize);
 				dtoList.add(dto);
 				
 			}
@@ -93,7 +111,8 @@ public class Product_Search_Dao {
 	public void conditionSearchAction() {
 		
 		String query1 = "select modelnum, brand, modelname, color, stosize from store where " + searchName;
-		String query2 = " like '%" + searchText + "%';";
+		String query2 = " like '%" + searchText + "%'";
+		String query3 = " order by " + searchName + " asc;";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -101,7 +120,7 @@ public class Product_Search_Dao {
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
 			
-			ResultSet rs = stmt_mysql.executeQuery(query1 + query2);
+			ResultSet rs = stmt_mysql.executeQuery(query1 + query2 + query3);
 			while(rs.next()) {
 				String[] qTxt = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), Integer.toString(rs.getInt(5))};
 				table.addRow(qTxt);
