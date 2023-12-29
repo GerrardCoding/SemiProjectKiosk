@@ -128,6 +128,8 @@ public class MyPage {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(25, 25, 25));
+		frame.setBackground(new Color(255, 255, 255));
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {
@@ -145,15 +147,18 @@ public class MyPage {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 			tabbedPane.setBounds(0, 0, 740, 564);
-			tabbedPane.setBackground(Color.WHITE);
+			tabbedPane.setBackground(new Color(255, 255, 255));
 			tabbedPane.addTab("Account Info",
 					new ImageIcon("/Users/tj/Downloads/icons8-테스트-계정-parakeet-line/icons8-테스트-계정-30.png"),
 					getAccountInfo(), null);
+			tabbedPane.setForegroundAt(0, new Color(255, 146, 0));
 			tabbedPane.addTab("My Orders",
 					new ImageIcon("/Users/tj/Downloads/icons8-bookmark-sf-regular/icons8-bookmark-30.png"), getOrders(),
 					null);
+			tabbedPane.setForegroundAt(1, new Color(255, 146, 0));
 			tabbedPane.addTab("My Cart", new ImageIcon("/Users/tj/Downloads/icons8-쇼핑-카트-32.png"), getCart(),
 					null);
+			tabbedPane.setForegroundAt(2, new Color(255, 146, 0));
 			tabbedPane.addChangeListener(new ChangeListener() {
 
 				@Override
@@ -179,6 +184,8 @@ public class MyPage {
 	private JPanel getAccountInfo() {
 		if (accountInfo == null) {
 			accountInfo = new JPanel();
+			accountInfo.setForeground(new Color(255, 255, 255));
+			accountInfo.setBackground(new Color(25, 25, 25));
 			accountInfo.setLayout(null);
 			accountInfo.add(getLblNewLabel());
 			accountInfo.add(getLblId());
@@ -201,6 +208,8 @@ public class MyPage {
 	private JPanel getOrders() {
 		if (orders == null) {
 			orders = new JPanel();
+			orders.setForeground(new Color(0, 0, 0));
+			orders.setBackground(new Color(0, 0, 0));
 			orders.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -218,6 +227,8 @@ public class MyPage {
 	private JPanel getCart() {
 		if (cart == null) {
 			cart = new JPanel();
+			cart.setForeground(new Color(255, 255, 255));
+			cart.setBackground(new Color(0, 0, 0));
 			cart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -250,8 +261,9 @@ public class MyPage {
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("Welcome Back!");
-			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-			lblNewLabel.setBounds(303, 30, 179, 16);
+			lblNewLabel.setForeground(new Color(254, 255, 255));
+			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+			lblNewLabel.setBounds(277, 33, 179, 16);
 		}
 		return lblNewLabel;
 	}
@@ -259,7 +271,9 @@ public class MyPage {
 	private JLabel getLblId() {
 		if (lblId == null) {
 			lblId = new JLabel("ID: ");
-			lblId.setBounds(230, 95, 61, 16);
+			lblId.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblId.setForeground(new Color(254, 255, 255));
+			lblId.setBounds(244, 94, 40, 16);
 		}
 		return lblId;
 	}
@@ -277,7 +291,9 @@ public class MyPage {
 	private JLabel getLblPw() {
 		if (lblPw == null) {
 			lblPw = new JLabel("PW:");
-			lblPw.setBounds(230, 143, 61, 16);
+			lblPw.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblPw.setForeground(new Color(254, 255, 255));
+			lblPw.setBounds(244, 142, 40, 16);
 		}
 		return lblPw;
 	}
@@ -294,7 +310,9 @@ public class MyPage {
 	private JLabel getLblName() {
 		if (lblName == null) {
 			lblName = new JLabel("이름:");
-			lblName.setBounds(230, 187, 61, 16);
+			lblName.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblName.setForeground(new Color(254, 255, 255));
+			lblName.setBounds(244, 186, 40, 16);
 		}
 		return lblName;
 	}
@@ -311,6 +329,8 @@ public class MyPage {
 	private JLabel getLblPhone() {
 		if (lblPhone == null) {
 			lblPhone = new JLabel("전화번호:");
+			lblPhone.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblPhone.setForeground(new Color(254, 255, 255));
 			lblPhone.setBounds(230, 240, 61, 16);
 		}
 		return lblPhone;
@@ -328,7 +348,9 @@ public class MyPage {
 	private JLabel getLblAddress() {
 		if (lblAddress == null) {
 			lblAddress = new JLabel("주소:");
-			lblAddress.setBounds(230, 294, 61, 16);
+			lblAddress.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblAddress.setForeground(new Color(254, 255, 255));
+			lblAddress.setBounds(244, 293, 40, 16);
 		}
 		return lblAddress;
 	}
@@ -345,6 +367,7 @@ public class MyPage {
 	private JButton getBtnBack() {
 		if (btnBack == null) {
 			btnBack = new JButton("돌아가기");
+			btnBack.setForeground(new Color(0, 0, 0));
 			btnBack.setIcon(null);
 			btnBack.setBounds(173, 375, 111, 29);
 		}
@@ -354,6 +377,7 @@ public class MyPage {
 	private JButton getBtnEdit() {
 		if (btnEdit == null) {
 			btnEdit = new JButton("수정하기");
+			btnEdit.setForeground(new Color(0, 0, 0));
 			btnEdit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					updateAction();
@@ -369,6 +393,7 @@ public class MyPage {
 	private JButton getBtnDeactivate() {
 		if (btnDeactivate == null) {
 			btnDeactivate = new JButton("회원탈퇴");
+			btnDeactivate.setForeground(new Color(0, 0, 0));
 			btnDeactivate.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					deactivate();
@@ -431,6 +456,7 @@ public class MyPage {
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("상품번호:");
+			lblNewLabel_1.setForeground(new Color(255, 255, 255));
 			lblNewLabel_1.setBounds(16, 222, 61, 16);
 		}
 		return lblNewLabel_1;
@@ -450,6 +476,7 @@ public class MyPage {
 	private JLabel getLbl() {
 		if (lbl == null) {
 			lbl = new JLabel("제품ID:");
+			lbl.setForeground(new Color(255, 255, 255));
 			lbl.setBounds(16, 321, 61, 16);
 		}
 		return lbl;
@@ -469,6 +496,7 @@ public class MyPage {
 	private JLabel getLblPrice() {
 		if (lblPrice == null) {
 			lblPrice = new JLabel("금액:");
+			lblPrice.setForeground(new Color(255, 255, 255));
 			lblPrice.setBounds(16, 255, 61, 16);
 		}
 		return lblPrice;
@@ -488,6 +516,7 @@ public class MyPage {
 	private JLabel getLblSize() {
 		if (lblSize == null) {
 			lblSize = new JLabel("사이즈:");
+			lblSize.setForeground(new Color(255, 255, 255));
 			lblSize.setBounds(16, 354, 61, 16);
 		}
 		return lblSize;
@@ -507,6 +536,7 @@ public class MyPage {
 	private JLabel getLblColor() {
 		if (lblColor == null) {
 			lblColor = new JLabel("색상:");
+			lblColor.setForeground(new Color(255, 255, 255));
 			lblColor.setBounds(16, 288, 61, 16);
 		}
 		return lblColor;
@@ -526,6 +556,7 @@ public class MyPage {
 	private JLabel getLblQty() {
 		if (lblQty == null) {
 			lblQty = new JLabel("수량:");
+			lblQty.setForeground(new Color(255, 255, 255));
 			lblQty.setBounds(16, 387, 61, 16);
 		}
 		return lblQty;
@@ -534,6 +565,7 @@ public class MyPage {
 	private JButton getBtnNewButton_1() {
 		if (btnNewButton_1 == null) {
 			btnNewButton_1 = new JButton("돌아가기");
+			btnNewButton_1.setForeground(new Color(0, 0, 0));
 			btnNewButton_1.setBounds(182, 460, 117, 29);
 		}
 		return btnNewButton_1;
@@ -542,6 +574,7 @@ public class MyPage {
 	private JButton getBtnEmptyCart() {
 		if (btnEmptyCart == null) {
 			btnEmptyCart = new JButton("장바구니에서 삭제");
+			btnEmptyCart.setForeground(new Color(0, 0, 0));
 			btnEmptyCart.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					deleteAction();
@@ -557,6 +590,7 @@ public class MyPage {
 	private JButton getBtnCheckout() {
 		if (btnCheckout == null) {
 			btnCheckout = new JButton("결제하기");
+			btnCheckout.setForeground(new Color(0, 0, 0));
 			btnCheckout.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					checkout();
@@ -581,6 +615,7 @@ public class MyPage {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("돌아가기");
+			btnNewButton.setForeground(new Color(0, 0, 0));
 			btnNewButton.setBounds(299, 473, 117, 29);
 		}
 		return btnNewButton;
@@ -592,12 +627,13 @@ public class MyPage {
 	private void orderTableInit() {
 		// System.out.println("hello");
 		// Table Column 명 정하기
-		outerTable.addColumn("No.");
-		outerTable.addColumn("Model No.");
-		outerTable.addColumn("Size");
-		outerTable.addColumn("Qty");
+		outerTable.addColumn("Order No.");
+		outerTable.addColumn("Cust ID");
+		outerTable.addColumn("Model No");
+		outerTable.addColumn("Order Qty");
+		outerTable.addColumn("Order Price");
 		outerTable.addColumn("Order Date");
-		outerTable.setColumnCount(5);
+		outerTable.setColumnCount(6);
 
 		// Table Column 크기 정하기
 		int colNo = 0;
@@ -624,6 +660,11 @@ public class MyPage {
 		col = order_Table.getColumnModel().getColumn(colNo);
 		width = 300;
 		col.setPreferredWidth(width);
+		
+		colNo = 5;
+		col = order_Table.getColumnModel().getColumn(colNo);
+		width = 300;
+		col.setPreferredWidth(width);
 
 		order_Table.setAutoResizeMode(order_Table.AUTO_RESIZE_OFF);
 
@@ -643,9 +684,12 @@ public class MyPage {
 
 		for (int i = 0; i < listCount; i++) {
 
-			String[] temp = { Integer.toString(dtoList.get(i).getStgseqno()), dtoList.get(i).getStomodelnum(),
-					Integer.toString(dtoList.get(i).getStgsize()), Integer.toString(dtoList.get(i).getStgqty()),
-					dtoList.get(i).getStgdate(), };
+			String[] temp = { Integer.toString(dtoList.get(i).getPurnum()), 
+							dtoList.get(i).getCustid(),
+							dtoList.get(i).getStomodelnum(),
+							Integer.toString(dtoList.get(i).getPurqty()), 
+							Integer.toString(dtoList.get(i).getPurprice()),
+							dtoList.get(i).getPurdate(), };
 			outerTable.addRow(temp);
 		}
 
