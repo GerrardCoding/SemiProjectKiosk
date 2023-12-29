@@ -494,6 +494,7 @@ public class AdminSujin {
 			tfQty.setEditable(false);
 			tfPrice.setEditable(false);
 			tfImage.setEditable(false);
+			lblImage.setVisible(true);
 		}
 		// 기존제품 추가.
 		if(rdbtnUpdate.isSelected() == true) {
@@ -507,6 +508,7 @@ public class AdminSujin {
 			tfQty.setEditable(true);
 			tfPrice.setEditable(false);
 			tfImage.setEditable(false);
+			lblImage.setVisible(true);
 		}
 		// 새제품 추가.
 		if(rdbtnInsert.isSelected() == true) {
@@ -520,6 +522,8 @@ public class AdminSujin {
 			tfQty.setEditable(true);
 			tfPrice.setEditable(true);
 			tfImage.setEditable(true);
+			lblImage.setVisible(false);
+			
 		}
 		// 삭제.
 		if(rdbtnDelete.isSelected() == true) {
@@ -533,6 +537,7 @@ public class AdminSujin {
 			tfQty.setEditable(false);
 			tfPrice.setEditable(false);
 			tfImage.setEditable(false);
+			lblImage.setVisible(true);
 		}
 	}	// End of screenPartition()
 	private void tableClick() {
@@ -670,7 +675,7 @@ public class AdminSujin {
 		tfQty.setText("");
 		tfPrice.setText("");
 		tfImage.setText("");
-		lblImage.setText("");
+		lblImage.setVisible(false);
 	}
 	
 	// 기존제품 추가.
