@@ -33,6 +33,23 @@ public class MyInfoDto {
 
 
 
+	public MyInfoDto(String custid) {
+		super();
+		this.custid = custid;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public String getCustid() {
 		return custid;
 	}

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -94,9 +95,70 @@ public class MyInfoDao {
 		
 		
 	}
+	
+	
+	
+
+	//고객 정보 수정
+	public boolean updateAction() {
+		PreparedStatement ps = null;
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement(); 
+			
+			String A = "update customer set custpw = ?, custname = ?, phone = ?, address = ? ";
+			String B = " where custid = ?";
+				
+			
+			ps = conn_mysql.prepareStatement(A+B);
+			
+			ps.setString(1, custpw);
+			ps.setString(2, custname);
+			ps.setString(3, phone);
+			ps.setString(4, address);
+			ps.setString(5, custid);
+			ps.executeUpdate();
+			
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+			return false;
+		}
+		
+		return true;	
+	}
 
 
 	
+	//회원 탈퇴 
+	public boolean deactivate() {
+		PreparedStatement ps = null;
+		System.out.println(custid);
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement(); 
+			
+			String A = "delete from customer";
+			String B = " where custid = ?";
+			
+			
+			ps = conn_mysql.prepareStatement(A+B);
+			ps.setString(1, custpw);
+			
+			ps.executeUpdate();
+			
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return true;	
+	}
 	
 	
 	
