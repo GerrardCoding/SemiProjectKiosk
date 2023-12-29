@@ -69,7 +69,7 @@ public class ProductDao {
 		if(col.equals("stosize")||col.equals("stoqty")) {	// 사이즈나 갯수일경우 
 			tmpVal = Integer.parseInt(val);
 			where = " WHERE "+col+"="+tmpVal;
-		}else {
+		}else if(col.equals("modelname")||col.equals("color")){
 			where = " WHERE "+col+" like '%"+val+"%'"; //"상품명" modelname, "사이즈" stosize, "색상" color, "재고갯수" stoqty
 		}
 		

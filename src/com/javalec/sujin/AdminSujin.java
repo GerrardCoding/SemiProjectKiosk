@@ -104,6 +104,7 @@ public class AdminSujin {
 			public void windowActivated(WindowEvent e) {
 				tableInit();
 				searchAction();
+				clearColumn();
 				screenPartition();
 			}
 		});
@@ -221,10 +222,9 @@ public class AdminSujin {
 			btnSearch = new JButton("검색");
 			btnSearch.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					searchAction();
 					tableInit();
-					searchAction();
 					clearColumn();
+					searchAction();
 					screenPartition();
 				}
 			});
@@ -484,13 +484,13 @@ public class AdminSujin {
 		int listCount = dtoList.size();
 		
 		for(int i=0; i<listCount; i++) {
-			String modelnum;
-			String brand;
-			String modelname;
-			String color;
-			int stosize;
-			int stoqty;
-			int stoprice;
+//			String modelnum;
+//			String brand;
+//			String modelname;
+//			String color;
+//			int stosize;
+//			int stoqty;
+//			int stoprice;
 			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
 			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
 			String tmpPrice = Integer.toString(dtoList.get(i).getStoprice()); 
@@ -512,7 +512,7 @@ public class AdminSujin {
 			tfQty.setEditable(false);
 			tfPrice.setEditable(false);
 			tfImage.setEditable(false);
-			lblImage.setVisible(true);
+//			lblImage.setIcon(null);
 		}
 		// 기존제품 추가.
 		if(rdbtnUpdate.isSelected() == true) {
@@ -526,7 +526,6 @@ public class AdminSujin {
 			tfQty.setEditable(true);
 			tfPrice.setEditable(false);
 			tfImage.setEditable(false);
-			lblImage.setVisible(true);
 		}
 		// 새제품 추가.
 		if(rdbtnInsert.isSelected() == true) {
@@ -540,7 +539,7 @@ public class AdminSujin {
 			tfQty.setEditable(true);
 			tfPrice.setEditable(true);
 			tfImage.setEditable(true);
-			lblImage.setVisible(false);
+//			lblImage.setIcon(null);
 			
 		}
 		// 삭제.
@@ -555,7 +554,6 @@ public class AdminSujin {
 			tfQty.setEditable(false);
 			tfPrice.setEditable(false);
 			tfImage.setEditable(false);
-			lblImage.setVisible(true);
 		}
 	}	// End of screenPartition()
 	private void tableClick() {
@@ -576,8 +574,8 @@ public class AdminSujin {
 		// Image 처리 : fileName이 틀려야 보여주기가 가능.
 		String filePath = Integer.toString(ShareVar.filename);
 //		tfFilePath.setText(filePath);
-		
-		lblImage.setIcon(new ImageIcon(filePath));
+//		System.out.println(filePath);
+		lblImage.setIcon(new ImageIcon(filePath));	
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 	}	//End of tableClick()
 	
@@ -613,6 +611,7 @@ public class AdminSujin {
 			i++;
 			tfSize.requestFocus();
 		}
+
 		return i;
 	}
 	
@@ -628,6 +627,9 @@ public class AdminSujin {
 	private void actionPartition() {
 		// 검색일 경우
 		if(rdbtnSearch.isSelected() == true) {
+			tableInit();
+			searchAction();
+			clearColumn();
 			screenPartition();
 		}
 		
@@ -647,7 +649,6 @@ public class AdminSujin {
 		}
 		// 새제품 추가.
 		if(rdbtnInsert.isSelected() == true) {
-			lblImage.setText("");
 			int i_chk = insertFieldCheck();
 			if(i_chk == 0) {
 				if(imageCheck()) {
@@ -693,7 +694,7 @@ public class AdminSujin {
 		tfQty.setText("");
 		tfPrice.setText("");
 		tfImage.setText("");
-		lblImage.setVisible(false);
+		lblImage.setIcon(null);
 	}
 	
 	// 기존제품 추가.
@@ -720,7 +721,7 @@ public class AdminSujin {
 		boolean result = dao.insertAction();
 		
 		if(result == true) {
-			JOptionPane.showMessageDialog(null,  tfModelnum.getText() + " 새상품이 "+ tfQty.getText().trim() +"등록 되었습니다.");
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 새상품이 "+ tfQty.getText().trim() +"등록 되었습니다.");
 		}else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
 		}
@@ -739,7 +740,7 @@ public class AdminSujin {
 		boolean result = dao.updateAction();
 		
 		if(result == true) {
-			JOptionPane.showMessageDialog(null,  tfModelnum.getText() + " 상품이 "+ tfQty.getText().trim() +"개 추가 되었습니다.");
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 "+ tfQty.getText().trim() +"개 추가 되었습니다.");
 		}else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
 		}
@@ -752,7 +753,7 @@ public class AdminSujin {
 		boolean result = dao.deleteAction();
 		
 		if(result == true) {
-			JOptionPane.showMessageDialog(null,  tfModelnum.getText() + " 상품이 삭제 되었습니다.");
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 삭제 되었습니다.");
 		}else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
 		}
