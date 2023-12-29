@@ -9,11 +9,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import com.javalec.sujin.ProductDao;
+import com.javalec.sujin.ProductDto;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.ListSelectionModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Admin {
 
@@ -26,7 +35,7 @@ public class Admin {
 	private JComboBox cbMonth;
 	private JComboBox cbDay;
 	private JScrollPane scrollPane;
-	private JTable table;
+	private JTable innerTable;
 	private JTextField textField_1;
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_1;
@@ -36,6 +45,7 @@ public class Admin {
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_2_1;
 	private JLabel lblNewLabel_2_2;
+	private final DefaultTableModel outerTable = new DefaultTableModel();
 	
 	// ----- 날짜 시작 -----------------------------------------
 	// 날짜 배열 선언
@@ -80,6 +90,13 @@ public class Admin {
 	 */
 	private void initialize() {
 		frmAdmin = new JFrame();
+		frmAdmin.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				tableInit();
+				searchAction();
+			}
+		});
 		frmAdmin.setTitle("Admin");
 		frmAdmin.setBounds(100, 100, 574, 711);
 		frmAdmin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -176,15 +193,17 @@ public class Admin {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(17, 62, 512, 442);
-			scrollPane.setViewportView(getTable());
+			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
 	}
-	private JTable getTable() {
-		if (table == null) {
-			table = new JTable();
+	private JTable getInnerTable() {
+		if (innerTable == null) {
+			innerTable = new JTable();
+			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			innerTable.setModel(outerTable);
 		}
-		return table;
+		return innerTable;
 	}
 	private JTextField getTextField_1() {
 		if (textField_1 == null) {
@@ -265,4 +284,93 @@ public class Admin {
 		}
 		return value;
 	}
+	
+	private void tableInit() {
+		// Table Column 명 정하기.
+		outerTable.addColumn("모델번호");
+		outerTable.addColumn("브랜드");
+		outerTable.addColumn("모델명");
+		outerTable.addColumn("색상");
+		outerTable.addColumn("사이즈");
+		outerTable.addColumn("재고량");
+		outerTable.addColumn("가격");
+		outerTable.setColumnCount(7);
+		
+		// 모델번호
+		int colNo = 0;
+		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		// 브랜드
+		colNo = 1;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+
+		
+		// 모델명
+		colNo = 2;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 200;
+		col.setPreferredWidth(width);
+		
+		
+		// 색상
+		colNo = 3;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		// 사이즈
+		colNo = 4;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		
+		// 재고량
+		colNo = 5;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		
+		// 가격
+		colNo = 6;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 150;
+		col.setPreferredWidth(width);
+		
+		
+		// 테이블 내용 지우기.
+		int i = outerTable.getRowCount();
+		for(int j=0; j<i; j++) {
+			outerTable.removeRow(0);
+		}
+		
+		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
+	}
+	
+	private void searchAction() {
+		ProductDao dao = new ProductDao();
+		ArrayList<ProductDto> dtoList = dao.selectList();
+		
+		int listCount = dtoList.size();
+		
+		for(int i=0; i<listCount; i++) {
+			String modelnum;
+			String brand;
+			String modelname;
+			String color;
+			int stosize;
+			int stoqty;
+			int stoprice;
+			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
+			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
+			String tmpPrice = Integer.toString(dtoList.get(i).getStoprice()); 
+			String[] qTxt = {dtoList.get(i).getModelnum(), dtoList.get(i).getBrand(), dtoList.get(i).getModelname(), dtoList.get(i).getColor(), tmpSize, tmpQty, tmpPrice};
+			outerTable.addRow(qTxt);
+		}
+	}	// End of searchAction()
 }
