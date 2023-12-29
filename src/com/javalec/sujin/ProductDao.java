@@ -62,16 +62,25 @@ public class ProductDao {
 	
 	// Method
 	// 검색 결과를 Table로 보내자.
-	public ArrayList<ProductDto> selectList(){
+	public ArrayList<ProductDto> selectList(String col, String val){
+		//"상품명" modelname, "사이즈" stosize, "색상" color, "재고갯수" stoqty
+		String where = ""; 
+		int tmpVal =0;
+		if(col.equals("stosize")||col.equals("stoqty")) {	// 사이즈나 갯수일경우 
+			tmpVal = Integer.parseInt(val);
+			where = " WHERE "+col+"="+tmpVal;
+		}else {
+			where = " WHERE "+col+" like '%"+val+"%'"; //"상품명" modelname, "사이즈" stosize, "색상" color, "재고갯수" stoqty
+		}
+		
 		ArrayList<ProductDto> dtoList = new ArrayList<ProductDto>();
 		String whereDefault = "SELECT modelnum, brand, modelname, color, stosize, stoqty, stoprice FROM store";
-		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 			Statement stmt_mysql = conn_mysql.createStatement();
 			
-			ResultSet rs = stmt_mysql.executeQuery(whereDefault);
+			ResultSet rs = stmt_mysql.executeQuery(whereDefault+where);
 			while(rs.next()) {	
 				String wMdelnum = rs.getString(1);
 				String wBrand = rs.getString(2);

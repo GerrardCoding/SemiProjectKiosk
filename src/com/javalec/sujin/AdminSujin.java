@@ -219,6 +219,15 @@ public class AdminSujin {
 	private JButton getBtnSearch() {
 		if (btnSearch == null) {
 			btnSearch = new JButton("검색");
+			btnSearch.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					searchAction();
+					tableInit();
+					searchAction();
+					clearColumn();
+					screenPartition();
+				}
+			});
 			btnSearch.setBounds(328, 24, 97, 23);
 		}
 		return btnSearch;
@@ -460,8 +469,17 @@ public class AdminSujin {
 	}	// End of tableInit()
 	
 	private void searchAction() {
+		int selectIndex = cbSelect.getSelectedIndex();
+		String selectColumn = "";
+		switch (selectIndex) {	
+		case 0 : selectColumn = "modelname";	break;	//"상품명" 	modelname
+		case 1 : selectColumn = "stosize"; 		break;	//"사이즈" 	stosize
+		case 2 : selectColumn = "color"; 		break;	//"색상"		color
+		case 3 : selectColumn = "stoqty"; 		break;	//"재고갯수" 	stoqty
+		default : break;
+		}
 		ProductDao dao = new ProductDao();
-		ArrayList<ProductDto> dtoList = dao.selectList();
+		ArrayList<ProductDto> dtoList = dao.selectList(selectColumn, tfSelect.getText());
 		
 		int listCount = dtoList.size();
 		
