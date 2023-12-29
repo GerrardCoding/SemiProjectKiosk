@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import javax.sound.midi.Sequence;
@@ -13,6 +16,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,15 +30,23 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
+import com.javalec.common.ShareVar;
 import com.javalec.sumin.function.MyCartDao;
 import com.javalec.sumin.function.MyCartDto;
+import com.javalec.sumin.function.MyInfoDao;
+import com.javalec.sumin.function.MyInfoDto;
 import com.javalec.sumin.function.MyOrdersDao;
 import com.javalec.sumin.function.MyOrdersDto;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 
 public class MyPage {
 
@@ -75,18 +87,15 @@ public class MyPage {
 	private JButton btnNewButton_1;
 	private JButton btnEmptyCart;
 	private JButton btnCheckout;
-	private JLabel lblNewLabel_2;
-	private JComboBox cbDate;
-	private JTextField tfSearch;
-	private JButton btnSearch;
+	private JLabel lblImage;
 	private JButton btnNewButton;
-	private JSpinner spQty;
 	
 	
 	//--Table--
 	
 	private final DefaultTableModel outerTable = new DefaultTableModel();
-	
+	private final DefaultTableModel cartOuterTable = new DefaultTableModel();
+	private JTextField tfQty;
 	
 
 
@@ -118,7 +127,11 @@ public class MyPage {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {});
+		frame.addWindowListener(new WindowAdapter() {			@Override
+			public void windowActivated(WindowEvent e) {
+			myInfoAction();
+			}
+});
 		frame.setTitle("마이페이지");
 		frame.setBounds(100, 100, 470, 540);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -140,7 +153,7 @@ public class MyPage {
 					// TODO Auto-generated method stub
 					int selectedIndex = tabbedPane.getSelectedIndex();
 					if(selectedIndex==0) {
-						
+						myInfoAction();
 					}else if(selectedIndex==1) {
 						orderTableInit();	
 						orderSearchAction();
@@ -188,9 +201,6 @@ public class MyPage {
 			});
 			orders.setLayout(null);
 			orders.add(getScrollPane());
-			orders.add(getCbDate());
-			orders.add(getTfSearch());
-			orders.add(getBtnSearch());
 			orders.add(getBtnNewButton());
 		}
 		return orders;
@@ -221,8 +231,8 @@ public class MyPage {
 			cart.add(getBtnNewButton_1());
 			cart.add(getBtnEmptyCart());
 			cart.add(getBtnCheckout());
-			cart.add(getLblNewLabel_2());
-			cart.add(getSpQty());
+			cart.add(getLblImage());
+			cart.add(getTfQty());
 		}
 		return cart;
 	}
@@ -334,7 +344,7 @@ public class MyPage {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 48, 433, 322);
+			scrollPane.setBounds(6, 19, 433, 380);
 			scrollPane.setViewportView(getOrder_Table());
 		}
 		return scrollPane;
@@ -367,7 +377,7 @@ public class MyPage {
 				}
 			});
 			cart_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			cart_Table.setModel(outerTable);
+			cart_Table.setModel(cartOuterTable);
 		}
 		return cart_Table;
 	}
@@ -471,6 +481,8 @@ public class MyPage {
 			btnEmptyCart.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					deleteAction();
+					cartTableInit();
+					cartSearchAction();
 				}
 			});
 			btnEmptyCart.setBounds(170, 423, 117, 29);
@@ -480,40 +492,23 @@ public class MyPage {
 	private JButton getBtnCheckout() {
 		if (btnCheckout == null) {
 			btnCheckout = new JButton("결제하기");
+			btnCheckout.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					checkout();
+					
+				}
+			});
 			btnCheckout.setBounds(287, 423, 117, 29);
 		}
 		return btnCheckout;
 	}
-	private JLabel getLblNewLabel_2() {
-		if (lblNewLabel_2 == null) {
-			lblNewLabel_2 = new JLabel("IMAGE");
-			lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-			lblNewLabel_2.setBounds(208, 193, 231, 186);
+	private JLabel getLblImage() {
+		if (lblImage == null) {
+			lblImage = new JLabel("");
+			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+			lblImage.setBounds(208, 193, 231, 186);
 		}
-		return lblNewLabel_2;
-	}
-	private JComboBox getCbDate() {
-		if (cbDate == null) {
-			cbDate = new JComboBox();
-			cbDate.setModel(new DefaultComboBoxModel(new String[] {"3 Months", "6 Months", "1 Year"}));
-			cbDate.setBounds(6, 9, 117, 27);
-		}
-		return cbDate;
-	}
-	private JTextField getTfSearch() {
-		if (tfSearch == null) {
-			tfSearch = new JTextField();
-			tfSearch.setBounds(122, 8, 191, 26);
-			tfSearch.setColumns(10);
-		}
-		return tfSearch;
-	}
-	private JButton getBtnSearch() {
-		if (btnSearch == null) {
-			btnSearch = new JButton("검색");
-			btnSearch.setBounds(322, 6, 117, 29);
-		}
-		return btnSearch;
+		return lblImage;
 	}
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
@@ -521,13 +516,6 @@ public class MyPage {
 			btnNewButton.setBounds(171, 411, 117, 29);
 		}
 		return btnNewButton;
-	}
-	private JSpinner getSpQty() {
-		if (spQty == null) {
-			spQty = new JSpinner();
-			spQty.setBounds(79, 358, 55, 26);
-		}
-		return spQty;
 	}
 	
 	//------FUNCTIONS-------
@@ -549,30 +537,31 @@ public class MyPage {
 	//Table Column 크기 정하기 
 	int colNo = 0; 
 	TableColumn col = order_Table.getColumnModel().getColumn(colNo);
-	int width = 30;
+	int width = 50;
 	col.setPreferredWidth(width);
+	
 	
 	
 	colNo = 1; 
 	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 90;
+	width = 100;
 	col.setPreferredWidth(width);
 	
 	
 	colNo = 2; 
 	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 40;
+	width = 50;
 	col.setPreferredWidth(width);
 	
 	
 	colNo = 3; 
 	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 40;
+	width = 50;
 	col.setPreferredWidth(width);
 	
 	colNo = 4; 
 	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 100;
+	width = 200;
 	col.setPreferredWidth(width);
 	
 	
@@ -603,8 +592,30 @@ public class MyPage {
 							  };
 			outerTable.addRow(temp);
 		}
-
+		// Table Column별 정렬하기.
+				// Table Column(Cell) 가운데 정렬
+				DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+				center.setHorizontalAlignment(SwingConstants.CENTER);
+				
+				TableColumnModel tcm = order_Table.getColumnModel();
+				
+				// 특정 Column(Cell) 가운데 정렬
+				tcm.getColumn(0).setCellRenderer(center);
+				tcm.getColumn(1).setCellRenderer(center);
+				tcm.getColumn(2).setCellRenderer(center);
+				tcm.getColumn(3).setCellRenderer(center);
+				tcm.getColumn(4).setCellRenderer(center);
+				
+				
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	
@@ -614,13 +625,13 @@ public class MyPage {
 	private void cartTableInit() {
 		
 		//Table Column 명 정하기
-		outerTable.addColumn("No.");
-		outerTable.addColumn("Model No.");
-		outerTable.addColumn("Size");
-		outerTable.addColumn("Cart Qty");
-		outerTable.addColumn("Price");	
-		outerTable.addColumn("Color");
-		outerTable.setColumnCount(6);	
+		cartOuterTable.addColumn("No.");
+		cartOuterTable.addColumn("Model No.");
+		cartOuterTable.addColumn("Size");
+		cartOuterTable.addColumn("Cart Qty");
+		cartOuterTable.addColumn("Price");	
+		cartOuterTable.addColumn("Color");
+		cartOuterTable.setColumnCount(6);	
 		
 
 			
@@ -632,7 +643,7 @@ public class MyPage {
 		
 		colNo = 1; 
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 150;
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		colNo = 2; 
@@ -642,12 +653,12 @@ public class MyPage {
 	
 		colNo = 3; 
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 70;
 		col.setPreferredWidth(width);
 		
 		colNo = 4; 
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		colNo = 5; 
@@ -660,9 +671,9 @@ public class MyPage {
 	
 		cart_Table.setAutoResizeMode (cart_Table.AUTO_RESIZE_OFF); 
 		
-		int i = outerTable.getRowCount();
+		int i = cartOuterTable.getRowCount();
 		for (int j =0; j<i; j++ ) {
-			outerTable.removeRow(0);
+			cartOuterTable.removeRow(0);
 		}
 	}		
 		
@@ -683,7 +694,7 @@ public class MyPage {
 								  Integer.toString(dtoList.get(i).getCartqty()),
 								  Integer.toString(dtoList.get(i).getStoprice()),
 								  dtoList.get(i).getColor()};
-				outerTable.addRow(temp);
+				cartOuterTable.addRow(temp);
 			}
 
 		}	
@@ -694,20 +705,27 @@ public class MyPage {
 	
 	private void tableClick() {
 		int i = cart_Table.getSelectedRow(); 
-		String tkSequence = (String) cart_Table.getValueAt(i, 0);
-		int wkSequence = Integer.parseInt(tkSequence);
+		String tkSequence = (String) cart_Table.getValueAt(i, 1);
+//		int wkSequence = Integer.parseInt(tkSequence);
 	
-		MyCartDao dao = new MyCartDao(wkSequence); 
+		MyCartDao dao = new MyCartDao(tkSequence); 
 		MyCartDto dto = dao.tableClick(); 
 		
 		
 		tfSeqNo.setText(Integer.toString(dto.getCartseqno()));
 		tfModelNo.setText(dto.getModelnum());
 		tfSize.setText(Integer.toString(dto.getStosize()));
-		spQty.setValue(Integer.toString(dto.getCartqty()));
+//		spQty.setValue(Integer.toString(dto.getCartqty()));
+		tfQty.setText(Integer.toString(dto.getCartqty()));
 		tfPrice.setText(Integer.toString(dto.getStoprice()));
 		tfColor.setText(dto.getColor());
 	
+// Image 처리 : fileName이 틀려야 보여주기가 가능.
+		String filePath = Integer.toString(ShareVar.filename);
+//tfFilePath.setText(filePath);	
+		lblImage.setIcon(new ImageIcon(filePath));
+		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+
 	}
 	
 	
@@ -721,26 +739,53 @@ public class MyPage {
 		boolean result = dao.deleteAction(); 
 		
 		if(result == true) {		
-			JOptionPane.showMessageDialog(null, tfSeqNo.getText() + "님의 정보가 삭제되었습니다."); 
+			JOptionPane.showMessageDialog(null, "장바구니에서 삭제되었습니다."); 
 		}else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
 		}
 			
+	}
+	
+	
+	private void checkout() {
+		JOptionPane.showMessageDialog(null, "결제되었습니다.");
+	}
+	
+	
+
+	
+	
+	private JTextField getTfQty() {
+		if (tfQty == null) {
+			tfQty = new JTextField();
+			tfQty.setBounds(80, 358, 130, 26);
+			tfQty.setColumns(10);
 		}
+		return tfQty;
+	}
+	
+	
+	//MY INFO
+	
+	private void myInfoAction() {
+		
+		MyInfoDao dao = new MyInfoDao(ShareVar.loginID); 
+		MyInfoDto myInfoDto = dao.selectList(); 
+		
+		tfId.setText(myInfoDto.getCustid());
+		tfPw.setText(myInfoDto.getCustpw());
+		tfName.setText(myInfoDto.getCustname());
+		tfPhone.setText(myInfoDto.getPhone());
+		tfAddress.setText(myInfoDto.getAddress());
 		
 		
 		
-		
-		
+	}
 	
 	
 	
 	
 	
 	
-	
-	
-		
-		
 	
 }
