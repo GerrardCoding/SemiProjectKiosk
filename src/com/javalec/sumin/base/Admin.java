@@ -1,17 +1,28 @@
 package com.javalec.sumin.base;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import com.javalec.sujin.ProductDao;
+import com.javalec.sujin.ProductDto;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.ListSelectionModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Admin {
 
@@ -20,11 +31,11 @@ public class Admin {
 	private JPanel panel;
 	private JLabel lblNewLabel;
 	private JTextField textField;
-	private JComboBox comboBox;
-	private JComboBox comboBox_1;
-	private JComboBox comboBox_2;
+	private JComboBox cbYear;
+	private JComboBox cbMonth;
+	private JComboBox cbDay;
 	private JScrollPane scrollPane;
-	private JTable table;
+	private JTable innerTable;
 	private JTextField textField_1;
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_1;
@@ -34,7 +45,23 @@ public class Admin {
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_2_1;
 	private JLabel lblNewLabel_2_2;
-
+	private final DefaultTableModel outerTable = new DefaultTableModel();
+	
+	// ----- 날짜 시작 -----------------------------------------
+	// 날짜 배열 선언
+	ArrayList<String> arrYear;
+	ArrayList<String> arrMonth;
+	ArrayList<String> arrDay;
+	
+	// 현재 날짜, 시간 등의 정보 받아오기.
+	Calendar calendar = Calendar.getInstance();
+	
+	// 현재 날짜
+	int toYear = calendar.get(Calendar.YEAR);
+	int toMonth = calendar.get(Calendar.MONTH)+1;
+	int toDay = calendar.get(Calendar.DAY_OF_MONTH);
+	// ----- 날짜 끝 -----------------------------------------
+	
 	/**
 	 * Launch the application.
 	 */
@@ -63,6 +90,13 @@ public class Admin {
 	 */
 	private void initialize() {
 		frmAdmin = new JFrame();
+		frmAdmin.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				tableInit();
+				searchAction();
+			}
+		});
 		frmAdmin.setTitle("Admin");
 		frmAdmin.setBounds(100, 100, 574, 711);
 		frmAdmin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,9 +118,9 @@ public class Admin {
 			panel.setLayout(null);
 			panel.add(getLblNewLabel());
 			panel.add(getTextField());
-			panel.add(getComboBox());
-			panel.add(getComboBox_1());
-			panel.add(getComboBox_2());
+			panel.add(getCbYear());
+			panel.add(getCbMonth());
+			panel.add(getCbDay());
 			panel.add(getScrollPane());
 			panel.add(getTextField_1());
 			panel.add(getBtnNewButton());
@@ -111,43 +145,65 @@ public class Admin {
 		}
 		return textField;
 	}
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setBounds(41, 28, 77, 27);
-			comboBox.setModel(new DefaultComboBoxModel(new String[] {"년도"}));
+	private JComboBox getCbYear() {
+		if (cbYear == null) {
+			// 년도
+			arrYear = new ArrayList<String>();
+			
+			for (int i = toYear +10; i>=toYear-10; i--) {
+				arrYear.add(String.valueOf(i));
+			}
+			
+			cbYear = new JComboBox<String>(arrYear.toArray(new String[arrYear.size()]));
+			cbYear.setBounds(41, 28, 77, 27);
+			cbYear.setSelectedItem(String.valueOf(toYear));
 		}
-		return comboBox;
+		return cbYear;
 	}
-	private JComboBox getComboBox_1() {
-		if (comboBox_1 == null) {
-			comboBox_1 = new JComboBox();
-			comboBox_1.setBounds(119, 28, 77, 27);
-			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"월"}));
+	private JComboBox getCbMonth() {
+		if (cbMonth == null) {
+			// 월
+			arrMonth = new ArrayList<String>();
+			
+			for (int i=1; i <=12; i++) {
+				arrMonth.add(addZeroString(i));
+			}
+			cbMonth = new JComboBox<String>(arrMonth.toArray(new String[arrMonth.size()]));
+			cbMonth.setBounds(119, 28, 77, 27);
+			String mcom = toMonth >= 10?String.valueOf(toMonth):"0"+toMonth;
+			cbMonth.setSelectedItem(mcom);
 		}
-		return comboBox_1;
+		return cbMonth;
 	}
-	private JComboBox getComboBox_2() {
-		if (comboBox_2 == null) {
-			comboBox_2 = new JComboBox();
-			comboBox_2.setBounds(199, 28, 77, 27);
-			comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"일"}));
+	private JComboBox getCbDay() {
+		if (cbDay == null) {
+			// 일    
+			arrDay = new ArrayList<String>();
+			for(int i = 1; i <= 31; i++){
+				arrDay.add(addZeroString(i));
+			}
+			cbDay = new JComboBox<String>(arrDay.toArray(new String[arrDay.size()]));
+			cbDay.setBounds(199, 28, 77, 27);
+			String dcom = toDay >= 10?String.valueOf(toDay):"0"+toDay;
+			cbDay.setSelectedItem(dcom);
 		}
-		return comboBox_2;
+		return cbDay;
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setBounds(17, 62, 512, 442);
-			scrollPane.setViewportView(getTable());
+			scrollPane.setViewportView(getInnerTable());
 		}
 		return scrollPane;
 	}
-	private JTable getTable() {
-		if (table == null) {
-			table = new JTable();
+	private JTable getInnerTable() {
+		if (innerTable == null) {
+			innerTable = new JTable();
+			innerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			innerTable.setModel(outerTable);
 		}
-		return table;
+		return innerTable;
 	}
 	private JTextField getTextField_1() {
 		if (textField_1 == null) {
@@ -217,4 +273,104 @@ public class Admin {
 		}
 		return lblNewLabel_2_2;
 	}
+	
+	
+	// ---- Method -----
+	// 한자리 숫자 앞에 + 0 예) 7일 -> 07일  
+	private String addZeroString(int k){
+		String value=Integer.toString(k);
+		if(value.length()==1) {
+			value="0"+value;
+		}
+		return value;
+	}
+	
+	private void tableInit() {
+		// Table Column 명 정하기.
+		outerTable.addColumn("모델번호");
+		outerTable.addColumn("브랜드");
+		outerTable.addColumn("모델명");
+		outerTable.addColumn("색상");
+		outerTable.addColumn("사이즈");
+		outerTable.addColumn("재고량");
+		outerTable.addColumn("가격");
+		outerTable.setColumnCount(7);
+		
+		// 모델번호
+		int colNo = 0;
+		TableColumn col = innerTable.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		// 브랜드
+		colNo = 1;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+
+		
+		// 모델명
+		colNo = 2;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 200;
+		col.setPreferredWidth(width);
+		
+		
+		// 색상
+		colNo = 3;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		// 사이즈
+		colNo = 4;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		
+		// 재고량
+		colNo = 5;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		
+		// 가격
+		colNo = 6;
+		col = innerTable.getColumnModel().getColumn(colNo);
+		width = 150;
+		col.setPreferredWidth(width);
+		
+		
+		// 테이블 내용 지우기.
+		int i = outerTable.getRowCount();
+		for(int j=0; j<i; j++) {
+			outerTable.removeRow(0);
+		}
+		
+		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
+	}
+	
+	private void searchAction() {
+		ProductDao dao = new ProductDao();
+		ArrayList<ProductDto> dtoList = dao.selectList();
+		
+		int listCount = dtoList.size();
+		
+		for(int i=0; i<listCount; i++) {
+			String modelnum;
+			String brand;
+			String modelname;
+			String color;
+			int stosize;
+			int stoqty;
+			int stoprice;
+			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
+			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
+			String tmpPrice = Integer.toString(dtoList.get(i).getStoprice()); 
+			String[] qTxt = {dtoList.get(i).getModelnum(), dtoList.get(i).getBrand(), dtoList.get(i).getModelname(), dtoList.get(i).getColor(), tmpSize, tmpQty, tmpPrice};
+			outerTable.addRow(qTxt);
+		}
+	}	// End of searchAction()
 }

@@ -93,8 +93,39 @@ public class ProductDao {
 		
 		return dtoList;
 	}
-	
-	
+	// 오늘 매출 불러오기.
+	public ArrayList<ProductDto> selectTodayList(){
+		ArrayList<ProductDto> dtoList = new ArrayList<ProductDto>();
+		String whereDefault = "SELECT modelnum, brand, modelname, color, stosize, stoqty, stoprice FROM store";
+		String where = "WHERE ";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			ResultSet rs = stmt_mysql.executeQuery(whereDefault);
+			while(rs.next()) {	
+				String wMdelnum = rs.getString(1);
+				String wBrand = rs.getString(2);
+				String wModelname = rs.getString(3);
+				String wColor = rs.getString(4);
+				int wStosize = rs.getInt(5);
+				int wStoqty = rs.getInt(6);
+				int wStoprice = rs.getInt(7);
+				
+				ProductDto productDto = new ProductDto(wMdelnum, wBrand, wModelname, wColor, wStosize, wStoqty, wStoprice);
+				dtoList.add(productDto);
+				
+			}
+			conn_mysql.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return dtoList;
+	}
 	// Table을 Click 하였을 경우
 	public ProductDto tableClick() {
 		ProductDto dto = null;
