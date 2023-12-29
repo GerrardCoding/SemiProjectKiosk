@@ -9,6 +9,10 @@ import java.awt.event.WindowAdapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.sound.midi.Sequence;
@@ -89,15 +93,12 @@ public class MyPage {
 	private JButton btnCheckout;
 	private JLabel lblImage;
 	private JButton btnNewButton;
-	
-	
-	//--Table--
-	
+
+	// --Table--
+
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private final DefaultTableModel cartOuterTable = new DefaultTableModel();
 	private JTextField tfQty;
-	
-
 
 	/**
 	 * Launch the application.
@@ -127,50 +128,64 @@ public class MyPage {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {			@Override
+		frame.getContentPane().setBackground(new Color(25, 25, 25));
+		frame.setBackground(new Color(255, 255, 255));
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowActivated(WindowEvent e) {
-			myInfoAction();
+				myInfoAction();
 			}
-});
+		});
 		frame.setTitle("마이페이지");
-		frame.setBounds(100, 100, 470, 540);
+		frame.setBounds(100, 100, 739, 594);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(getTabbedPane_1());
 	}
+
 	private JTabbedPane getTabbedPane_1() {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-			tabbedPane.setBounds(0, 0, 466, 517);
-			tabbedPane.setBackground(Color.WHITE);
-			tabbedPane.addTab("Account Info", new ImageIcon("/Users/tj/Downloads/icons8-테스트-계정-parakeet-line/icons8-테스트-계정-30.png"), getAccountInfo(), null);
-			tabbedPane.addTab("My Orders", new ImageIcon("/Users/tj/Downloads/icons8-bookmark-sf-regular/icons8-bookmark-30.png"), getOrders(), null);
-			tabbedPane.addTab("My Cart", new ImageIcon("/Users/tj/Downloads/icons8-쇼핑-카트-32.png"), getCart(), null);
+			tabbedPane.setBounds(0, 0, 740, 564);
+			tabbedPane.setBackground(new Color(255, 255, 255));
+			tabbedPane.addTab("Account Info",
+					new ImageIcon("/Users/tj/Downloads/icons8-테스트-계정-parakeet-line/icons8-테스트-계정-30.png"),
+					getAccountInfo(), null);
+			tabbedPane.setForegroundAt(0, new Color(255, 146, 0));
+			tabbedPane.addTab("My Orders",
+					new ImageIcon("/Users/tj/Downloads/icons8-bookmark-sf-regular/icons8-bookmark-30.png"), getOrders(),
+					null);
+			tabbedPane.setForegroundAt(1, new Color(255, 146, 0));
+			tabbedPane.addTab("My Cart", new ImageIcon("/Users/tj/Downloads/icons8-쇼핑-카트-32.png"), getCart(),
+					null);
+			tabbedPane.setForegroundAt(2, new Color(255, 146, 0));
 			tabbedPane.addChangeListener(new ChangeListener() {
-				
+
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					// TODO Auto-generated method stub
 					int selectedIndex = tabbedPane.getSelectedIndex();
-					if(selectedIndex==0) {
+					if (selectedIndex == 0) {
 						myInfoAction();
-					}else if(selectedIndex==1) {
-						orderTableInit();	
+					} else if (selectedIndex == 1) {
+						orderTableInit();
 						orderSearchAction();
-					}else if(selectedIndex==2) {
+					} else if (selectedIndex == 2) {
 						cartTableInit();
 						cartSearchAction();
-						
-						
+
 					}
 				}
 			});
 		}
 		return tabbedPane;
 	}
+
 	private JPanel getAccountInfo() {
 		if (accountInfo == null) {
 			accountInfo = new JPanel();
+			accountInfo.setForeground(new Color(255, 255, 255));
+			accountInfo.setBackground(new Color(25, 25, 25));
 			accountInfo.setLayout(null);
 			accountInfo.add(getLblNewLabel());
 			accountInfo.add(getLblId());
@@ -189,9 +204,12 @@ public class MyPage {
 		}
 		return accountInfo;
 	}
+
 	private JPanel getOrders() {
 		if (orders == null) {
 			orders = new JPanel();
+			orders.setForeground(new Color(0, 0, 0));
+			orders.setBackground(new Color(0, 0, 0));
 			orders.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -205,9 +223,12 @@ public class MyPage {
 		}
 		return orders;
 	}
+
 	private JPanel getCart() {
 		if (cart == null) {
 			cart = new JPanel();
+			cart.setForeground(new Color(255, 255, 255));
+			cart.setBackground(new Color(0, 0, 0));
 			cart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -236,142 +257,192 @@ public class MyPage {
 		}
 		return cart;
 	}
+
 	private JLabel getLblNewLabel() {
 		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("Welcome Back, Kim !");
-			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-			lblNewLabel.setBounds(116, 29, 179, 16);
+			lblNewLabel = new JLabel("Welcome Back!");
+			lblNewLabel.setForeground(new Color(254, 255, 255));
+			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+			lblNewLabel.setBounds(277, 33, 179, 16);
 		}
 		return lblNewLabel;
 	}
+
 	private JLabel getLblId() {
 		if (lblId == null) {
 			lblId = new JLabel("ID: ");
-			lblId.setBounds(80, 96, 61, 16);
+			lblId.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblId.setForeground(new Color(254, 255, 255));
+			lblId.setBounds(244, 94, 40, 16);
 		}
 		return lblId;
 	}
+
 	private JTextField getTfId() {
 		if (tfId == null) {
 			tfId = new JTextField();
-			tfId.setBounds(146, 91, 111, 26);
+			tfId.setEnabled(false);
+			tfId.setBounds(296, 90, 111, 26);
 			tfId.setColumns(10);
 		}
 		return tfId;
 	}
+
 	private JLabel getLblPw() {
 		if (lblPw == null) {
 			lblPw = new JLabel("PW:");
-			lblPw.setBounds(80, 144, 61, 16);
+			lblPw.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblPw.setForeground(new Color(254, 255, 255));
+			lblPw.setBounds(244, 142, 40, 16);
 		}
 		return lblPw;
 	}
+
 	private JTextField getTfPw() {
 		if (tfPw == null) {
 			tfPw = new JTextField();
 			tfPw.setColumns(10);
-			tfPw.setBounds(146, 139, 111, 26);
+			tfPw.setBounds(296, 138, 111, 26);
 		}
 		return tfPw;
 	}
+
 	private JLabel getLblName() {
 		if (lblName == null) {
 			lblName = new JLabel("이름:");
-			lblName.setBounds(80, 188, 61, 16);
+			lblName.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblName.setForeground(new Color(254, 255, 255));
+			lblName.setBounds(244, 186, 40, 16);
 		}
 		return lblName;
 	}
+
 	private JTextField getTfName() {
 		if (tfName == null) {
 			tfName = new JTextField();
 			tfName.setColumns(10);
-			tfName.setBounds(146, 183, 111, 26);
+			tfName.setBounds(296, 182, 111, 26);
 		}
 		return tfName;
 	}
+
 	private JLabel getLblPhone() {
 		if (lblPhone == null) {
 			lblPhone = new JLabel("전화번호:");
-			lblPhone.setBounds(80, 241, 61, 16);
+			lblPhone.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblPhone.setForeground(new Color(254, 255, 255));
+			lblPhone.setBounds(230, 240, 61, 16);
 		}
 		return lblPhone;
 	}
+
 	private JTextField getTfPhone() {
 		if (tfPhone == null) {
 			tfPhone = new JTextField();
 			tfPhone.setColumns(10);
-			tfPhone.setBounds(146, 236, 149, 26);
+			tfPhone.setBounds(296, 235, 149, 26);
 		}
 		return tfPhone;
 	}
+
 	private JLabel getLblAddress() {
 		if (lblAddress == null) {
 			lblAddress = new JLabel("주소:");
-			lblAddress.setBounds(80, 295, 61, 16);
+			lblAddress.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+			lblAddress.setForeground(new Color(254, 255, 255));
+			lblAddress.setBounds(244, 293, 40, 16);
 		}
 		return lblAddress;
 	}
+
 	private JTextField getTfAddress() {
 		if (tfAddress == null) {
 			tfAddress = new JTextField();
 			tfAddress.setColumns(10);
-			tfAddress.setBounds(146, 290, 197, 26);
+			tfAddress.setBounds(296, 289, 149, 26);
 		}
 		return tfAddress;
 	}
+
 	private JButton getBtnBack() {
 		if (btnBack == null) {
 			btnBack = new JButton("돌아가기");
+			btnBack.setForeground(new Color(0, 0, 0));
 			btnBack.setIcon(null);
-			btnBack.setBounds(34, 371, 111, 29);
+			btnBack.setBounds(173, 375, 111, 29);
 		}
 		return btnBack;
 	}
+
 	private JButton getBtnEdit() {
 		if (btnEdit == null) {
 			btnEdit = new JButton("수정하기");
-			btnEdit.setBounds(154, 371, 117, 29);
+			btnEdit.setForeground(new Color(0, 0, 0));
+			btnEdit.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					updateAction();
+					myInfoAction();
+
+				}
+			});
+			btnEdit.setBounds(293, 375, 117, 29);
 		}
 		return btnEdit;
 	}
+
 	private JButton getBtnDeactivate() {
 		if (btnDeactivate == null) {
 			btnDeactivate = new JButton("회원탈퇴");
-			btnDeactivate.setBounds(271, 371, 117, 29);
+			btnDeactivate.setForeground(new Color(0, 0, 0));
+			btnDeactivate.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					deactivate();
+				}
+			});
+			btnDeactivate.setBounds(410, 375, 117, 29);
 		}
 		return btnDeactivate;
 	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(6, 19, 433, 380);
+			scrollPane.setBounds(6, 14, 708, 435);
 			scrollPane.setViewportView(getOrder_Table());
 		}
 		return scrollPane;
 	}
+
 	private JTable getOrder_Table() {
 		if (order_Table == null) {
 			order_Table = new JTable();
+			order_Table.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				}
+			});
 			order_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			order_Table.setModel(outerTable);
 		}
 		return order_Table;
 	}
+
 	private JScrollPane getScrollPane_1() {
 		if (scrollPane_1 == null) {
 			scrollPane_1 = new JScrollPane();
-			scrollPane_1.setBounds(6, 6, 433, 175);
+			scrollPane_1.setBounds(6, 6, 707, 175);
 			scrollPane_1.setViewportView(getCart_Table());
 		}
 		return scrollPane_1;
 	}
+
 	private JTable getCart_Table() {
 		if (cart_Table == null) {
 			cart_Table = new JTable();
 			cart_Table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if (e.getButton()==1) {
+					if (e.getButton() == 1) {
 						tableClick();
 					}
 				}
@@ -381,103 +452,129 @@ public class MyPage {
 		}
 		return cart_Table;
 	}
+
 	private JLabel getLblNewLabel_1() {
 		if (lblNewLabel_1 == null) {
 			lblNewLabel_1 = new JLabel("상품번호:");
-			lblNewLabel_1.setBounds(16, 198, 61, 16);
+			lblNewLabel_1.setForeground(new Color(255, 255, 255));
+			lblNewLabel_1.setBounds(16, 222, 61, 16);
 		}
 		return lblNewLabel_1;
 	}
+
 	private JTextField getTfSeqNo() {
 		if (tfSeqNo == null) {
 			tfSeqNo = new JTextField();
+			tfSeqNo.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfSeqNo.setEditable(false);
-			tfSeqNo.setBounds(80, 193, 130, 26);
+			tfSeqNo.setBounds(80, 217, 90, 26);
 			tfSeqNo.setColumns(10);
 		}
 		return tfSeqNo;
 	}
+
 	private JLabel getLbl() {
 		if (lbl == null) {
 			lbl = new JLabel("제품ID:");
-			lbl.setBounds(16, 297, 61, 16);
+			lbl.setForeground(new Color(255, 255, 255));
+			lbl.setBounds(16, 321, 61, 16);
 		}
 		return lbl;
 	}
+
 	private JTextField getTfModelNo() {
 		if (tfModelNo == null) {
 			tfModelNo = new JTextField();
+			tfModelNo.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfModelNo.setEditable(false);
 			tfModelNo.setColumns(10);
-			tfModelNo.setBounds(80, 292, 130, 26);
+			tfModelNo.setBounds(80, 316, 90, 26);
 		}
 		return tfModelNo;
 	}
+
 	private JLabel getLblPrice() {
 		if (lblPrice == null) {
 			lblPrice = new JLabel("금액:");
-			lblPrice.setBounds(16, 231, 61, 16);
+			lblPrice.setForeground(new Color(255, 255, 255));
+			lblPrice.setBounds(16, 255, 61, 16);
 		}
 		return lblPrice;
 	}
+
 	private JTextField getTfPrice() {
 		if (tfPrice == null) {
 			tfPrice = new JTextField();
+			tfPrice.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfPrice.setEditable(false);
 			tfPrice.setColumns(10);
-			tfPrice.setBounds(80, 226, 130, 26);
+			tfPrice.setBounds(80, 250, 90, 26);
 		}
 		return tfPrice;
 	}
+
 	private JLabel getLblSize() {
 		if (lblSize == null) {
 			lblSize = new JLabel("사이즈:");
-			lblSize.setBounds(16, 330, 61, 16);
+			lblSize.setForeground(new Color(255, 255, 255));
+			lblSize.setBounds(16, 354, 61, 16);
 		}
 		return lblSize;
 	}
+
 	private JTextField getTfSize() {
 		if (tfSize == null) {
 			tfSize = new JTextField();
+			tfSize.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfSize.setEditable(false);
 			tfSize.setColumns(10);
-			tfSize.setBounds(80, 325, 83, 26);
+			tfSize.setBounds(80, 349, 90, 26);
 		}
 		return tfSize;
 	}
+
 	private JLabel getLblColor() {
 		if (lblColor == null) {
 			lblColor = new JLabel("색상:");
-			lblColor.setBounds(16, 264, 61, 16);
+			lblColor.setForeground(new Color(255, 255, 255));
+			lblColor.setBounds(16, 288, 61, 16);
 		}
 		return lblColor;
 	}
+
 	private JTextField getTfColor() {
 		if (tfColor == null) {
 			tfColor = new JTextField();
+			tfColor.setHorizontalAlignment(SwingConstants.TRAILING);
 			tfColor.setEditable(false);
 			tfColor.setColumns(10);
-			tfColor.setBounds(80, 259, 83, 26);
+			tfColor.setBounds(80, 283, 90, 26);
 		}
 		return tfColor;
 	}
+
 	private JLabel getLblQty() {
 		if (lblQty == null) {
 			lblQty = new JLabel("수량:");
-			lblQty.setBounds(16, 363, 61, 16);
+			lblQty.setForeground(new Color(255, 255, 255));
+			lblQty.setBounds(16, 387, 61, 16);
 		}
 		return lblQty;
 	}
+
 	private JButton getBtnNewButton_1() {
 		if (btnNewButton_1 == null) {
 			btnNewButton_1 = new JButton("돌아가기");
-			btnNewButton_1.setBounds(53, 423, 117, 29);
+			btnNewButton_1.setForeground(new Color(0, 0, 0));
+			btnNewButton_1.setBounds(182, 460, 117, 29);
 		}
 		return btnNewButton_1;
 	}
+
 	private JButton getBtnEmptyCart() {
 		if (btnEmptyCart == null) {
 			btnEmptyCart = new JButton("장바구니에서 삭제");
+			btnEmptyCart.setForeground(new Color(0, 0, 0));
 			btnEmptyCart.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					deleteAction();
@@ -485,307 +582,341 @@ public class MyPage {
 					cartSearchAction();
 				}
 			});
-			btnEmptyCart.setBounds(170, 423, 117, 29);
+			btnEmptyCart.setBounds(299, 460, 117, 29);
 		}
 		return btnEmptyCart;
 	}
+
 	private JButton getBtnCheckout() {
 		if (btnCheckout == null) {
 			btnCheckout = new JButton("결제하기");
+			btnCheckout.setForeground(new Color(0, 0, 0));
 			btnCheckout.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					checkout();
-					
+					clearColumn();
+
 				}
 			});
-			btnCheckout.setBounds(287, 423, 117, 29);
+			btnCheckout.setBounds(416, 460, 117, 29);
 		}
 		return btnCheckout;
 	}
+
 	private JLabel getLblImage() {
 		if (lblImage == null) {
 			lblImage = new JLabel("");
 			lblImage.setHorizontalAlignment(SwingConstants.CENTER);
-			lblImage.setBounds(208, 193, 231, 186);
+			lblImage.setBounds(182, 193, 531, 243);
 		}
 		return lblImage;
 	}
+
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("돌아가기");
-			btnNewButton.setBounds(171, 411, 117, 29);
+			btnNewButton.setForeground(new Color(0, 0, 0));
+			btnNewButton.setBounds(299, 473, 117, 29);
 		}
 		return btnNewButton;
 	}
-	
-	//------FUNCTIONS-------
-	
-	//MY ORDERS TABLE 초기화 시키기
-	
-	private void orderTableInit() {
-	//System.out.println("hello");
-	//Table Column 명 정하기
-	outerTable.addColumn("No.");
-	outerTable.addColumn("Model No.");
-	outerTable.addColumn("Size");
-	outerTable.addColumn("Qty");
-	outerTable.addColumn("Order Date");
-	outerTable.setColumnCount(5);	
-	
+	// ------FUNCTIONS-------
 
+	// MY ORDERS TABLE 초기화 시키기
+
+	private void orderTableInit() {
+		// System.out.println("hello");
+		// Table Column 명 정하기
+		outerTable.addColumn("Order No.");
+		outerTable.addColumn("Cust ID");
+		outerTable.addColumn("Model No");
+		outerTable.addColumn("Order Qty");
+		outerTable.addColumn("Order Price");
+		outerTable.addColumn("Order Date");
+		outerTable.setColumnCount(6);
+
+		// Table Column 크기 정하기
+		int colNo = 0;
+		TableColumn col = order_Table.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+
+		colNo = 1;
+		col = order_Table.getColumnModel().getColumn(colNo);
+		width = 200;
+		col.setPreferredWidth(width);
+
+		colNo = 2;
+		col = order_Table.getColumnModel().getColumn(colNo);
+		width = 150;
+		col.setPreferredWidth(width);
+
+		colNo = 3;
+		col = order_Table.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+
+		colNo = 4;
+		col = order_Table.getColumnModel().getColumn(colNo);
+		width = 300;
+		col.setPreferredWidth(width);
 		
-	//Table Column 크기 정하기 
-	int colNo = 0; 
-	TableColumn col = order_Table.getColumnModel().getColumn(colNo);
-	int width = 50;
-	col.setPreferredWidth(width);
-	
-	
-	
-	colNo = 1; 
-	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 100;
-	col.setPreferredWidth(width);
-	
-	
-	colNo = 2; 
-	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 50;
-	col.setPreferredWidth(width);
-	
-	
-	colNo = 3; 
-	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 50;
-	col.setPreferredWidth(width);
-	
-	colNo = 4; 
-	col = order_Table.getColumnModel().getColumn(colNo);
-	width = 200;
-	col.setPreferredWidth(width);
-	
-	
-	
-	order_Table.setAutoResizeMode (order_Table.AUTO_RESIZE_OFF); 
-	
-	int i = outerTable.getRowCount();
-	for (int j =0; j<i; j++ ) {
-		outerTable.removeRow(0);
+		colNo = 5;
+		col = order_Table.getColumnModel().getColumn(colNo);
+		width = 300;
+		col.setPreferredWidth(width);
+
+		order_Table.setAutoResizeMode(order_Table.AUTO_RESIZE_OFF);
+
+		int i = outerTable.getRowCount();
+		for (int j = 0; j < i; j++) {
+			outerTable.removeRow(0);
+		}
 	}
-}	
-		
-	//Orders 검색
-	
+
+	// Orders 검색
+
 	private void orderSearchAction() {
 		MyOrdersDao myPageDao = new MyOrdersDao();
 		ArrayList<MyOrdersDto> dtoList = myPageDao.selectList();
-		
+
 		int listCount = dtoList.size();
-		
-		for (int i=0; i<listCount; i++) {
-			
-			String [] temp = {Integer.toString(dtoList.get(i).getStgseqno()),
-							  dtoList.get(i).getStomodelnum(),
-							  Integer.toString(dtoList.get(i).getStgsize()),
-							  Integer.toString(dtoList.get(i).getStgqty()),
-							  dtoList.get(i).getStgdate(),  
-							  };
+
+		for (int i = 0; i < listCount; i++) {
+
+			String[] temp = { Integer.toString(dtoList.get(i).getPurnum()), 
+							dtoList.get(i).getCustid(),
+							dtoList.get(i).getStomodelnum(),
+							Integer.toString(dtoList.get(i).getPurqty()), 
+							Integer.toString(dtoList.get(i).getPurprice()),
+							dtoList.get(i).getPurdate(), };
 			outerTable.addRow(temp);
 		}
-		// Table Column별 정렬하기.
-				// Table Column(Cell) 가운데 정렬
-				DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-				center.setHorizontalAlignment(SwingConstants.CENTER);
-				
-				TableColumnModel tcm = order_Table.getColumnModel();
-				
-				// 특정 Column(Cell) 가운데 정렬
-				tcm.getColumn(0).setCellRenderer(center);
-				tcm.getColumn(1).setCellRenderer(center);
-				tcm.getColumn(2).setCellRenderer(center);
-				tcm.getColumn(3).setCellRenderer(center);
-				tcm.getColumn(4).setCellRenderer(center);
-				
-				
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	
-	
-	//MY CART TABLE 초기화 시키기
-		
+	}
+
+	// MY CART TABLE 초기화 시키기
+
 	private void cartTableInit() {
-		
-		//Table Column 명 정하기
+
+		// Table Column 명 정하기
 		cartOuterTable.addColumn("No.");
 		cartOuterTable.addColumn("Model No.");
 		cartOuterTable.addColumn("Size");
 		cartOuterTable.addColumn("Cart Qty");
-		cartOuterTable.addColumn("Price");	
+		cartOuterTable.addColumn("Price");
 		cartOuterTable.addColumn("Color");
-		cartOuterTable.setColumnCount(6);	
-		
+		cartOuterTable.setColumnCount(6);
 
-			
-		//Table Column 크기 정하기 
-		int colNo = 0; 
+		// Table Column 크기 정하기
+		int colNo = 0;
 		TableColumn col = cart_Table.getColumnModel().getColumn(colNo);
-		int width = 50;
+		int width = 150;
 		col.setPreferredWidth(width);
-		
-		colNo = 1; 
+
+		colNo = 1;
+		col = cart_Table.getColumnModel().getColumn(colNo);
+		width = 90;
+		col.setPreferredWidth(width);
+
+		colNo = 2;
 		col = cart_Table.getColumnModel().getColumn(colNo);
 		width = 100;
 		col.setPreferredWidth(width);
-		
-		colNo = 2; 
+
+		colNo = 3;
+		col = cart_Table.getColumnModel().getColumn(colNo);
+		width = 170;
+		col.setPreferredWidth(width);
+
+		colNo = 4;
+		col = cart_Table.getColumnModel().getColumn(colNo);
+		width = 150;
+		col.setPreferredWidth(width);
+
+		colNo = 5;
 		col = cart_Table.getColumnModel().getColumn(colNo);
 		width = 50;
 		col.setPreferredWidth(width);
-	
-		colNo = 3; 
-		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 70;
-		col.setPreferredWidth(width);
-		
-		colNo = 4; 
-		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
-		col.setPreferredWidth(width);
-		
-		colNo = 5; 
-		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 50;
-		col.setPreferredWidth(width);
-		
-		
-			
-	
-		cart_Table.setAutoResizeMode (cart_Table.AUTO_RESIZE_OFF); 
-		
+
+		cart_Table.setAutoResizeMode(cart_Table.AUTO_RESIZE_OFF);
+
 		int i = cartOuterTable.getRowCount();
-		for (int j =0; j<i; j++ ) {
+		for (int j = 0; j < i; j++) {
 			cartOuterTable.removeRow(0);
 		}
-	}		
-		
-		
-	//Cart 검색
-	
-		private void cartSearchAction() {
-			MyCartDao myCartDao = new MyCartDao();
-			ArrayList<MyCartDto> dtoList = myCartDao.selectList();
-			
-			int listCount = dtoList.size();
-			
-			for (int i=0; i<listCount; i++) {
-				
-				String [] temp = {Integer.toString(dtoList.get(i).getCartseqno()),
-								  dtoList.get(i).getModelnum(),
-								  Integer.toString(dtoList.get(i).getStosize()),
-								  Integer.toString(dtoList.get(i).getCartqty()),
-								  Integer.toString(dtoList.get(i).getStoprice()),
-								  dtoList.get(i).getColor()};
-				cartOuterTable.addRow(temp);
-			}
+	}
 
-		}	
-		
-	
-		
-	//Cart table 에서 Row 를 Click 했을 경우
-	
+	// Cart 검색
+
+	private void cartSearchAction() {
+		MyCartDao myCartDao = new MyCartDao();
+		ArrayList<MyCartDto> dtoList = myCartDao.selectList();
+
+		int listCount = dtoList.size();
+
+		for (int i = 0; i < listCount; i++) {
+
+			String[] temp = { Integer.toString(dtoList.get(i).getCartseqno()), dtoList.get(i).getModelnum(),
+					Integer.toString(dtoList.get(i).getStosize()), Integer.toString(dtoList.get(i).getCartqty()),
+					Integer.toString(dtoList.get(i).getStoprice()), dtoList.get(i).getColor() };
+			cartOuterTable.addRow(temp);
+		}
+
+	}
+
+	// Cart table 에서 Row 를 Click 했을 경우
+
 	private void tableClick() {
-		int i = cart_Table.getSelectedRow(); 
+		int i = cart_Table.getSelectedRow();
 		String tkSequence = (String) cart_Table.getValueAt(i, 1);
-//		int wkSequence = Integer.parseInt(tkSequence);
-	
-		MyCartDao dao = new MyCartDao(tkSequence); 
-		MyCartDto dto = dao.tableClick(); 
-		
-		
+
+		MyCartDao dao = new MyCartDao(tkSequence);
+		MyCartDto dto = dao.tableClick();
+
 		tfSeqNo.setText(Integer.toString(dto.getCartseqno()));
 		tfModelNo.setText(dto.getModelnum());
 		tfSize.setText(Integer.toString(dto.getStosize()));
-//		spQty.setValue(Integer.toString(dto.getCartqty()));
 		tfQty.setText(Integer.toString(dto.getCartqty()));
 		tfPrice.setText(Integer.toString(dto.getStoprice()));
 		tfColor.setText(dto.getColor());
-	
-// Image 처리 : fileName이 틀려야 보여주기가 가능.
+
+		// Image 처리 : fileName이 틀려야 보여주기가 가능.
 		String filePath = Integer.toString(ShareVar.filename);
-//tfFilePath.setText(filePath);	
+		// tfFilePath.setText(filePath);
 		lblImage.setIcon(new ImageIcon(filePath));
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 
 	}
-	
-	
-	//Cart 에서 삭제할 경우 
-	
-	
+
+	// Cart 에서 삭제할 경우
+
 	private void deleteAction() {
 		int cartseqno = Integer.parseInt(tfSeqNo.getText());
-		
+
 		MyCartDao dao = new MyCartDao(cartseqno);
-		boolean result = dao.deleteAction(); 
-		
-		if(result == true) {		
-			JOptionPane.showMessageDialog(null, "장바구니에서 삭제되었습니다."); 
-		}else {
+		boolean result = dao.deleteAction();
+
+		if (result == true) {
+			JOptionPane.showMessageDialog(null, "장바구니에서 삭제되었습니다.");
+		} else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
 		}
-			
-	}
-	
-	
-	private void checkout() {
-		JOptionPane.showMessageDialog(null, "결제되었습니다.");
-	}
-	
-	
 
+	}
+
+	// 결
+	private void checkout() {
+
+		int cartseqno = Integer.parseInt(tfSeqNo.getText());
+		
+		// cart
+		MyCartDao dao = new MyCartDao(cartseqno);
+		
+		boolean result = dao.checkout();
+
+		if (result == true) {
+			JOptionPane.showMessageDialog(null, "결제되었습니다.");
+//			dao.stoDao(qty,modelnum);
+			
+//			dao.moveAction();
+			
+			
+			cartTableInit();
+			cartSearchAction();
+		}
+
+	}
+
+//	private void moveAction() {//장바구니에서 구매 버튼을 눌렀을 때
+		
+		//x-productprice
+		//cbSelectedQty.getSelectedItem().toString() - 몇개 구입하려는 수량
+		
+//		int qty = Integer.parseInt(tfQty.getText());
+	//	int x = Integer.parseInt(input);
 	
-	
+//		MyCartDao dao = new MyCartDao(qty);
+//		MyCartDao dao = new MyCartDao(Integer.parseInt(tfSelectedProductSeqNo.getText()),ShareVar.userID,x,Integer.parseInt(cbSelectedQty.getSelectedItem().toString))
+//		boolean result = dao.moveAction();
+//		
+//		if(result == true) {
+//		dao = new MyCartDao(Integer.parseInt(tfSelectedProductSeqNo.getText()));
+//		dao.updateAction(); //save에서 삭제
+//		dao = new MyCartDao(Integer.parseInt(tfSelectedProductSeqNo.getText()),
+//							Integer.parseInt(tfSelectedProductQty.getText()),
+//							Integer.parseInt(cbSelectedQty.getSelectedItem().toSTring())))
+//	}
+
 	private JTextField getTfQty() {
 		if (tfQty == null) {
 			tfQty = new JTextField();
-			tfQty.setBounds(80, 358, 130, 26);
+			tfQty.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfQty.setBounds(80, 382, 90, 26);
 			tfQty.setColumns(10);
 		}
 		return tfQty;
 	}
-	
-	
-	//MY INFO
-	
+
+	// MY INFO
+
 	private void myInfoAction() {
-		
-		MyInfoDao dao = new MyInfoDao(ShareVar.loginID); 
-		MyInfoDto myInfoDto = dao.selectList(); 
-		
+
+		MyInfoDao dao = new MyInfoDao(ShareVar.loginID);
+		MyInfoDto myInfoDto = dao.selectList();
+
 		tfId.setText(myInfoDto.getCustid());
 		tfPw.setText(myInfoDto.getCustpw());
 		tfName.setText(myInfoDto.getCustname());
 		tfPhone.setText(myInfoDto.getPhone());
 		tfAddress.setText(myInfoDto.getAddress());
-		
-		
-		
+
 	}
-	
-	
-	
-	
-	
-	
-	
+
+	// MYINFO 에서 수정할 경우
+
+	private void updateAction() {
+		String custid = ShareVar.loginID;
+		String custpw = tfPw.getText().trim();
+		String custname = tfName.getText().trim();
+		String phone = tfPhone.getText().trim();
+		String address = tfAddress.getText().trim();
+
+		MyInfoDao dao = new MyInfoDao(custid, custpw, custname, phone, address);
+		boolean result = dao.updateAction();
+
+		if (result == true) {
+			JOptionPane.showMessageDialog(null, tfName.getText() + "님의 정보가 수정되었습니다.");
+		} else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
+		}
+
+	}
+
+	// 회원탈퇴 경우
+
+	private void deactivate() {
+		String custid = ShareVar.loginID;
+
+		MyInfoDao dao = new MyInfoDao(custid);
+		boolean result = dao.deactivate();
+
+		if (result == true) {
+			JOptionPane.showMessageDialog(null, ShareVar.loginID + "님의 정보가 삭제되었습니다.");
+		} else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
+		}
+
+	}
+
+	private void clearColumn() {
+		tfSeqNo.setText("");
+		tfModelNo.setText("");
+		tfPrice.setText("");
+		tfSize.setText("");
+		tfColor.setText("");
+		tfQty.setText("");
+		lblImage.setIcon(null);
+
+	}
 }

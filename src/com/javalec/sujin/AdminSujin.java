@@ -682,7 +682,7 @@ public class AdminSujin {
 		}
 		
 	}
-	
+	 
 	
 	// 컬럼 내용 지우기.
 	private void clearColumn() {

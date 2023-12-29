@@ -64,7 +64,7 @@ public class Sign extends JDialog {
 	public Sign() {
 		getContentPane().setBackground(new Color(7, 7, 7));
 		setTitle("회원가입");
-		setBounds(100, 100, 502, 514);
+		setBounds(500, 250, 510, 520);
 		getContentPane().setLayout(null);
 		getContentPane().add(getLblNewLabel());
 		getContentPane().add(getLblNewLabel_1());

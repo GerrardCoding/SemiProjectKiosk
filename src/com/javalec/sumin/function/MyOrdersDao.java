@@ -16,13 +16,12 @@ public class MyOrdersDao {
 	private final String id_mysql = ShareVar.dbUser;
 	private final String pw_mysql = ShareVar.dbPass;
 	
-	
-	int stgseqno;
+	int purnum;
+	String custid;
 	String stomodelnum;
-	int stgsize;
-	int stgqty;
-	String stgdate; 
-
+	int purqty;
+	int purprice;
+	String purdate;
 	
 	
 	
@@ -33,16 +32,17 @@ public class MyOrdersDao {
 
 
 	//Constructor
-	
-	public MyOrdersDao(int stgseqno, String stomodelnum, int stgsize, int stgqty, String stgdate) {
+
+	public MyOrdersDao(int purnum, String custid, String stomodelnum, int purqty, int purprice, String purdate) {
 		super();
-		this.stgseqno = stgseqno;
+		this.purnum = purnum;
+		this.custid = custid;
 		this.stomodelnum = stomodelnum;
-		this.stgsize = stgsize;
-		this.stgqty = stgqty;
-		this.stgdate = stgdate;
-		
+		this.purqty = purqty;
+		this.purprice = purprice;
+		this.purdate = purdate;
 	}
+	
 	
 
 	
@@ -51,7 +51,7 @@ public class MyOrdersDao {
 	//검색 결과를 Table 로 보내자 
 		public ArrayList<MyOrdersDto> selectList() {
 			ArrayList<MyOrdersDto> dtoList = new ArrayList<MyOrdersDto>(); 
-			String whereDefault = "select stgseqno, stomodelnum, stgsize, stgqty, stgdate from orders";
+			String whereDefault = "select purnum, custid, stomodelnum, purqty, purprice, purdate from purchase";
 			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
@@ -62,13 +62,14 @@ public class MyOrdersDao {
 				
 				
 				while(rs.next()) {
-					int stgseqno = rs.getInt(1);
-					String stomodelnum = rs.getString(2);
-					int stgsize = rs.getInt(3);
-					int stgqty = rs.getInt(4);
-					String stgdate = rs.getString(5);
+					int purnum = rs.getInt(1);
+					String custid = rs.getString(2);
+					String stomodelnum = rs.getString(3);
+					int purqty = rs.getInt(4);
+					int purprice = rs.getInt(5);
+					String purdate = rs.getString(6);
 					
-					MyOrdersDto myPageDto =  new MyOrdersDto(stgseqno, stomodelnum, stgsize, stgqty, stgdate);
+					MyOrdersDto myPageDto =  new MyOrdersDto(purnum, custid, stomodelnum, purqty, purprice, purdate);
 					dtoList.add(myPageDto); 
 							
 				}
@@ -83,10 +84,11 @@ public class MyOrdersDao {
 			
 			
 		}
-	
+
+
+
 
 	
-	//고객 정보를 보내자 
 		
 		
 	

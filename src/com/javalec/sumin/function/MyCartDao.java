@@ -133,7 +133,7 @@ public class MyCartDao {
 					int stoprice = rs.getInt(5); 
 					String color = rs.getString(6);
 					
-					// File  그림 파일을 하나만들어준다.
+				// File  그림 파일을 하나만들어준다.
 					ShareVar.filename = ShareVar.filename +1 ;
 					File file = new File(Integer.toString(ShareVar.filename));
 					FileOutputStream output = new FileOutputStream(file);
@@ -193,6 +193,68 @@ public class MyCartDao {
 		
 		
 		
+		
+		//삭제할 경우 
+		
+		public boolean checkout() {
+			PreparedStatement ps = null;
+			
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				Statement stmt_mysql = conn_mysql.createStatement(); 
+				
+				String A = "delete from cart ";
+				String B = " where cartseqno = ?";
+				
+//				moveAction();
+				
+				ps = conn_mysql.prepareStatement(A+B);
+				ps.setInt(1, cartseqno);
+				ps.executeUpdate(); 
+				
+				conn_mysql.close();
+				
+				
+				
+			}catch(Exception e) {
+				return false; 
+			}
+			
+			return true; 
+			
+		}
+//		
+//		public boolean moveAction() {
+//			PreparedStatement ps = null;
+//			
+//			try {
+//				Class.forName("com.mysql.cj.jdbc.Driver");
+//				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+//				Statement stmt_mysql = conn_mysql.createStatement(); 
+//				
+//				String A = "update store set stoqty = " ;
+//				String B = " where modelnum = ?";
+//					
+//				
+//				ps = conn_mysql.prepareStatement(A+B);
+//				ps.setString(1, qty);
+//				ps.setString(2, modelnum);
+//				ps.executeUpdate();
+//				
+////				moveAction();
+//				
+//				conn_mysql.close();
+//				
+//				
+//				
+//			}catch(Exception e) {
+//				return false; 
+//			}
+//			
+//			return true; 
+//		}
+//		
 		
 		
 		
