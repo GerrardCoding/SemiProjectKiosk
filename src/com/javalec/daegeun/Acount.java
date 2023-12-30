@@ -39,6 +39,9 @@ public class Acount extends JDialog {
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JLabel lblLogout;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
 
 	/**
 	 * Launch the application.
@@ -72,38 +75,41 @@ public class Acount extends JDialog {
 		contentPanel.add(getBtnSearch());
 		contentPanel.add(getScrollPane());
 		contentPanel.add(getLblLogout());
+		contentPanel.add(getBtnNewButton());
+		contentPanel.add(getBtnNewButton_1());
+		contentPanel.add(getBtnNewButton_2());
 	}
 	private JRadioButton getRdbSelect() {
 		if (rdbSelect == null) {
-			rdbSelect = new JRadioButton("회원 정보 조회");
-			rdbSelect.setFont(new Font("굴림", Font.BOLD, 12));
+			rdbSelect = new JRadioButton("회원 조회");
+			rdbSelect.setFont(new Font("굴림", Font.BOLD, 20));
 			rdbSelect.setForeground(new Color(255, 255, 255));
 			rdbSelect.setBackground(new Color(119, 108, 106));
 			rdbSelect.setSelected(true);
 			buttonGroup.add(rdbSelect);
-			rdbSelect.setBounds(33, 32, 115, 23);
+			rdbSelect.setBounds(100, 88, 140, 23);
 		}
 		return rdbSelect;
 	}
 	private JRadioButton getRdbUpdate() {
 		if (rdbUpdate == null) {
-			rdbUpdate = new JRadioButton("회원 정보 수정");
-			rdbUpdate.setFont(new Font("굴림", Font.BOLD, 12));
+			rdbUpdate = new JRadioButton("회원 수정");
+			rdbUpdate.setFont(new Font("굴림", Font.BOLD, 20));
 			rdbUpdate.setForeground(new Color(255, 255, 255));
 			rdbUpdate.setBackground(new Color(119, 108, 106));
 			buttonGroup.add(rdbUpdate);
-			rdbUpdate.setBounds(232, 32, 115, 23);
+			rdbUpdate.setBounds(278, 88, 149, 23);
 		}
 		return rdbUpdate;
 	}
 	private JRadioButton getRdbDelete() {
 		if (rdbDelete == null) {
-			rdbDelete = new JRadioButton("회원 정보 삭제");
-			rdbDelete.setFont(new Font("굴림", Font.BOLD, 12));
+			rdbDelete = new JRadioButton("회원 삭제");
+			rdbDelete.setFont(new Font("굴림", Font.BOLD, 20));
 			rdbDelete.setForeground(new Color(255, 255, 255));
 			rdbDelete.setBackground(new Color(119, 108, 106));
 			buttonGroup.add(rdbDelete);
-			rdbDelete.setBounds(433, 32, 115, 23);
+			rdbDelete.setBounds(441, 88, 149, 23);
 		}
 		return rdbDelete;
 	}
@@ -111,14 +117,14 @@ public class Acount extends JDialog {
 		if (cbBox == null) {
 			cbBox = new JComboBox();
 			cbBox.setModel(new DefaultComboBoxModel(new String[] {"ID", "이름", "주소", "상태"}));
-			cbBox.setBounds(33, 74, 115, 41);
+			cbBox.setBounds(34, 130, 115, 41);
 		}
 		return cbBox;
 	}
 	private JTextField getTfSearch() {
 		if (tfSearch == null) {
 			tfSearch = new JTextField();
-			tfSearch.setBounds(158, 74, 337, 41);
+			tfSearch.setBounds(159, 130, 337, 41);
 			tfSearch.setColumns(10);
 		}
 		return tfSearch;
@@ -126,14 +132,14 @@ public class Acount extends JDialog {
 	private JButton getBtnSearch() {
 		if (btnSearch == null) {
 			btnSearch = new JButton("검색");
-			btnSearch.setBounds(505, 74, 149, 41);
+			btnSearch.setBounds(506, 130, 149, 41);
 		}
 		return btnSearch;
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(33, 123, 621, 351);
+			scrollPane.setBounds(34, 179, 621, 351);
 			scrollPane.setViewportView(getTable());
 		}
 		return scrollPane;
@@ -156,11 +162,26 @@ public class Acount extends JDialog {
 			// 변경된 이미지를 다시 ImageIcon에 담아준다
 			ImageIcon changeIcon = new ImageIcon(changeImg);
 	    	lblLogout = new JLabel(changeIcon); // 변경된 이미지로 JLabel 생성
+	    	
+	    	// 바뀌는 이미지 담아주기
+	    	ImageIcon icon2 = new ImageIcon(Acount.class.getResource("/com/javalec/images/logout2.png"));
+			Image img2 = icon2.getImage();
+			Image changeImg2 = img2.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			ImageIcon changeIcon2 = new ImageIcon(changeImg2);
+	    	
 	    	lblLogout.setToolTipText("로그아웃");
 	    	lblLogout.addMouseListener(new MouseAdapter() {
 	    		@Override
 	    		public void mouseClicked(MouseEvent e) {
 	    			homeScreen();
+	    		}
+	    		@Override
+	    		public void mouseEntered(MouseEvent e) {
+	    			lblLogout.setIcon(changeIcon2);
+	    		}
+	    		@Override
+	    		public void mouseExited(MouseEvent e) {
+	    			lblLogout.setIcon(changeIcon);
 	    		}
 	    	});
 	    	lblLogout.setBounds(617, 10, 50, 50);
@@ -175,8 +196,27 @@ public class Acount extends JDialog {
 		window.main(null);
 		this.setVisible(false);
 	}
+	private JButton getBtnNewButton() {
+		if (btnNewButton == null) {
+			btnNewButton = new JButton("회원");
+			btnNewButton.setBounds(127, 23, 85, 39);
+		}
+		return btnNewButton;
+	}
 	
 	
-	
-	
+	private JButton getBtnNewButton_1() {
+		if (btnNewButton_1 == null) {
+			btnNewButton_1 = new JButton("회원");
+			btnNewButton_1.setBounds(293, 23, 85, 39);
+		}
+		return btnNewButton_1;
+	}
+	private JButton getBtnNewButton_2() {
+		if (btnNewButton_2 == null) {
+			btnNewButton_2 = new JButton("회원");
+			btnNewButton_2.setBounds(456, 23, 85, 39);
+		}
+		return btnNewButton_2;
+	}
 } // End
