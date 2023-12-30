@@ -479,7 +479,7 @@ public class AdminSujin {
 		default : break;
 		}
 		ProductDao dao = new ProductDao();
-		ArrayList<ProductDto> dtoList = dao.selectList(selectColumn, tfSelect.getText());
+		ArrayList<ProductDto> dtoList = dao.selectList(selectColumn, tfSelect.getText().trim());
 		
 		int listCount = dtoList.size();
 		
