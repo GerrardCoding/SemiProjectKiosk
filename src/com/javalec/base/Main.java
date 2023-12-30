@@ -2,6 +2,7 @@ package com.javalec.base;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -22,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.javalec.common.ShareVar;
+import com.javalec.daegeun.Acount;
 import com.javalec.daegeun.AdminDao;
 import com.javalec.daegeun.Sign;
 import com.javalec.daegeun.SignLoginDao;
@@ -41,6 +43,14 @@ public class Main {
 	private JPasswordField pfPassword;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JCheckBox chbShow;
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel_3_1;
+	private JLabel lblNewLabel_3_1_1;
+	private JLabel lblNewLabel_3_1_1_1;
+	private JLabel lblNewLabel_3_1_1_1_1;
+	private JLabel lblNewLabel_3_1_1_1_1_1;
 
 	/**
 	 * Launch the application.
@@ -72,7 +82,7 @@ public class Main {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(7, 7, 7));
 		frame.setTitle("로그인");
-		frame.setBounds(500, 250 , 500, 500);
+		frame.setBounds(500, 100 , 485, 612);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(getLblLogo());
@@ -85,11 +95,20 @@ public class Main {
 		frame.getContentPane().add(getTfId());
 		frame.getContentPane().add(getPfPassword());
 		frame.getContentPane().add(getChbShow());
+		frame.getContentPane().add(getLblNewLabel());
+		frame.getContentPane().add(getLblNewLabel_2());
+		frame.getContentPane().add(getLblNewLabel_3());
+		frame.getContentPane().add(getLblNewLabel_3_1());
+		frame.getContentPane().add(getLblNewLabel_3_1_1());
+		frame.getContentPane().add(getLblNewLabel_3_1_1_1());
+		frame.getContentPane().add(getLblNewLabel_3_1_1_1_1());
+		frame.getContentPane().add(getLblNewLabel_3_1_1_1_1_1());
 	}
 
 	private JLabel getLblLogo() {
 		if (lblLogo == null) {
 			lblLogo = new JLabel("");
+			lblLogo.setToolTipText("메인화면으로 이동합니다");
 			lblLogo.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -112,7 +131,7 @@ public class Main {
 					signAction();
 				}
 			});
-			btnSign.setBounds(68, 364, 124, 53);
+			btnSign.setBounds(67, 333, 124, 53);
 		}
 		return btnSign;
 	}
@@ -178,7 +197,7 @@ public class Main {
 					loginAction();
 				}
 			});
-			btnLogin.setBounds(275, 364, 124, 53);
+			btnLogin.setBounds(274, 333, 124, 53);
 		}
 		return btnLogin;
 	}
@@ -230,7 +249,7 @@ public class Main {
 			});
 			chbShow.setBackground(new Color(7, 7, 7));
 			chbShow.setForeground(new Color(255, 255, 255));
-			chbShow.setBounds(163, 304, 107, 23);
+			chbShow.setBounds(162, 292, 107, 23);
 		}
 		return chbShow;
 	}
@@ -278,7 +297,7 @@ public class Main {
 					ps.main(null);
 				} else {
 					// 로그인 실패 시
-					JOptionPane.showMessageDialog(null, "고객님의 정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");
+					JOptionPane.showMessageDialog(null, "정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");
 					tfId.setText("");
 					pfPassword.setText("");
 					tfId.requestFocus();
@@ -292,10 +311,12 @@ public class Main {
 				if (result) {
 					// 로그인 성공시
 					ShareVar.loginID = id1; 
-					homeScreen();
+					frame.setVisible(false);
+					Acount acount = new Acount();
+					acount.setVisible(true);
 				} else {
 					// 로그인 실패 시
-					JOptionPane.showMessageDialog(null, "고객님의 정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");
+					JOptionPane.showMessageDialog(null, "정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");
 					tfId.setText("");
 					pfPassword.setText("");
 					tfId.requestFocus();
@@ -360,5 +381,70 @@ public class Main {
 			btnSign.setVisible(false);
 		}
 	}
-
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("CS CENTER");
+			lblNewLabel.setFont(new Font("굴림", Font.BOLD, 12));
+			lblNewLabel.setForeground(new Color(192, 192, 192));
+			lblNewLabel.setBounds(32, 402, 76, 23);
+		}
+		return lblNewLabel;
+	}
+	private JLabel getLblNewLabel_2() {
+		if (lblNewLabel_2 == null) {
+			lblNewLabel_2 = new JLabel("1234-5678");
+			lblNewLabel_2.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+			lblNewLabel_2.setForeground(Color.LIGHT_GRAY);
+			lblNewLabel_2.setBounds(32, 426, 110, 23);
+		}
+		return lblNewLabel_2;
+	}
+	private JLabel getLblNewLabel_3() {
+		if (lblNewLabel_3 == null) {
+			lblNewLabel_3 = new JLabel("(주)유신사    |");
+			lblNewLabel_3.setForeground(new Color(192, 192, 192));
+			lblNewLabel_3.setBounds(32, 459, 83, 23);
+		}
+		return lblNewLabel_3;
+	}
+	private JLabel getLblNewLabel_3_1() {
+		if (lblNewLabel_3_1 == null) {
+			lblNewLabel_3_1 = new JLabel("대표 : 3조   |");
+			lblNewLabel_3_1.setForeground(Color.LIGHT_GRAY);
+			lblNewLabel_3_1.setBounds(124, 459, 76, 23);
+		}
+		return lblNewLabel_3_1;
+	}
+	private JLabel getLblNewLabel_3_1_1() {
+		if (lblNewLabel_3_1_1 == null) {
+			lblNewLabel_3_1_1 = new JLabel("이메일 : usinsa@usinsa.com");
+			lblNewLabel_3_1_1.setForeground(Color.LIGHT_GRAY);
+			lblNewLabel_3_1_1.setBounds(210, 459, 174, 23);
+		}
+		return lblNewLabel_3_1_1;
+	}
+	private JLabel getLblNewLabel_3_1_1_1() {
+		if (lblNewLabel_3_1_1_1 == null) {
+			lblNewLabel_3_1_1_1 = new JLabel("주소 : 서울 특별시 강남구 한국빌딩 4층(유신사)");
+			lblNewLabel_3_1_1_1.setForeground(Color.LIGHT_GRAY);
+			lblNewLabel_3_1_1_1.setBounds(32, 480, 269, 23);
+		}
+		return lblNewLabel_3_1_1_1;
+	}
+	private JLabel getLblNewLabel_3_1_1_1_1() {
+		if (lblNewLabel_3_1_1_1_1 == null) {
+			lblNewLabel_3_1_1_1_1 = new JLabel("사업자등록번호 : 1234567890");
+			lblNewLabel_3_1_1_1_1.setForeground(Color.LIGHT_GRAY);
+			lblNewLabel_3_1_1_1_1.setBounds(32, 502, 167, 23);
+		}
+		return lblNewLabel_3_1_1_1_1;
+	}
+	private JLabel getLblNewLabel_3_1_1_1_1_1() {
+		if (lblNewLabel_3_1_1_1_1_1 == null) {
+			lblNewLabel_3_1_1_1_1_1 = new JLabel("copyright. 유신사. all rights reserved. Designed by gerrard");
+			lblNewLabel_3_1_1_1_1_1.setForeground(Color.LIGHT_GRAY);
+			lblNewLabel_3_1_1_1_1_1.setBounds(32, 544, 343, 23);
+		}
+		return lblNewLabel_3_1_1_1_1_1;
+	}
 } // End
