@@ -38,7 +38,6 @@ public class AdminDao {
 		ArrayList<AdminDto> dtoList = new ArrayList<AdminDto>();
 		String whereDefault = "SELECT purnum, custid, stomodelnum, purqty, purprice, purdate FROM purchase";
 		String where = " WHERE purdate = '"+ purdate +"'";
-		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
@@ -64,4 +63,5 @@ public class AdminDao {
 		}
 		return dtoList;
 	}
+	
 }
