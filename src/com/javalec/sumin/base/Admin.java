@@ -439,7 +439,7 @@ public class Admin {
 			// 주문번호
 			int colNo = 0;
 			TableColumn col = innerTable.getColumnModel().getColumn(colNo);
-			int width = 100;
+			int width = 30;
 			col.setPreferredWidth(width);
 			
 			// 고객ID
@@ -452,14 +452,14 @@ public class Admin {
 			// 모델번호
 			colNo = 2;
 			col = innerTable.getColumnModel().getColumn(colNo);
-			width = 200;
+			width = 100;
 			col.setPreferredWidth(width);
 			
 			
 			// 구매수량
 			colNo = 3;
 			col = innerTable.getColumnModel().getColumn(colNo);
-			width = 100;
+			width = 50;
 			col.setPreferredWidth(width);
 			
 			// 가격
@@ -469,10 +469,10 @@ public class Admin {
 			col.setPreferredWidth(width);
 			
 			
-			// 구매
+			// 구매일
 			colNo = 5;
 			col = innerTable.getColumnModel().getColumn(colNo);
-			width = 100;
+			width = 200;
 			col.setPreferredWidth(width);
 			
 			
