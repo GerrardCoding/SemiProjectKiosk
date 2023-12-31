@@ -33,14 +33,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Admin {
 
 	private JFrame frmAdmin;
 	private JTabbedPane tabbedPane;
 	private JPanel tabPurchase;
-	private JLabel lblNewLabel;
-	private JTextField tfTotalPrice;
 	private JComboBox cbYear;
 	private JComboBox cbMonth;
 	private JComboBox cbDay;
@@ -50,7 +50,7 @@ public class Admin {
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_1_1;
-	private JTextField tfBestCustomer;
+	private JTextField tfTotal;
 	private JPanel tabProduct;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_2_1;
@@ -79,6 +79,7 @@ public class Admin {
 	private JButton btnSearchCust;
 	private JScrollPane scrollPane_1;
 	private JTable innerTableCust;
+	private JButton btnPurchaseSearch;
 	// ----- 날짜 끝 -----------------------------------------
 	
 	/**
@@ -154,8 +155,6 @@ public class Admin {
 		if (tabPurchase == null) {
 			tabPurchase = new JPanel();
 			tabPurchase.setLayout(null);
-			tabPurchase.add(getLblNewLabel());
-			tabPurchase.add(getTfTotalPrice());
 			tabPurchase.add(getCbYear());
 			tabPurchase.add(getCbMonth());
 			tabPurchase.add(getCbDay());
@@ -165,26 +164,9 @@ public class Admin {
 			tabPurchase.add(getLblNewLabel_1());
 			tabPurchase.add(getLblNewLabel_1_1());
 			tabPurchase.add(getTextField_2_1());
+			tabPurchase.add(getBtnPurchaseSearch());
 		}
 		return tabPurchase;
-	}
-	private JLabel getLblNewLabel() {
-		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("총 매출:");
-			lblNewLabel.setBounds(326, 28, 61, 16);
-		}
-		return lblNewLabel;
-	}
-	private JTextField getTfTotalPrice() {
-		if (tfTotalPrice == null) {
-			tfTotalPrice = new JTextField();
-			tfTotalPrice.setHorizontalAlignment(SwingConstants.TRAILING);
-			tfTotalPrice.setEnabled(false);
-			tfTotalPrice.setEditable(false);
-			tfTotalPrice.setBounds(399, 23, 130, 26);
-			tfTotalPrice.setColumns(10);
-		}
-		return tfTotalPrice;
 	}
 	private JComboBox getCbYear() {
 		if (cbYear == null) {
@@ -196,19 +178,13 @@ public class Admin {
 			}
 			
 			cbYear = new JComboBox<String>(arrYear.toArray(new String[arrYear.size()]));
-			cbYear.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+//			cbYear.addActionListener(new ActionListener() {
+//				public void actionPerformed(ActionEvent e) {
 //					tableInit();
 //					searchAction();
-				}
-			});
-			cbYear.addPropertyChangeListener(new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent evt) {
-//					tableInit();
-//					searchAction();
-				}
-				
-			});
+//				}
+//			});
+
 			cbYear.setBounds(19, 23, 103, 27);
 			cbYear.setSelectedItem(String.valueOf(toYear));
 		}
@@ -223,18 +199,12 @@ public class Admin {
 				arrMonth.add(addZeroString(i));
 			}
 			cbMonth = new JComboBox<String>(arrMonth.toArray(new String[arrMonth.size()]));
-			cbMonth.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+//			cbMonth.addActionListener(new ActionListener() {
+//				public void actionPerformed(ActionEvent e) {
 //					tableInit();
 //					searchAction();
-				}
-			});
-			cbMonth.addPropertyChangeListener(new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent evt) {
-//					tableInit();
-//					searchAction();
-				}
-			});
+//				}
+//			});
 			cbMonth.setBounds(125, 23, 77, 27);
 			String mcom = toMonth >= 10?String.valueOf(toMonth):"0"+toMonth;
 			cbMonth.setSelectedItem(mcom);
@@ -249,18 +219,12 @@ public class Admin {
 				arrDay.add(addZeroString(i));
 			}
 			cbDay = new JComboBox<String>(arrDay.toArray(new String[arrDay.size()]));
-			cbDay.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+//			cbDay.addActionListener(new ActionListener() {
+//				public void actionPerformed(ActionEvent e) {
 //					tableInit();
 //					searchAction();
-				}
-			});
-			cbDay.addPropertyChangeListener(new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent evt) {
-//					tableInit();
-//					searchAction();
-				}
-			});
+//				}
+//			});
 			cbDay.setBounds(214, 23, 77, 27);
 			String dcom = toDay >= 10?String.valueOf(toDay):"0"+toDay;
 			cbDay.setSelectedItem(dcom);
@@ -295,6 +259,19 @@ public class Admin {
 		}
 		return tfBestSeller;
 	}
+	private JButton getBtnPurchaseSearch() {
+		if (btnPurchaseSearch == null) {
+			btnPurchaseSearch = new JButton("검색");
+			btnPurchaseSearch.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					tableInit();
+					searchAction();
+				}
+			});
+			btnPurchaseSearch.setBounds(315, 25, 97, 23);
+		}
+		return btnPurchaseSearch;
+	}
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("뒤로가기");
@@ -311,21 +288,21 @@ public class Admin {
 	}
 	private JLabel getLblNewLabel_1_1() {
 		if (lblNewLabel_1_1 == null) {
-			lblNewLabel_1_1 = new JLabel("베스트고객:");
+			lblNewLabel_1_1 = new JLabel("총매출 : ");
 			lblNewLabel_1_1.setBounds(285, 521, 61, 16);
 		}
 		return lblNewLabel_1_1;
 	}
 	private JTextField getTextField_2_1() {
-		if (tfBestCustomer == null) {
-			tfBestCustomer = new JTextField();
-			tfBestCustomer.setHorizontalAlignment(SwingConstants.TRAILING);
-			tfBestCustomer.setEnabled(false);
-			tfBestCustomer.setEditable(false);
-			tfBestCustomer.setColumns(10);
-			tfBestCustomer.setBounds(362, 516, 130, 26);
+		if (tfTotal == null) {
+			tfTotal = new JTextField();
+			tfTotal.setHorizontalAlignment(SwingConstants.TRAILING);
+			tfTotal.setEnabled(false);
+			tfTotal.setEditable(false);
+			tfTotal.setColumns(10);
+			tfTotal.setBounds(362, 516, 130, 26);
 		}
-		return tfBestCustomer;
+		return tfTotal;
 	}
 	private JPanel getPanel_1_1() {
 		if (tabProduct == null) {
@@ -380,6 +357,15 @@ public class Admin {
 	private JTextField getTextField_3() {
 		if (tfSearchCust == null) {
 			tfSearchCust = new JTextField();
+			tfSearchCust.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						tableInitCust(); 
+						searchCustAction(); 
+					}
+				}
+			});
 			tfSearchCust.setBounds(152, 26, 200, 21);
 			tfSearchCust.setColumns(10);
 		}
@@ -390,7 +376,8 @@ public class Admin {
 			btnSearchCust = new JButton("검색");
 			btnSearchCust.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					tableInitCust(); 
+					searchCustAction(); 
 				}
 			});
 			btnSearchCust.setBounds(384, 25, 97, 23);
@@ -598,4 +585,5 @@ public class Admin {
 			outerTableCust.addRow(qTxt);
 		}
 	}	// End of searchAction()
+
 }
