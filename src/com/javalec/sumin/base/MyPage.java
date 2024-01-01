@@ -965,6 +965,10 @@ public class MyPage {
 		Product_Search ps = new Product_Search();
 		ps.main(null);
 		
+		System.out.println("수정");
 	}
+	
+
+	
 	
 }
