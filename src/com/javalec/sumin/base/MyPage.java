@@ -3,6 +3,7 @@ package com.javalec.sumin.base;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -41,6 +42,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import com.javalec.common.ShareVar;
+import com.javalec.gwangyeong.Product_Search;
 import com.javalec.sumin.function.MyCartDao;
 import com.javalec.sumin.function.MyCartDto;
 import com.javalec.sumin.function.MyInfoDao;
@@ -99,6 +101,8 @@ public class MyPage {
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private final DefaultTableModel cartOuterTable = new DefaultTableModel();
 	private JTextField tfQty;
+	private JLabel lblLogo;
+	private JLabel lblNewLabel_2;
 
 	/**
 	 * Launch the application.
@@ -201,6 +205,8 @@ public class MyPage {
 			accountInfo.add(getBtnBack());
 			accountInfo.add(getBtnEdit());
 			accountInfo.add(getBtnDeactivate());
+			accountInfo.add(getLblLogo());
+			
 		}
 		return accountInfo;
 	}
@@ -263,7 +269,7 @@ public class MyPage {
 			lblNewLabel = new JLabel("Welcome Back!");
 			lblNewLabel.setForeground(new Color(254, 255, 255));
 			lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-			lblNewLabel.setBounds(277, 33, 179, 16);
+			lblNewLabel.setBounds(276, 99, 179, 16);
 		}
 		return lblNewLabel;
 	}
@@ -273,7 +279,7 @@ public class MyPage {
 			lblId = new JLabel("ID: ");
 			lblId.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 			lblId.setForeground(new Color(254, 255, 255));
-			lblId.setBounds(244, 94, 40, 16);
+			lblId.setBounds(243, 160, 40, 16);
 		}
 		return lblId;
 	}
@@ -282,7 +288,7 @@ public class MyPage {
 		if (tfId == null) {
 			tfId = new JTextField();
 			tfId.setEnabled(false);
-			tfId.setBounds(296, 90, 111, 26);
+			tfId.setBounds(295, 156, 111, 26);
 			tfId.setColumns(10);
 		}
 		return tfId;
@@ -293,7 +299,7 @@ public class MyPage {
 			lblPw = new JLabel("PW:");
 			lblPw.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 			lblPw.setForeground(new Color(254, 255, 255));
-			lblPw.setBounds(244, 142, 40, 16);
+			lblPw.setBounds(243, 208, 40, 16);
 		}
 		return lblPw;
 	}
@@ -302,7 +308,7 @@ public class MyPage {
 		if (tfPw == null) {
 			tfPw = new JTextField();
 			tfPw.setColumns(10);
-			tfPw.setBounds(296, 138, 111, 26);
+			tfPw.setBounds(295, 204, 111, 26);
 		}
 		return tfPw;
 	}
@@ -312,7 +318,7 @@ public class MyPage {
 			lblName = new JLabel("이름:");
 			lblName.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 			lblName.setForeground(new Color(254, 255, 255));
-			lblName.setBounds(244, 186, 40, 16);
+			lblName.setBounds(243, 252, 40, 16);
 		}
 		return lblName;
 	}
@@ -321,7 +327,7 @@ public class MyPage {
 		if (tfName == null) {
 			tfName = new JTextField();
 			tfName.setColumns(10);
-			tfName.setBounds(296, 182, 111, 26);
+			tfName.setBounds(295, 248, 111, 26);
 		}
 		return tfName;
 	}
@@ -331,7 +337,7 @@ public class MyPage {
 			lblPhone = new JLabel("전화번호:");
 			lblPhone.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 			lblPhone.setForeground(new Color(254, 255, 255));
-			lblPhone.setBounds(230, 240, 61, 16);
+			lblPhone.setBounds(229, 306, 61, 16);
 		}
 		return lblPhone;
 	}
@@ -340,7 +346,7 @@ public class MyPage {
 		if (tfPhone == null) {
 			tfPhone = new JTextField();
 			tfPhone.setColumns(10);
-			tfPhone.setBounds(296, 235, 149, 26);
+			tfPhone.setBounds(295, 301, 149, 26);
 		}
 		return tfPhone;
 	}
@@ -350,7 +356,7 @@ public class MyPage {
 			lblAddress = new JLabel("주소:");
 			lblAddress.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 			lblAddress.setForeground(new Color(254, 255, 255));
-			lblAddress.setBounds(244, 293, 40, 16);
+			lblAddress.setBounds(243, 359, 40, 16);
 		}
 		return lblAddress;
 	}
@@ -359,7 +365,7 @@ public class MyPage {
 		if (tfAddress == null) {
 			tfAddress = new JTextField();
 			tfAddress.setColumns(10);
-			tfAddress.setBounds(296, 289, 149, 26);
+			tfAddress.setBounds(295, 355, 149, 26);
 		}
 		return tfAddress;
 	}
@@ -367,9 +373,14 @@ public class MyPage {
 	private JButton getBtnBack() {
 		if (btnBack == null) {
 			btnBack = new JButton("돌아가기");
+			btnBack.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					psAction(); 
+				}
+			});
 			btnBack.setForeground(new Color(0, 0, 0));
 			btnBack.setIcon(null);
-			btnBack.setBounds(173, 375, 111, 29);
+			btnBack.setBounds(172, 441, 111, 29);
 		}
 		return btnBack;
 	}
@@ -385,7 +396,7 @@ public class MyPage {
 
 				}
 			});
-			btnEdit.setBounds(293, 375, 117, 29);
+			btnEdit.setBounds(292, 441, 117, 29);
 		}
 		return btnEdit;
 	}
@@ -399,7 +410,7 @@ public class MyPage {
 					deactivate();
 				}
 			});
-			btnDeactivate.setBounds(410, 375, 117, 29);
+			btnDeactivate.setBounds(415, 441, 117, 29);
 		}
 		return btnDeactivate;
 	}
@@ -565,15 +576,20 @@ public class MyPage {
 	private JButton getBtnNewButton_1() {
 		if (btnNewButton_1 == null) {
 			btnNewButton_1 = new JButton("돌아가기");
+			btnNewButton_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					psAction(); 
+				}
+			});
 			btnNewButton_1.setForeground(new Color(0, 0, 0));
-			btnNewButton_1.setBounds(182, 460, 117, 29);
+			btnNewButton_1.setBounds(155, 460, 117, 29);
 		}
 		return btnNewButton_1;
 	}
 
 	private JButton getBtnEmptyCart() {
 		if (btnEmptyCart == null) {
-			btnEmptyCart = new JButton("장바구니에서 삭제");
+			btnEmptyCart = new JButton("삭제");
 			btnEmptyCart.setForeground(new Color(0, 0, 0));
 			btnEmptyCart.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -598,7 +614,7 @@ public class MyPage {
 
 				}
 			});
-			btnCheckout.setBounds(416, 460, 117, 29);
+			btnCheckout.setBounds(447, 460, 117, 29);
 		}
 		return btnCheckout;
 	}
@@ -615,10 +631,30 @@ public class MyPage {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("돌아가기");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					psAction(); 
+				}
+			});
 			btnNewButton.setForeground(new Color(0, 0, 0));
 			btnNewButton.setBounds(299, 473, 117, 29);
 		}
 		return btnNewButton;
+	}
+	private JLabel getLblLogo() {
+		if (lblLogo == null) {
+			//원래 이미지의 파일을 ICON에 담는다 . 
+			ImageIcon icon = new ImageIcon(MyPage.class.getResource("/com/javalec/images/로고.png"));
+			//img 안에 이미지를 담는다. 
+			Image img = icon.getImage(); 
+			//change the image size
+			Image changeImg = img.getScaledInstance(100, 40, 100);
+			//변경된 이미지를 다시 iMAGE ICON 에 담아준다. 
+			ImageIcon changeIcon = new ImageIcon(changeImg); 
+			lblLogo = new JLabel(changeIcon); 
+			lblLogo.setBounds(12, 10, 157, 62);
+		}
+		return lblLogo;
 	}
 	// ------FUNCTIONS-------
 
@@ -919,4 +955,20 @@ public class MyPage {
 		lblImage.setIcon(null);
 
 	}
+	
+	
+	//My Account 에서 돌아가기 버튼 눌렀을 경우 
+	
+	private void psAction() {
+		
+		frame.setVisible(false);
+		Product_Search ps = new Product_Search();
+		ps.main(null);
+		
+		System.out.println("수정");
+	}
+	
+
+	
+	
 }
