@@ -178,6 +178,33 @@ public class ProductDao {
 		return true;
 	}
 	
+	// 발주기록 테이블에 데이터 삽입.
+	public boolean insertOrderAction() {
+		PreparedStatement ps = null; 
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			//INSERT INTO `usinsa`.`orders` (`stomodelnum`, `stgsize`, `stgqty`, `stgdate`) VALUES ('moncler_1', '240', '5', '2023-12-02');
+			String A = "INSERT INTO orders (stomodelnum, stgsize, stgqty, stgdate";
+			String B = ") VALUES (?,?,?,sysdate())";
+			
+			ps = conn_mysql.prepareStatement(A+B);
+			ps.setString(1, modelnum);
+			ps.setInt(2, stosize);
+			ps.setInt(3, stoqty);
+			ps.executeUpdate();
+			
+			conn_mysql.close();
+			
+		}catch(Exception e) {
+//			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	// 기존상품 업데이트.
 	public boolean updateAction() {
 		PreparedStatement ps = null; 

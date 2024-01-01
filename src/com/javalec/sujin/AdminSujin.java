@@ -8,8 +8,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.javalec.common.ShareVar;
 
@@ -29,6 +31,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -53,6 +56,7 @@ public class AdminSujin {
 	private JTable innerTable;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	DecimalFormat df = new DecimalFormat("###,###,###,###");
 	private JLabel lblNewLabel;
 	private JTextField tfModelnum;
 	private JTextField tfBrand;
@@ -271,7 +275,7 @@ public class AdminSujin {
 	private JTextField getTfModelnum() {
 		if (tfModelnum == null) {
 			tfModelnum = new JTextField();
-			tfModelnum.setBounds(145, 315, 245, 26);
+			tfModelnum.setBounds(145, 315, 150, 26);
 			tfModelnum.setColumns(10);
 		}
 		return tfModelnum;
@@ -280,7 +284,7 @@ public class AdminSujin {
 		if (tfBrand == null) {
 			tfBrand = new JTextField();
 			tfBrand.setColumns(10);
-			tfBrand.setBounds(145, 353, 245, 26);
+			tfBrand.setBounds(145, 353, 150, 26);
 		}
 		return tfBrand;
 	}
@@ -295,7 +299,7 @@ public class AdminSujin {
 		if (tfModelname == null) {
 			tfModelname = new JTextField();
 			tfModelname.setColumns(10);
-			tfModelname.setBounds(145, 391, 245, 26);
+			tfModelname.setBounds(145, 391, 150, 26);
 		}
 		return tfModelname;
 	}
@@ -310,7 +314,7 @@ public class AdminSujin {
 		if (tfColor == null) {
 			tfColor = new JTextField();
 			tfColor.setColumns(10);
-			tfColor.setBounds(145, 429, 245, 26);
+			tfColor.setBounds(145, 429, 150, 26);
 		}
 		return tfColor;
 	}
@@ -332,7 +336,7 @@ public class AdminSujin {
 		if (tfSize == null) {
 			tfSize = new JTextField();
 			tfSize.setColumns(10);
-			tfSize.setBounds(145, 474, 245, 26);
+			tfSize.setBounds(145, 474, 150, 26);
 		}
 		return tfSize;
 	}
@@ -340,7 +344,7 @@ public class AdminSujin {
 		if (tfQty == null) {
 			tfQty = new JTextField();
 			tfQty.setColumns(10);
-			tfQty.setBounds(145, 512, 245, 26);
+			tfQty.setBounds(145, 512, 150, 26);
 		}
 		return tfQty;
 	}
@@ -355,7 +359,7 @@ public class AdminSujin {
 		if (tfPrice == null) {
 			tfPrice = new JTextField();
 			tfPrice.setColumns(10);
-			tfPrice.setBounds(145, 550, 245, 26);
+			tfPrice.setBounds(145, 550, 150, 26);
 		}
 		return tfPrice;
 	}
@@ -370,7 +374,7 @@ public class AdminSujin {
 		if (lblImage == null) {
 			lblImage = new JLabel("");
 			lblImage.setBackground(Color.GRAY);
-			lblImage.setBounds(429, 307, 555, 269);
+			lblImage.setBounds(429, 307, 555, 280);
 		}
 		return lblImage;
 	}
@@ -491,6 +495,7 @@ public class AdminSujin {
 		case 3 : selectColumn = "stoqty"; 		break;	//"재고갯수" 	stoqty
 		default : break;
 		}
+		
 		ProductDao dao = new ProductDao();
 		ArrayList<ProductDto> dtoList = dao.selectList(selectColumn, tfSelect.getText().trim());
 		
@@ -506,10 +511,35 @@ public class AdminSujin {
 //			int stoprice;
 			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
 			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
-			String tmpPrice = Integer.toString(dtoList.get(i).getStoprice()); 
+			String tmpPrice = df.format(dtoList.get(i).getStoprice()); 
 			String[] qTxt = {dtoList.get(i).getModelnum(), dtoList.get(i).getBrand(), dtoList.get(i).getModelname(), dtoList.get(i).getColor(), tmpSize, tmpQty, tmpPrice};
 			outerTable.addRow(qTxt);
 		}
+		
+		// Table Column별 정렬하기.
+		// Table Column(Cell) 가운데 정렬
+		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+		center.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		TableColumnModel tcm = innerTable.getColumnModel();
+		
+		// 특정 Column(Cell) 가운데 정렬
+		tcm.getColumn(0).setCellRenderer(center);
+		tcm.getColumn(1).setCellRenderer(center);
+		tcm.getColumn(2).setCellRenderer(center);
+		tcm.getColumn(3).setCellRenderer(center);
+		
+		// Table Column(Cell) 우측 정렬
+		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+		right.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		// 특정 Column(Cell) 우측 정렬
+		tcm.getColumn(4).setCellRenderer(right);
+		tcm.getColumn(5).setCellRenderer(right);		
+		tcm.getColumn(6).setCellRenderer(right);
+		
+		
+		
 	}	// End of searchAction()
 	
 	private void screenPartition() {
@@ -542,6 +572,7 @@ public class AdminSujin {
 		}
 		// 새제품 추가.
 		if(rdbtnInsert.isSelected() == true) {
+//			clearColumn();
 			btnOK.setVisible(true);
 			btnImage.setVisible(true);
 			tfModelnum.setEditable(true);
@@ -582,7 +613,7 @@ public class AdminSujin {
 		tfColor.setText(dto.getColor());
 		tfSize.setText(Integer.toString(dto.getStosize()));
 		tfQty.setText(Integer.toString(dto.getStoqty()));
-		tfPrice.setText(Integer.toString(dto.getStoprice()));
+		tfPrice.setText(df.format(dto.getStoprice()));
 		lastQty = dto.getStoqty();
 		// Image 처리 : fileName이 틀려야 보여주기가 가능.
 		String filePath = Integer.toString(ShareVar.filename);
@@ -710,7 +741,7 @@ public class AdminSujin {
 		lblImage.setIcon(null);
 	}
 	
-	// 기존제품 추가.
+	// 새제품 추가.
 	private void insertAction() {
 		String modelnum = tfModelnum.getText().trim();
 		String brand = tfBrand.getText().trim();
@@ -718,7 +749,7 @@ public class AdminSujin {
 		String color = tfColor.getText().trim();
 		int size = Integer.parseInt(tfSize.getText().trim());
 		int qty = Integer.parseInt(tfQty.getText().trim());
-		int price = Integer.parseInt(tfPrice.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim().replace(",", ""));
 		
 		// Image File
 		FileInputStream input = null;
@@ -732,14 +763,15 @@ public class AdminSujin {
 		
 		ProductDao dao = new ProductDao(modelnum, brand, modelname, color, size, qty, price, input);
 		boolean result = dao.insertAction();
+		boolean resultOrder = dao.insertOrderAction();
 		
-		if(result == true) {
+		if(result == true && resultOrder == true) {
 			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 새상품이 "+ tfQty.getText().trim() +"등록 되었습니다.");
 		}else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
 		}
 	}
-	
+	// 기존제품 추가.
 	private void updateAction() {
 		String modelnum = tfModelnum.getText().trim();
 		String brand = tfBrand.getText().trim();
@@ -747,12 +779,15 @@ public class AdminSujin {
 		String color = tfColor.getText().trim();
 		int size = Integer.parseInt(tfSize.getText().trim());
 		int qty = Integer.parseInt(tfQty.getText().trim());
-		int price = Integer.parseInt(tfPrice.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim().replace(",", ""));
 		
 		ProductDao dao = new ProductDao(modelnum,lastQty+qty);
 		boolean result = dao.updateAction();
 		
-		if(result == true) {
+		ProductDao orderDao = new ProductDao(modelnum,qty);
+		boolean resultOrder = orderDao.insertOrderAction();
+		
+		if(result == true && resultOrder == true) {
 			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 "+ tfQty.getText().trim() +"개 추가 되었습니다.");
 		}else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
@@ -768,7 +803,7 @@ public class AdminSujin {
 		if(result == true) {
 			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 삭제 되었습니다.");
 		}else {
-			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+			JOptionPane.showMessageDialog(null, "삭제중 문제가 발생했습니다.");
 		}
 	}
 	
