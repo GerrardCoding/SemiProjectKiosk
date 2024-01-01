@@ -36,13 +36,6 @@ public class MyCartDao {
 
 
 	//Constructor
-	
-	
-	
-	
-
-	
-
 
 	public MyCartDao(int cartseqno, int stoprice, String color, String modelnum, int stosize, int cartqty) {
 		super();
@@ -71,9 +64,11 @@ public class MyCartDao {
 
 	//Method
 	
-	//검색 결과를 Table 로 보내자 
+	
+	
+		//검색 결과를 Table 로 보내자 
 
-	public ArrayList<MyCartDto> selectList() {
+		public ArrayList<MyCartDto> selectList() {
 		ArrayList<MyCartDto> dtoList = new ArrayList<MyCartDto>(); 
 		String where1 = "select c.cartseqno, s.modelnum, s.stosize, c.cartqty, s.stoprice, s.color  from cart c, store s where c.stomodelnum = s.modelnum ";
 		
@@ -107,13 +102,11 @@ public class MyCartDao {
 			e.printStackTrace();
 		}
 		
-		return dtoList; 
-		
-		
+		return dtoList; 				
 	}
 		
 
-	//Table 을 Click 하였을 경우 
+		//Table 을 Click 하였을 경우 
 			
 		public MyCartDto tableClick() {
 			MyCartDto myCartDto = null; 
@@ -152,16 +145,12 @@ public class MyCartDao {
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
-			
-			
-			return myCartDto; 
-			
-			
-			
+		
+			return myCartDto; 						
 		}
 	
 		
-	//삭제할 경우 
+		//삭제할 경우 
 		
 		public boolean deleteAction() {
 			PreparedStatement ps = null;
@@ -187,14 +176,12 @@ public class MyCartDao {
 				return false; 
 			}
 			
-			return true; 
-		
+			return true; 		
 		}
+	
 		
+		//결제할 경우 해당 아이탬 삭제 
 		
-		
-		
-		//삭제할 경우 
 		
 		public boolean checkout() {
 			PreparedStatement ps = null;
@@ -206,15 +193,12 @@ public class MyCartDao {
 				
 				String A = "delete from cart ";
 				String B = " where cartseqno = ?";
-				
-//				moveAction();
-				
+								
 				ps = conn_mysql.prepareStatement(A+B);
 				ps.setInt(1, cartseqno);
 				ps.executeUpdate(); 
 				
 				conn_mysql.close();
-				
 				
 				
 			}catch(Exception e) {
@@ -224,38 +208,7 @@ public class MyCartDao {
 			return true; 
 			
 		}
-//		
-//		public boolean moveAction() {
-//			PreparedStatement ps = null;
-//			
-//			try {
-//				Class.forName("com.mysql.cj.jdbc.Driver");
-//				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
-//				Statement stmt_mysql = conn_mysql.createStatement(); 
-//				
-//				String A = "update store set stoqty = " ;
-//				String B = " where modelnum = ?";
-//					
-//				
-//				ps = conn_mysql.prepareStatement(A+B);
-//				ps.setString(1, qty);
-//				ps.setString(2, modelnum);
-//				ps.executeUpdate();
-//				
-////				moveAction();
-//				
-//				conn_mysql.close();
-//				
-//				
-//				
-//			}catch(Exception e) {
-//				return false; 
-//			}
-//			
-//			return true; 
-//		}
-//		
-		
+
 		
 		
 		

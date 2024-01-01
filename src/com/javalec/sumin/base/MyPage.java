@@ -41,6 +41,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.javalec.base.Main;
 import com.javalec.common.ShareVar;
 import com.javalec.gwangyeong.Product_Search;
 import com.javalec.sumin.function.MyCartDao;
@@ -103,6 +104,7 @@ public class MyPage {
 	private JTextField tfQty;
 	private JLabel lblLogo;
 	private JLabel lblNewLabel_2;
+	private JLabel lblLogout;
 
 	/**
 	 * Launch the application.
@@ -206,6 +208,7 @@ public class MyPage {
 			accountInfo.add(getBtnEdit());
 			accountInfo.add(getBtnDeactivate());
 			accountInfo.add(getLblLogo());
+			accountInfo.add(getLblLogout());
 			
 		}
 		return accountInfo;
@@ -611,6 +614,7 @@ public class MyPage {
 				public void actionPerformed(ActionEvent e) {
 					checkout();
 					clearColumn();
+					insertAction(); 
 
 				}
 			});
@@ -656,6 +660,22 @@ public class MyPage {
 		}
 		return lblLogo;
 	}
+	private JLabel getLblLogout() {
+		if (lblLogout == null) {
+			lblLogout = new JLabel("");
+			lblLogout.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					logoutAction(); 
+				}
+			});
+			lblLogout.setBackground(new Color(0, 0, 0));
+			lblLogout.setForeground(new Color(0, 0, 0));
+			lblLogout.setIcon(new ImageIcon(MyPage.class.getResource("/com/javalec/images/logout3.png")));
+			lblLogout.setBounds(645, 10, 48, 69);
+		}
+		return lblLogout;
+	}
 	// ------FUNCTIONS-------
 
 	// MY ORDERS TABLE 초기화 시키기
@@ -679,27 +699,27 @@ public class MyPage {
 
 		colNo = 1;
 		col = order_Table.getColumnModel().getColumn(colNo);
-		width = 200;
+		width = 135;
 		col.setPreferredWidth(width);
 
 		colNo = 2;
 		col = order_Table.getColumnModel().getColumn(colNo);
-		width = 150;
+		width = 110;
 		col.setPreferredWidth(width);
 
 		colNo = 3;
 		col = order_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 90;
 		col.setPreferredWidth(width);
 
 		colNo = 4;
 		col = order_Table.getColumnModel().getColumn(colNo);
-		width = 300;
+		width = 150;
 		col.setPreferredWidth(width);
 		
 		colNo = 5;
 		col = order_Table.getColumnModel().getColumn(colNo);
-		width = 300;
+		width = 120;
 		col.setPreferredWidth(width);
 
 		order_Table.setAutoResizeMode(order_Table.AUTO_RESIZE_OFF);
@@ -709,6 +729,7 @@ public class MyPage {
 			outerTable.removeRow(0);
 		}
 	}
+	
 
 	// Orders 검색
 
@@ -747,22 +768,22 @@ public class MyPage {
 		// Table Column 크기 정하기
 		int colNo = 0;
 		TableColumn col = cart_Table.getColumnModel().getColumn(colNo);
-		int width = 150;
+		int width = 100;
 		col.setPreferredWidth(width);
 
 		colNo = 1;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 90;
+		width = 135;
 		col.setPreferredWidth(width);
 
 		colNo = 2;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 100;
+		width = 110;
 		col.setPreferredWidth(width);
 
 		colNo = 3;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 170;
+		width = 90;
 		col.setPreferredWidth(width);
 
 		colNo = 4;
@@ -772,7 +793,7 @@ public class MyPage {
 
 		colNo = 5;
 		col = cart_Table.getColumnModel().getColumn(colNo);
-		width = 50;
+		width = 120;
 		col.setPreferredWidth(width);
 
 		cart_Table.setAutoResizeMode(cart_Table.AUTO_RESIZE_OFF);
@@ -853,36 +874,14 @@ public class MyPage {
 
 		if (result == true) {
 			JOptionPane.showMessageDialog(null, "결제되었습니다.");
-//			dao.stoDao(qty,modelnum);
-			
-//			dao.moveAction();
-			
+		
 			
 			cartTableInit();
 			cartSearchAction();
+			insertAction(); 
 		}
 
 	}
-
-//	private void moveAction() {//장바구니에서 구매 버튼을 눌렀을 때
-		
-		//x-productprice
-		//cbSelectedQty.getSelectedItem().toString() - 몇개 구입하려는 수량
-		
-//		int qty = Integer.parseInt(tfQty.getText());
-	//	int x = Integer.parseInt(input);
-	
-//		MyCartDao dao = new MyCartDao(qty);
-//		MyCartDao dao = new MyCartDao(Integer.parseInt(tfSelectedProductSeqNo.getText()),ShareVar.userID,x,Integer.parseInt(cbSelectedQty.getSelectedItem().toString))
-//		boolean result = dao.moveAction();
-//		
-//		if(result == true) {
-//		dao = new MyCartDao(Integer.parseInt(tfSelectedProductSeqNo.getText()));
-//		dao.updateAction(); //save에서 삭제
-//		dao = new MyCartDao(Integer.parseInt(tfSelectedProductSeqNo.getText()),
-//							Integer.parseInt(tfSelectedProductQty.getText()),
-//							Integer.parseInt(cbSelectedQty.getSelectedItem().toSTring())))
-//	}
 
 	private JTextField getTfQty() {
 		if (tfQty == null) {
@@ -953,7 +952,6 @@ public class MyPage {
 		tfColor.setText("");
 		tfQty.setText("");
 		lblImage.setIcon(null);
-
 	}
 	
 	
@@ -964,11 +962,45 @@ public class MyPage {
 		frame.setVisible(false);
 		Product_Search ps = new Product_Search();
 		ps.main(null);
-		
-		System.out.println("수정");
+			
 	}
 	
+	//MY INFO 패이지 에서 로그아웃 아이콘을 눌렀을 경우 
+		
+	private void logoutAction() {
+	// 첫 화면으로 돌아가기
+		Main window = new Main();
+		window.main(null);
+		frame.setVisible(false);
 
+	}
 	
 	
-}
+	//MY CART 에서 결제했을 경우 결제한 값이 PURCHASE TABLE (MY ORDER) 로 이동한다
+	
+	private void insertAction() {
+		
+		
+		
+		
+		
+		
+		MyOrdersDao dao = new MyOrdersDao(purnum, custid, stomodelnum, purqty, purprice, purdate);
+		boolean result = dao.insertAction();
+		
+		if(result == true) {
+			JOptionPane.showMessageDialog(null,  "등록되었습니다.");
+		}else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+		}
+		
+		
+		
+		
+	}
+		
+		
+	
+}	
+	
+

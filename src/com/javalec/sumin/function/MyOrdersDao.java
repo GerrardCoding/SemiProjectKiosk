@@ -3,6 +3,7 @@ package com.javalec.sumin.function;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -42,13 +43,15 @@ public class MyOrdersDao {
 		this.purprice = purprice;
 		this.purdate = purdate;
 	}
-	
-	
 
+	
 	
 	//Method 
 	
-	//검색 결과를 Table 로 보내자 
+
+
+
+		//검색 결과를 Table 로 보내자 
 		public ArrayList<MyOrdersDto> selectList() {
 			ArrayList<MyOrdersDto> dtoList = new ArrayList<MyOrdersDto>(); 
 			String whereDefault = "select purnum, custid, stomodelnum, purqty, purprice, purdate from purchase";
@@ -86,7 +89,39 @@ public class MyOrdersDao {
 		}
 
 
-
+		//결제했을 경우 결제한 값이 PURCHASE data 로 이동한다
+		
+		
+		public boolean insertAction() { 
+			PreparedStatement ps = null; 
+			
+			try { 
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				Statement stmt_mysql = conn_mysql.createStatement(); 
+				
+				String A = "insert into purchase purnum, custid, stomodelnum, purqty, purprice, purdate";
+				String B = ") values (?,?,?,?,?,?)";
+				
+				
+				ps = conn_mysql.prepareStatement(A+B); 
+				ps.setInt(1, purnum);
+				ps.setString(2, custid);
+				ps.setString(3, stomodelnum);
+				ps.setInt(4,  purqty);
+				ps.setInt(5,  purprice);	
+				ps.setString(6,  purdate);
+	
+				conn_mysql.close();
+	
+			
+			}catch(Exception e) {
+				e.printStackTrace(); 
+				return false;
+			}
+				return true; 
+		
+		}
 
 	
 		
