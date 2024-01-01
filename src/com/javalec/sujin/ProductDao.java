@@ -146,6 +146,28 @@ public class ProductDao {
 		return dto;
 	}
 	
+	// 모델명이 있는지 체크.
+	public boolean checkModelnum() {
+		String where1 = "SELECT modelnum FROM store";
+		String where2 = " where modelnum = '"+ modelnum + "'";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+			Statement stmt_mysql = conn_mysql.createStatement();
+			
+			ResultSet rs = stmt_mysql.executeQuery(where1+where2);
+			if(rs.next()) {
+				return false;	// 이미 모델번호가 있으면 false.
+			}
+			conn_mysql.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return true;	// 이미 모델번호가 없으면 true.
+	}
+	
 	// 새상품 추가.
 	public boolean insertAction() {
 		PreparedStatement ps = null; 
