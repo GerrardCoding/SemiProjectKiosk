@@ -61,6 +61,7 @@ public class Admin {
 	private JLabel lblNewLabel_2_2;
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private final DefaultTableModel outerTableCust = new DefaultTableModel();
+	DecimalFormat df = new DecimalFormat("###,###,###,###");
 	
 	// ----- 날짜 시작 -----------------------------------------
 	// 날짜 배열 선언
@@ -460,10 +461,6 @@ public class Admin {
 		
 		AdminDao dao = new AdminDao(srhDate);
 		ArrayList<AdminDto> dtoList = dao.selectTodayList();
-		
-		DecimalFormat df = new DecimalFormat("###,###,###,###");
-		
-		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블 셀렌더러를 생성
 		
 		int totPrice = 0;		
 		int listCount = dtoList.size();
