@@ -13,6 +13,36 @@ public class MyCartDto {
 	String color; 
 	FileInputStream file;
 	
+	
+	
+	int purnum;
+	String custid;
+	String stomodelnum;
+	int purqty;
+	int purprice;
+	String purdate;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public MyCartDto(int purnum, String custid, String stomodelnum, int purqty, int purprice, String purdate) {
+		super();
+		this.purnum = purnum;
+		this.custid = custid;
+		this.stomodelnum = stomodelnum;
+		this.purqty = purqty;
+		this.purprice = purprice;
+		this.purdate = purdate;
+	}
+
+
+
+
 	//CONSTRUCTOR
 	public MyCartDto() {
 		// TODO Auto-generated constructor stub
