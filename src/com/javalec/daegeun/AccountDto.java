@@ -1,8 +1,10 @@
 package com.javalec.daegeun;
 
-public class SignLoginDto {
+import com.javalec.common.ShareVar;
 
-	// Filed
+public class AccountDto {
+
+	// Field
 	String custid;
 	String custpw;
 	String custname;
@@ -10,39 +12,31 @@ public class SignLoginDto {
 	String address;
 	String deactivate;
 	
-	public String getDeactivate() {
-		return deactivate;
-	}
-
-	public void setDeactivate(String deactivate) {
-		this.deactivate = deactivate;
-	}
-
 	// Constructor
-	public SignLoginDto() {
-		// TODO Auto-generated constructor stub
+	private void AccouuntDto() {
+		// TODO Auto-generated method stub
+
 	}
 
-	public SignLoginDto(String custid) {
-		super();
-		this.custid = custid;
-	}
-
-	public SignLoginDto(String custid, String custpw) {
-		super();
-		this.custid = custid;
-		this.custpw = custpw;
-	}
-
-	public SignLoginDto(String custid, String custpw, String custname, String phone, String address) {
+	public AccountDto(String custid, String custpw, String custname, String phone, String address, String deactivate) {
 		super();
 		this.custid = custid;
 		this.custpw = custpw;
 		this.custname = custname;
 		this.phone = phone;
 		this.address = address;
+		this.deactivate = deactivate;
 	}
-
+	
+	
+	public AccountDto(String custid, String custname, String phone, String address, String deactivate) {
+		super();
+		this.custid = custid;
+		this.custname = custname;
+		this.phone = phone;
+		this.address = address;
+		this.deactivate = deactivate;
+	}
 
 	// Method
 	public String getCustid() {
@@ -83,6 +77,14 @@ public class SignLoginDto {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getDeactivate() {
+		return deactivate;
+	}
+
+	public void setDeactivate(String deactivate) {
+		this.deactivate = deactivate;
 	}
 	
 	

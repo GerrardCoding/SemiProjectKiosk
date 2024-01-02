@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.javalec.common.ShareVar;
-import com.javalec.daegeun.Acount;
+import com.javalec.daegeun.Account;
 import com.javalec.daegeun.AdminDao;
 import com.javalec.daegeun.Sign;
 import com.javalec.daegeun.SignLoginDao;
@@ -312,8 +312,8 @@ public class Main {
 					// 로그인 성공시
 					ShareVar.loginID = id1; 
 					frame.setVisible(false);
-					Acount acount = new Acount();
-					acount.setVisible(true);
+					Account account = new Account();
+					account.setVisible(true);
 				} else {
 					// 로그인 실패 시
 					JOptionPane.showMessageDialog(null, "정보가 잘못 입력되었습니다. 다시 입력하여 주세요.");

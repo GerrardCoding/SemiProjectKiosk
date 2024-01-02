@@ -22,6 +22,7 @@ public class SignLoginDao {
 	String custname;
 	String phone;
 	String address;
+	String deactivate;
 
 	// Constructor
 	public SignLoginDao() {
