@@ -34,14 +34,13 @@ public class MyOrdersDao {
 
 	//Constructor
 
-	public MyOrdersDao(int purnum, String custid, String stomodelnum, int purqty, int purprice, String purdate) {
+	public MyOrdersDao(int purnum, String custid, String stomodelnum, int purqty, int purprice) {
 		super();
 		this.purnum = purnum;
 		this.custid = custid;
 		this.stomodelnum = stomodelnum;
 		this.purqty = purqty;
 		this.purprice = purprice;
-		this.purdate = purdate;
 	}
 
 	
@@ -88,6 +87,29 @@ public class MyOrdersDao {
 			
 		}
 
+		
+		public int getMaxPurnum() {
+			int maxpurnum = 0;
+			String whereDefault = "SELECT MAX(purnum) FROM purchase";
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
+				Statement stmt_mysql = conn_mysql.createStatement(); 
+				
+				ResultSet rs = stmt_mysql.executeQuery(whereDefault);
+				
+				
+				while(rs.next()) {
+					maxpurnum = rs.getInt(1);
+				}
+				conn_mysql.close();
+				
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return maxpurnum;
+		}
 
 		//결제했을 경우 결제한 값이 PURCHASE data 로 이동한다
 		
@@ -100,8 +122,8 @@ public class MyOrdersDao {
 				Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
 				Statement stmt_mysql = conn_mysql.createStatement(); 
 				
-				String A = "insert into purchase purnum, custid, stomodelnum, purqty, purprice, purdate";
-				String B = ") values (?,?,?,?,?,?)";
+				String A = "insert into purchase (purnum, custid, stomodelnum, purqty, purprice, purdate";
+				String B = ") values (?,?,?,?,?,sysdate())";
 				
 				
 				ps = conn_mysql.prepareStatement(A+B); 
@@ -110,8 +132,8 @@ public class MyOrdersDao {
 				ps.setString(3, stomodelnum);
 				ps.setInt(4,  purqty);
 				ps.setInt(5,  purprice);	
-				ps.setString(6,  purdate);
-	
+				ps.executeUpdate();
+				
 				conn_mysql.close();
 	
 			

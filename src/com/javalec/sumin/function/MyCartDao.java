@@ -182,8 +182,7 @@ public class MyCartDao {
 		
 		//결제할 경우 해당 아이탬 삭제 
 		
-		
-		public boolean checkout() {
+		public boolean deleteCart() {
 			PreparedStatement ps = null;
 			
 			try {
@@ -192,14 +191,11 @@ public class MyCartDao {
 				Statement stmt_mysql = conn_mysql.createStatement(); 
 				
 				String A = "delete from cart ";
-				String B = " where cartseqno = ?";
 								
-				ps = conn_mysql.prepareStatement(A+B);
-				ps.setInt(1, cartseqno);
+				ps = conn_mysql.prepareStatement(A);
 				ps.executeUpdate(); 
 				
 				conn_mysql.close();
-				
 				
 			}catch(Exception e) {
 				return false; 

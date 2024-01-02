@@ -614,8 +614,8 @@ public class MyPage {
 				public void actionPerformed(ActionEvent e) {
 					checkout();
 					clearColumn();
-					insertAction(); 
-
+					cartTableInit();
+					cartSearchAction();
 				}
 			});
 			btnCheckout.setBounds(447, 460, 117, 29);
@@ -861,26 +861,28 @@ public class MyPage {
 		}
 
 	}
-
-	// 결
+	
 	private void checkout() {
-
-		int cartseqno = Integer.parseInt(tfSeqNo.getText());
-		
-		// cart
-		MyCartDao dao = new MyCartDao(cartseqno);
-		
-		boolean result = dao.checkout();
-
-		if (result == true) {
+		if(insertOrder() && deleteCart()) {
 			JOptionPane.showMessageDialog(null, "결제되었습니다.");
-		
-			
-			cartTableInit();
-			cartSearchAction();
-			insertAction(); 
+		}else {
+			JOptionPane.showMessageDialog(null, "결제 중 문제가 발생했습니다.");
 		}
+	}
 
+	// 결제
+	private boolean deleteCart() {
+
+		// cart
+		MyCartDao dao = new MyCartDao();
+		
+		boolean result = dao.deleteCart();	// 카트에 있는 정보 삭제.
+		
+		if ( dao.deleteCart()) {
+			return true;
+		
+		}
+		return false;
 	}
 
 	private JTextField getTfQty() {
@@ -978,29 +980,28 @@ public class MyPage {
 	
 	//MY CART 에서 결제했을 경우 결제한 값이 PURCHASE TABLE (MY ORDER) 로 이동한다
 	
-	private void insertAction() {
+	private boolean insertOrder() {
+		boolean result = false;
+		MyCartDao myCartDao = new MyCartDao();
+		ArrayList<MyCartDto> dtoList = myCartDao.selectList();
 		
-		
-		
-		
-		
-		
-		MyOrdersDao dao = new MyOrdersDao(purnum, custid, stomodelnum, purqty, purprice, purdate);
-		boolean result = dao.insertAction();
-		
-		if(result == true) {
-			JOptionPane.showMessageDialog(null,  "등록되었습니다.");
-		}else {
-			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+		MyOrdersDao maxPurDao = new MyOrdersDao();
+		int maxPurnum = maxPurDao.getMaxPurnum();
+
+		int listCount = dtoList.size();
+		for (int i = 0; i < listCount; i++) {
+
+			String modelnum = dtoList.get(i).getModelnum();
+			int qty = dtoList.get(i).getCartqty();
+			int price = dtoList.get(i).getStoprice();
+			
+			MyOrdersDao dao = new MyOrdersDao(maxPurnum+1, ShareVar.loginID, modelnum, qty, price);
+			result = dao.insertAction();
 		}
 		
-		
-		
-		
+		return result;
 	}
 		
-		
-	
 }	
 	
 

@@ -417,7 +417,221 @@ public class AdminSujin {
 		}
 		return btnOK;
 	}
-	// ---- Function ------
+	// ---------------- Functions --------------------------------------------------------
+	// --------------[[ Action : 기능 Method ]] -----------------------
+	private void searchAction() {
+		int selectIndex = cbSelect.getSelectedIndex();
+		String selectColumn = "";
+		switch (selectIndex) {	
+		case 0 : selectColumn = "modelname";	break;	//"상품명" 	modelname
+		case 1 : selectColumn = "stosize"; 		break;	//"사이즈" 	stosize
+		case 2 : selectColumn = "color"; 		break;	//"색상"		color
+		case 3 : selectColumn = "stoqty"; 		break;	//"재고갯수" 	stoqty
+		default : break;
+		}
+		
+		ProductDao dao = new ProductDao();
+		ArrayList<ProductDto> dtoList = dao.selectList(selectColumn, tfSelect.getText().trim());
+		
+		int listCount = dtoList.size();
+		
+		for(int i=0; i<listCount; i++) {
+//			String modelnum;
+//			String brand;
+//			String modelname;
+//			String color;
+//			int stosize;
+//			int stoqty;
+//			int stoprice;
+			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
+			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
+			String tmpPrice = df.format(dtoList.get(i).getStoprice()); 
+			String[] qTxt = {dtoList.get(i).getModelnum(), dtoList.get(i).getBrand(), dtoList.get(i).getModelname(), dtoList.get(i).getColor(), tmpSize, tmpQty, tmpPrice};
+			outerTable.addRow(qTxt);
+		}
+		
+		// Table Column별 정렬하기.
+		// Table Column(Cell) 가운데 정렬
+		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+		center.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		TableColumnModel tcm = innerTable.getColumnModel();
+		
+		// 특정 Column(Cell) 가운데 정렬
+		tcm.getColumn(0).setCellRenderer(center);
+		tcm.getColumn(1).setCellRenderer(center);
+		tcm.getColumn(2).setCellRenderer(center);
+		tcm.getColumn(3).setCellRenderer(center);
+		
+		// Table Column(Cell) 우측 정렬
+		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+		right.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		// 특정 Column(Cell) 우측 정렬
+		tcm.getColumn(4).setCellRenderer(right);
+		tcm.getColumn(5).setCellRenderer(right);		
+		tcm.getColumn(6).setCellRenderer(right);
+		
+		
+		
+	}	// End of searchAction()
+	
+
+	// OK 버튼 눌렀을 때 액션.
+	private void actionPartition() {
+		// 검색일 경우
+		if(rdbtnSearch.isSelected() == true) {
+			tableInit();
+			searchAction();
+			clearColumn();
+			screenPartition();
+		}
+		
+		// 기존제품 추가.
+		if(rdbtnUpdate.isSelected() == true) {
+			int i_chk = insertFieldCheck();
+			if(i_chk == 0) {
+				updateAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			}else {
+				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
+			}
+			
+			screenPartition();
+		}
+		// 새제품 추가.
+		if(rdbtnInsert.isSelected() == true) {
+			if(checkModelnum()) {	// 이미 모델번호가 없을경우에만 실행.
+				int i_chk = insertFieldCheck();
+				if(i_chk == 0) {
+					System.out.println(imageCheck());
+//					System.out.println(lblImage.getIcon());	// 이미지 번호를 가져옴.
+					if(imageCheck()) {	// 이미지가 있을경우 데이터를 넣어줌. 
+//						if(tfImage.getText() == null) lblImage.setIcon(lblImage.getIcon());		// 이미지를 경로파일에서 불러오지 않는경우 기존 이미지를 사용함.
+						insertAction();
+						tableInit();
+						searchAction();
+						clearColumn();
+					}else {
+						JOptionPane.showMessageDialog(null, "이미지를 넣어주세요");
+						tfImage.requestFocus();
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
+				}
+			}else {
+				JOptionPane.showMessageDialog(null, "존재하는 모델번호입니다.");
+			}
+			
+			screenPartition();
+		}
+		// 삭제.
+		if(rdbtnDelete.isSelected() == true) {
+			int i_chk = insertFieldCheck();
+			if(i_chk == 0) {
+				deleteAction();
+				tableInit();
+				searchAction();
+				clearColumn();
+			}else {
+				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
+			}
+			
+			screenPartition();
+		}
+		
+	}
+	 
+	// 새제품 추가.
+	private void insertAction() {
+		String modelnum = tfModelnum.getText().trim();
+		String brand = tfBrand.getText().trim();
+		String modelname = tfModelname.getText().trim();
+		String color = tfColor.getText().trim();
+		int size = Integer.parseInt(tfSize.getText().trim());
+		int qty = Integer.parseInt(tfQty.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim().replace(",", ""));
+		
+			
+		// Image File
+		FileInputStream input = null;
+//		if(tfImage.getText() != null) {
+			File file = new File(tfImage.getText());
+			try {
+				input = new FileInputStream(file);
+				
+			}catch(FileNotFoundException e) { 
+				e.printStackTrace();
+			}
+//		}else {
+//			File file = new File(lblImage.getIcon());// File Path : text만 가능함. Icon은 안됨.
+//			try {
+//				input = new FileInputStream(file);
+//				
+//			}catch(FileNotFoundException e) { 
+//				e.printStackTrace();
+//			}
+//		}
+		
+//		lblImage.setIcon(lblImage.getIcon());	
+		
+//		lblImage.setIcon(lblImage.getIcon());	
+		
+		ProductDao dao = new ProductDao(modelnum, brand, modelname, color, size, qty, price, input);
+		
+//		if(dao.checkModelnum()) {	// 모델번호가 없을경우.
+			boolean result = dao.insertAction();
+			boolean resultOrder = dao.insertOrderAction();
+			
+			if(result == true && resultOrder == true) {
+				JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 새상품이 "+ tfQty.getText().trim() +"개 등록 되었습니다.");
+			}else {
+				JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+			}
+//		}else {	// 모델번호가 있을경우.
+//			JOptionPane.showMessageDialog(null, "존재하는 모델번호입니다.");
+//		}
+	}
+	// 기존제품 추가.
+	private void updateAction() {
+		String modelnum = tfModelnum.getText().trim();
+		String brand = tfBrand.getText().trim();
+		String modelname = tfModelname.getText().trim();
+		String color = tfColor.getText().trim();
+		int size = Integer.parseInt(tfSize.getText().trim());
+		int qty = Integer.parseInt(tfQty.getText().trim());
+		int price = Integer.parseInt(tfPrice.getText().trim().replace(",", ""));
+		
+		ProductDao dao = new ProductDao(modelnum,lastQty+qty);
+		boolean result = dao.updateAction();
+		
+		ProductDao orderDao = new ProductDao(modelnum,qty);
+		boolean resultOrder = orderDao.insertOrderAction();
+		
+		if(result == true && resultOrder == true) {
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 "+ tfQty.getText().trim() +"개 추가 되었습니다.");
+		}else {
+			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
+		}
+	}
+	
+	private void deleteAction() {
+		String modelnum = tfModelnum.getText().trim(); 
+		
+		ProductDao dao = new ProductDao(modelnum);
+		boolean result = dao.deleteAction();
+		
+		if(result == true) {
+			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 삭제 되었습니다.");
+		}else {
+			JOptionPane.showMessageDialog(null, "삭제중 문제가 발생했습니다.");
+		}
+	}
+	
+// -----------  [[ 화면 체크 Method ]] ---------------
+	
 	private void tableInit() {
 		// Table Column 명 정하기.
 		outerTable.addColumn("모델번호");
@@ -485,63 +699,7 @@ public class AdminSujin {
 		innerTable.setAutoResizeMode(innerTable.AUTO_RESIZE_OFF);
 	}	// End of tableInit()
 	
-	private void searchAction() {
-		int selectIndex = cbSelect.getSelectedIndex();
-		String selectColumn = "";
-		switch (selectIndex) {	
-		case 0 : selectColumn = "modelname";	break;	//"상품명" 	modelname
-		case 1 : selectColumn = "stosize"; 		break;	//"사이즈" 	stosize
-		case 2 : selectColumn = "color"; 		break;	//"색상"		color
-		case 3 : selectColumn = "stoqty"; 		break;	//"재고갯수" 	stoqty
-		default : break;
-		}
-		
-		ProductDao dao = new ProductDao();
-		ArrayList<ProductDto> dtoList = dao.selectList(selectColumn, tfSelect.getText().trim());
-		
-		int listCount = dtoList.size();
-		
-		for(int i=0; i<listCount; i++) {
-//			String modelnum;
-//			String brand;
-//			String modelname;
-//			String color;
-//			int stosize;
-//			int stoqty;
-//			int stoprice;
-			String tmpSize = Integer.toString(dtoList.get(i).getStosize()); 
-			String tmpQty = Integer.toString(dtoList.get(i).getStoqty()); 
-			String tmpPrice = df.format(dtoList.get(i).getStoprice()); 
-			String[] qTxt = {dtoList.get(i).getModelnum(), dtoList.get(i).getBrand(), dtoList.get(i).getModelname(), dtoList.get(i).getColor(), tmpSize, tmpQty, tmpPrice};
-			outerTable.addRow(qTxt);
-		}
-		
-		// Table Column별 정렬하기.
-		// Table Column(Cell) 가운데 정렬
-		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-		center.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		TableColumnModel tcm = innerTable.getColumnModel();
-		
-		// 특정 Column(Cell) 가운데 정렬
-		tcm.getColumn(0).setCellRenderer(center);
-		tcm.getColumn(1).setCellRenderer(center);
-		tcm.getColumn(2).setCellRenderer(center);
-		tcm.getColumn(3).setCellRenderer(center);
-		
-		// Table Column(Cell) 우측 정렬
-		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
-		right.setHorizontalAlignment(SwingConstants.RIGHT);
-		
-		// 특정 Column(Cell) 우측 정렬
-		tcm.getColumn(4).setCellRenderer(right);
-		tcm.getColumn(5).setCellRenderer(right);		
-		tcm.getColumn(6).setCellRenderer(right);
-		
-		
-		
-	}	// End of searchAction()
-	
+	// 라디오버튼 선택시 기능 온오프.
 	private void screenPartition() {
 		// 검색일 경우
 		if(rdbtnSearch.isSelected() == true) {
@@ -600,6 +758,7 @@ public class AdminSujin {
 			tfImage.setEditable(false);
 		}
 	}	// End of screenPartition()
+	
 	private void tableClick() {
 		int i = innerTable.getSelectedRow();
 		String tkModelnum = (String) innerTable.getValueAt(i, 0);
@@ -617,8 +776,6 @@ public class AdminSujin {
 		lastQty = dto.getStoqty();
 		// Image 처리 : fileName이 틀려야 보여주기가 가능.
 		String filePath = Integer.toString(ShareVar.filename);
-//		tfFilePath.setText(filePath);
-//		System.out.println(filePath);
 		lblImage.setIcon(new ImageIcon(filePath));	
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 	}	//End of tableClick()
@@ -659,74 +816,6 @@ public class AdminSujin {
 		return i;
 	}
 	
-	//이미지 파일 체크
-	private boolean imageCheck() {
-		if(tfImage.getText().trim().length() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	// OK 버튼 눌렀을 때 액션.
-	private void actionPartition() {
-		// 검색일 경우
-		if(rdbtnSearch.isSelected() == true) {
-			tableInit();
-			searchAction();
-			clearColumn();
-			screenPartition();
-		}
-		
-		// 기존제품 추가.
-		if(rdbtnUpdate.isSelected() == true) {
-			int i_chk = insertFieldCheck();
-			if(i_chk == 0) {
-				updateAction();
-				tableInit();
-				searchAction();
-				clearColumn();
-			}else {
-				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
-			}
-			
-			screenPartition();
-		}
-		// 새제품 추가.
-		if(rdbtnInsert.isSelected() == true) {
-			int i_chk = insertFieldCheck();
-			if(i_chk == 0) {
-				if(imageCheck()) {
-					insertAction();
-					tableInit();
-					searchAction();
-					clearColumn();
-				}else {
-					JOptionPane.showMessageDialog(null, "이미지를 넣어주세요");
-					tfImage.requestFocus();
-				}
-			}else {
-				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
-			}
-			
-			screenPartition();
-		}
-		// 삭제.
-		if(rdbtnDelete.isSelected() == true) {
-			int i_chk = insertFieldCheck();
-			if(i_chk == 0) {
-				deleteAction();
-				tableInit();
-				searchAction();
-				clearColumn();
-			}else {
-				JOptionPane.showMessageDialog(null, "데이터를 확인하세요");
-			}
-			
-			screenPartition();
-		}
-		
-	}
-	 
 	
 	// 컬럼 내용 지우기.
 	private void clearColumn() {
@@ -741,71 +830,26 @@ public class AdminSujin {
 		lblImage.setIcon(null);
 	}
 	
-	// 새제품 추가.
-	private void insertAction() {
+	// 존재하는 모델번호인지 체크.
+	private boolean checkModelnum() {
 		String modelnum = tfModelnum.getText().trim();
-		String brand = tfBrand.getText().trim();
-		String modelname = tfModelname.getText().trim();
-		String color = tfColor.getText().trim();
-		int size = Integer.parseInt(tfSize.getText().trim());
-		int qty = Integer.parseInt(tfQty.getText().trim());
-		int price = Integer.parseInt(tfPrice.getText().trim().replace(",", ""));
-		
-		// Image File
-		FileInputStream input = null;
-		File file = new File(tfImage.getText());
-		try {
-			input = new FileInputStream(file);
-			
-		}catch(FileNotFoundException e) { 
-			e.printStackTrace();
+		ProductDao dao = new ProductDao(modelnum);
+
+		if(dao.checkModelnum()) {	// 이미 모델번호가 없으면 true. 있으면 false
+			return true;
 		}
-		
-		ProductDao dao = new ProductDao(modelnum, brand, modelname, color, size, qty, price, input);
-		boolean result = dao.insertAction();
-		boolean resultOrder = dao.insertOrderAction();
-		
-		if(result == true && resultOrder == true) {
-			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 새상품이 "+ tfQty.getText().trim() +"등록 되었습니다.");
-		}else {
-			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
-		}
-	}
-	// 기존제품 추가.
-	private void updateAction() {
-		String modelnum = tfModelnum.getText().trim();
-		String brand = tfBrand.getText().trim();
-		String modelname = tfModelname.getText().trim();
-		String color = tfColor.getText().trim();
-		int size = Integer.parseInt(tfSize.getText().trim());
-		int qty = Integer.parseInt(tfQty.getText().trim());
-		int price = Integer.parseInt(tfPrice.getText().trim().replace(",", ""));
-		
-		ProductDao dao = new ProductDao(modelnum,lastQty+qty);
-		boolean result = dao.updateAction();
-		
-		ProductDao orderDao = new ProductDao(modelnum,qty);
-		boolean resultOrder = orderDao.insertOrderAction();
-		
-		if(result == true && resultOrder == true) {
-			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 "+ tfQty.getText().trim() +"개 추가 되었습니다.");
-		}else {
-			JOptionPane.showMessageDialog(null, "입력중 문제가 발생했습니다.");
-		}
+		return false;
 	}
 	
-	private void deleteAction() {
-		String modelnum = tfModelnum.getText().trim(); 
-		
-		ProductDao dao = new ProductDao(modelnum);
-		boolean result = dao.deleteAction();
-		
-		if(result == true) {
-			JOptionPane.showMessageDialog(null,  tfModelnum.getText().trim() + " 상품이 삭제 되었습니다.");
-		}else {
-			JOptionPane.showMessageDialog(null, "삭제중 문제가 발생했습니다.");
+	//이미지 파일 체크
+	private boolean imageCheck() {	// 이미지파일이 있으면 true, 없으면 false.
+//		if(lblImage.getIcon() != null) {
+		if(tfImage.getText().trim().length() == 0) {
+			return false;
 		}
+		return true;
 	}
+	
 	
 	// -----------------[[[ File ]]]]]]---------------------------------------------------
 
