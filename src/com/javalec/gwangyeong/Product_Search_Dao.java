@@ -25,9 +25,9 @@ public class Product_Search_Dao {
 	String color;
 	int stosize;
 	
-	String filename;
-	
-	FileInputStream file;
+//	String filename;
+//	
+//	FileInputStream file;
 	
 	String searchName;
 	String searchText;
@@ -62,7 +62,7 @@ public class Product_Search_Dao {
 	public ArrayList<Product_Search_Dto> selectList() {
 		
 		ArrayList<Product_Search_Dto> dtoList = new ArrayList<Product_Search_Dto>();
-		String where1 = "select file, brand, modelname, color, stosize, filename from store ";
+		String where1 = "select modelnum, brand, modelname, color, stosize from store ";
 		String where2 = "order by modelnum asc";
 		
 		try {
@@ -74,24 +74,25 @@ public class Product_Search_Dao {
 			
 			while(rs.next()) {
 				
+				String wkModelnum = rs.getString(1);
 				String wkBrand = rs.getString(2);
 				String wkModelname = rs.getString(3);
 				String wkColor = rs.getString(4);
 				int wkStosize = rs.getInt(5);
-				String wkFilename = rs.getString(6);
+//				String wkFilename = rs.getString(6);
 				
-				// File
-				File file = new File("./" + wkFilename);
-				FileOutputStream output = new FileOutputStream(file);
-				InputStream input = rs.getBinaryStream(1);
+//				// File
+//				File file = new File("./" + wkFilename);
+//				FileOutputStream output = new FileOutputStream(file);
+//				InputStream input = rs.getBinaryStream(1);
+//				
+//				byte[] buffer = new byte[1024];
+//				
+//				while(input.read(buffer) > 0) {
+//					output.write(buffer);
+//				}
 				
-				byte[] buffer = new byte[1024];
-				
-				while(input.read(buffer) > 0) {
-					output.write(buffer);
-				}
-				
-				Product_Search_Dto dto = new Product_Search_Dto(wkBrand, wkModelname, wkColor, wkFilename, wkStosize);
+				Product_Search_Dto dto = new Product_Search_Dto(wkModelnum, wkBrand, wkModelname, wkColor, wkStosize);
 				dtoList.add(dto);
 				
 			}
