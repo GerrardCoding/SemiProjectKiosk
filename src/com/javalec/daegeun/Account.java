@@ -4,14 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
@@ -32,6 +30,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import com.javalec.base.Main;
+import com.javalec.sujin.AdminSujin;
+import com.javalec.sumin.base.Admin;
 
 public class Account extends JDialog {
 
@@ -39,7 +39,6 @@ public class Account extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JRadioButton rdbSelect;
 	private JRadioButton rdbUpdate;
-	private JRadioButton rdbDelete;
 	private JComboBox cbSelection;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField tfSelection;
@@ -47,13 +46,12 @@ public class Account extends JDialog {
 	private JScrollPane scrollPane;
 	private JTable innerTable;
 	private JLabel lblLogout;
-	private JButton btnCust;
 	private JButton btnSales;
-	private JButton btnProduct;
 	private JButton btnOk;
 
 	// -- Table
 	private final DefaultTableModel outerTable = new DefaultTableModel();
+	private JButton btnSales_1;
 
 	/**
 	 * Launch the application.
@@ -89,16 +87,14 @@ public class Account extends JDialog {
 		contentPanel.setLayout(null);
 		contentPanel.add(getRdbSelect());
 		contentPanel.add(getRdbUpdate());
-		contentPanel.add(getRdbDelete());
 		contentPanel.add(getCbSelection());
 		contentPanel.add(getTfSelection());
 		contentPanel.add(getBtnSearch());
 		contentPanel.add(getScrollPane());
 		contentPanel.add(getLblLogout());
-		contentPanel.add(getBtnCust());
 		contentPanel.add(getBtnSales());
-		contentPanel.add(getBtnProduct());
 		contentPanel.add(getBtnOk());
+		contentPanel.add(getBtnSales_1());
 	}
 
 	private JRadioButton getRdbSelect() {
@@ -109,7 +105,7 @@ public class Account extends JDialog {
 			rdbSelect.setBackground(new Color(119, 108, 106));
 			rdbSelect.setSelected(true);
 			buttonGroup.add(rdbSelect);
-			rdbSelect.setBounds(100, 88, 140, 23);
+			rdbSelect.setBounds(189, 88, 140, 23);
 		}
 		return rdbSelect;
 	}
@@ -121,21 +117,9 @@ public class Account extends JDialog {
 			rdbUpdate.setForeground(new Color(255, 255, 255));
 			rdbUpdate.setBackground(new Color(119, 108, 106));
 			buttonGroup.add(rdbUpdate);
-			rdbUpdate.setBounds(278, 88, 149, 23);
+			rdbUpdate.setBounds(367, 88, 149, 23);
 		}
 		return rdbUpdate;
-	}
-
-	private JRadioButton getRdbDelete() {
-		if (rdbDelete == null) {
-			rdbDelete = new JRadioButton("회원 삭제");
-			rdbDelete.setFont(new Font("굴림", Font.BOLD, 20));
-			rdbDelete.setForeground(new Color(255, 255, 255));
-			rdbDelete.setBackground(new Color(119, 108, 106));
-			buttonGroup.add(rdbDelete);
-			rdbDelete.setBounds(441, 88, 149, 23);
-		}
-		return rdbDelete;
 	}
 
 	private JComboBox getCbSelection() {
@@ -240,28 +224,17 @@ public class Account extends JDialog {
 		this.setVisible(false);
 	}
 
-	private JButton getBtnCust() {
-		if (btnCust == null) {
-			btnCust = new JButton("회원");
-			btnCust.setBounds(127, 23, 85, 39);
-		}
-		return btnCust;
-	}
-
 	private JButton getBtnSales() {
 		if (btnSales == null) {
-			btnSales = new JButton("매출");
-			btnSales.setBounds(293, 23, 85, 39);
+			btnSales = new JButton("매출 관리");
+			btnSales.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					toSales();
+				}
+			});
+			btnSales.setBounds(220, 25, 94, 39);
 		}
 		return btnSales;
-	}
-
-	private JButton getBtnProduct() {
-		if (btnProduct == null) {
-			btnProduct = new JButton("상품");
-			btnProduct.setBounds(456, 23, 85, 39);
-		}
-		return btnProduct;
 	}
 
 	private JButton getBtnOk() {
@@ -356,34 +329,15 @@ public class Account extends JDialog {
 
 		tableInit(); // 검색한 기록을 지운다
 //		clearColumn();
-		conditionQueryAction(conditionQueryName); // argument
+//		conditionQueryAction(conditionQueryName); // argument
+	}
+	
+	private void toSales() {
+		this.setVisible(false);
+		Admin admin = new Admin();
+		admin.main(null);
 	}
 
-	private void conditionQueryAction(String conditionQueryName) { // parameter - 타입을 정해준다
-		String query1 = "select custid, custname, phone, address, deactivate from customer where " + conditionQueryName;
-		String query2 = " like '%" + tfSelection.getText() + "%'";
-//		System.out.println(query1 + query2);
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn_mysql = DriverManager.getConnection(url_mysql, id_mysql, pw_mysql);
-			Statement stmt_mysql = conn_mysql.createStatement(); // 갖고오는것
-			
-			ResultSet rs = stmt_mysql.executeQuery(query1 + query2);
-			while(rs.next()) {
-				String[] qTxt = {rs.getString(1)),rs.getString(2),rs.getString(3),rs.getString(4), rs.getString(5)};
-				outerTable.addRow(qTxt);
-				
-			}
-			
-			// ConCurentUser : DB에 동시접속자 수 최대 5명 가능.
-			conn_mysql.close(); // 반드시 적어줄것
-			
-		}catch(Exception e) {
-			// 에러코드가 있으면 보여주게한다
-			e.printStackTrace();
-		}
-		
-	}
 	// Table에서 Row를 click했을 경우
 	private void tableClick() {
 		int i = innerTable.getSelectedRow();
@@ -401,4 +355,22 @@ public class Account extends JDialog {
 //			tfRelation.setText(dto.getRelation());
 	}
 
+	private JButton getBtnSales_1() {
+		if (btnSales_1 == null) {
+			btnSales_1 = new JButton("상품 관리");
+			btnSales_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					toProduct();
+				}
+			});
+			btnSales_1.setBounds(366, 25, 94, 39);
+		}
+		return btnSales_1;
+	}
+	
+	private void toProduct() {
+		this.setVisible(false);
+		AdminSujin product = new AdminSujin();
+		product.main(null);
+	}
 } // End

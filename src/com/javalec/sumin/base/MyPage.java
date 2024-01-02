@@ -75,7 +75,6 @@ public class MyPage {
 	private JTextField tfAddress;
 	private JButton btnBack;
 	private JButton btnEdit;
-	private JButton btnDeactivate;
 	private JScrollPane scrollPane;
 	private JTable order_Table;
 	private JScrollPane scrollPane_1;
@@ -206,7 +205,6 @@ public class MyPage {
 			accountInfo.add(getTfAddress());
 			accountInfo.add(getBtnBack());
 			accountInfo.add(getBtnEdit());
-			accountInfo.add(getBtnDeactivate());
 			accountInfo.add(getLblLogo());
 			accountInfo.add(getLblLogout());
 			
@@ -402,20 +400,6 @@ public class MyPage {
 			btnEdit.setBounds(292, 441, 117, 29);
 		}
 		return btnEdit;
-	}
-
-	private JButton getBtnDeactivate() {
-		if (btnDeactivate == null) {
-			btnDeactivate = new JButton("회원탈퇴");
-			btnDeactivate.setForeground(new Color(0, 0, 0));
-			btnDeactivate.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					deactivate();
-				}
-			});
-			btnDeactivate.setBounds(415, 441, 117, 29);
-		}
-		return btnDeactivate;
 	}
 
 	private JScrollPane getScrollPane() {
@@ -924,22 +908,6 @@ public class MyPage {
 
 		if (result == true) {
 			JOptionPane.showMessageDialog(null, tfName.getText() + "님의 정보가 수정되었습니다.");
-		} else {
-			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
-		}
-
-	}
-
-	// 회원탈퇴 경우
-
-	private void deactivate() {
-		String custid = ShareVar.loginID;
-
-		MyInfoDao dao = new MyInfoDao(custid);
-		boolean result = dao.deactivate();
-
-		if (result == true) {
-			JOptionPane.showMessageDialog(null, ShareVar.loginID + "님의 정보가 삭제되었습니다.");
 		} else {
 			JOptionPane.showMessageDialog(null, "입력중 문제가 발생");
 		}

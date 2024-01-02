@@ -1,31 +1,13 @@
 package com.javalec.sujin;
 
+import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-
-import com.javalec.common.ShareVar;
-
-import javax.swing.JButton;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-import javax.swing.ButtonGroup;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -33,14 +15,30 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import com.javalec.common.ShareVar;
+import com.javalec.daegeun.Account;
 
 public class AdminSujin {
 
@@ -77,6 +75,7 @@ public class AdminSujin {
 	private JButton btnImage;
 	private JButton btnOK;
 	private int lastQty;
+	private JButton btnSearch_1;
 	/**
 	 * Launch the application.
 	 */
@@ -145,6 +144,7 @@ public class AdminSujin {
 		frame.getContentPane().add(getLblNewLabel_2_1_1());
 		frame.getContentPane().add(getBtnImage());
 		frame.getContentPane().add(getBtnOK());
+		frame.getContentPane().add(getBtnSearch_1());
 	}
 	private JRadioButton getRdbtnSearch() {
 		if (rdbtnSearch == null) {
@@ -870,4 +870,22 @@ public class AdminSujin {
 		
 	}
 
+	private JButton getBtnSearch_1() {
+		if (btnSearch_1 == null) {
+			btnSearch_1 = new JButton("뒤로가기");
+			btnSearch_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					toAdmin();
+				}
+			});
+			btnSearch_1.setBounds(936, 22, 97, 23);
+		}
+		return btnSearch_1;
+	}
+	
+	private void toAdmin() {
+		frame.setVisible(false);
+		Account account = new Account();
+		account.main(null);
+	}
 }	//	End 

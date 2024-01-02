@@ -1,46 +1,35 @@
 package com.javalec.sumin.base;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.javalec.gwangyeong.MyDefaultTableCellRenderer;
+import com.javalec.daegeun.Account;
 import com.javalec.sumin.function.AdminDao;
 import com.javalec.sumin.function.AdminDto;
-import com.javalec.sumin.function.CustDao;
-import com.javalec.sumin.function.CustDto;
-
-import javax.swing.JComboBox;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.ListSelectionModel;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeListener;
-import java.text.DecimalFormat;
-import java.beans.PropertyChangeEvent;
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class Admin {
 
@@ -55,10 +44,6 @@ public class Admin {
 	private JButton btnNewButton;
 	private JLabel lblNewLabel_1_1;
 	private JTextField tfTotal;
-	private JPanel tabProduct;
-	private JLabel lblNewLabel_2;
-	private JLabel lblNewLabel_2_1;
-	private JLabel lblNewLabel_2_2;
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	private final DefaultTableModel outerTableCust = new DefaultTableModel();
 	DecimalFormat df = new DecimalFormat("###,###,###,###");
@@ -78,12 +63,6 @@ public class Admin {
 	int toDay = calendar.get(Calendar.DAY_OF_MONTH);
 	
 	String srhDate = toYear + "-" + toMonth + "-" + toDay;
-	private JPanel tabCustomer;
-	private JComboBox<?> cbSearchCust;
-	private JTextField tfSearchCust;
-	private JButton btnSearchCust;
-	private JScrollPane scrollPane_1;
-	private JTable innerTableCust;
 	private JButton btnPurchaseSearch;
 	// ----- 날짜 끝 -----------------------------------------
 	
@@ -123,7 +102,7 @@ public class Admin {
 			}
 		});
 		frmAdmin.setTitle("Admin");
-		frmAdmin.setBounds(100, 100, 574, 711);
+		frmAdmin.setBounds(500, 100, 574, 711);
 		frmAdmin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAdmin.getContentPane().setLayout(null);
 		frmAdmin.getContentPane().add(getTabbedPane());
@@ -140,10 +119,10 @@ public class Admin {
 						searchAction(); 
 						break;
 					case 1 : break;
-					case 2 : 
-						tableInitCust(); 
-						searchCustAction(); 
-						break;	// 회원관리 tab
+//					case 2 : 
+//						tableInitCust(); 
+//						searchCustAction(); 
+//						break;	// 회원관리 tab
 					default : break;
 						
 					}
@@ -151,8 +130,6 @@ public class Admin {
 			});
 			tabbedPane.setBounds(0, 0, 574, 690);
 			tabbedPane.addTab("매출관리", null, getTabPurchase(), null);
-			tabbedPane.addTab("상품관리", null, getPanel_1_1(), null);
-			tabbedPane.addTab("회원관리", null, getTabCustomer(), null);
 		}
 		return tabbedPane;
 	}
@@ -267,6 +244,11 @@ public class Admin {
 	private JButton getBtnNewButton() {
 		if (btnNewButton == null) {
 			btnNewButton = new JButton("뒤로가기");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					toAdmin();
+				}
+			});
 			btnNewButton.setBounds(199, 577, 117, 29);
 		}
 		return btnNewButton;
@@ -287,102 +269,6 @@ public class Admin {
 			tfTotal.setBounds(362, 516, 130, 26);
 		}
 		return tfTotal;
-	}
-	private JPanel getPanel_1_1() {
-		if (tabProduct == null) {
-			tabProduct = new JPanel();
-			tabProduct.setLayout(null);
-			tabProduct.add(getLblNewLabel_2());
-			tabProduct.add(getLblNewLabel_2_1());
-			tabProduct.add(getLblNewLabel_2_2());
-		}
-		return tabProduct;
-	}
-	private JLabel getLblNewLabel_2() {
-		if (lblNewLabel_2 == null) {
-			lblNewLabel_2 = new JLabel("재고수량");
-			lblNewLabel_2.setBounds(6, 6, 61, 16);
-		}
-		return lblNewLabel_2;
-	}
-	private JLabel getLblNewLabel_2_1() {
-		if (lblNewLabel_2_1 == null) {
-			lblNewLabel_2_1 = new JLabel("입고수량");
-			lblNewLabel_2_1.setBounds(6, 218, 61, 16);
-		}
-		return lblNewLabel_2_1;
-	}
-	private JLabel getLblNewLabel_2_2() {
-		if (lblNewLabel_2_2 == null) {
-			lblNewLabel_2_2 = new JLabel("출고수량");
-			lblNewLabel_2_2.setBounds(6, 417, 61, 16);
-		}
-		return lblNewLabel_2_2;
-	}
-	private JPanel getTabCustomer() {
-		if (tabCustomer == null) {
-			tabCustomer = new JPanel();
-			tabCustomer.setLayout(null);
-			tabCustomer.add(getCbSearchCust());
-			tabCustomer.add(getTextField_3());
-			tabCustomer.add(getBtnSearchCust());
-			tabCustomer.add(getScrollPane_1_1());
-		}
-		return tabCustomer;
-	}
-	private JComboBox<?> getCbSearchCust() {
-		if (cbSearchCust == null) {
-			cbSearchCust = new JComboBox();
-			cbSearchCust.setModel(new DefaultComboBoxModel(new String[] {"이름", "전화번호", "회원아이디"}));
-			cbSearchCust.setBounds(28, 25, 112, 23);
-		}
-		return cbSearchCust;
-	}
-	private JTextField getTextField_3() {
-		if (tfSearchCust == null) {
-			tfSearchCust = new JTextField();
-			tfSearchCust.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-						tableInitCust(); 
-						searchCustAction(); 
-					}
-				}
-			});
-			tfSearchCust.setBounds(152, 26, 200, 21);
-			tfSearchCust.setColumns(10);
-		}
-		return tfSearchCust;
-	}
-	private JButton getBtnSearchCust() {
-		if (btnSearchCust == null) {
-			btnSearchCust = new JButton("검색");
-			btnSearchCust.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					tableInitCust(); 
-					searchCustAction(); 
-				}
-			});
-			btnSearchCust.setBounds(384, 25, 97, 23);
-		}
-		return btnSearchCust;
-	}
-	private JScrollPane getScrollPane_1_1() {
-		if (scrollPane_1 == null) {
-			scrollPane_1 = new JScrollPane();
-			scrollPane_1.setBounds(28, 85, 490, 425);
-			scrollPane_1.setViewportView(getInnerTableCust());
-		}
-		return scrollPane_1;
-	}
-	private JTable getInnerTableCust() {
-		if (innerTableCust == null) {
-			innerTableCust = new JTable();
-			innerTableCust.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			innerTableCust.setModel(outerTableCust);
-		}
-		return innerTableCust;
 	}
 	
 	
@@ -506,105 +392,111 @@ public class Admin {
 	}	// End of searchAction()
 	
 	
-	// ----  [[ 회원관리 ]] - Method -----
-	private void tableInitCust() {
-		// Table Column 명 정하기.
-		outerTableCust.addColumn("이름");
-		outerTableCust.addColumn("회원ID");
-		outerTableCust.addColumn("회원PW");
-		outerTableCust.addColumn("전화번호");
-		outerTableCust.addColumn("주소");
-		outerTableCust.addColumn("가입일");
-		outerTableCust.addColumn("탈퇴일");
-		outerTableCust.setColumnCount(7);
-		
-		// 이름
-		int colNo = 0;
-		TableColumn col = innerTableCust.getColumnModel().getColumn(colNo);
-		int width = 80;
-		col.setPreferredWidth(width);
-		
-		// 회원ID
-		colNo = 1;
-		col = innerTableCust.getColumnModel().getColumn(colNo);
-		width = 80;
-		col.setPreferredWidth(width);
-
-		
-		// 회원PW
-		colNo = 2;
-		col = innerTableCust.getColumnModel().getColumn(colNo);
-		width = 80;
-		col.setPreferredWidth(width);
-		
-		
-		// 전화번호
-		colNo = 3;
-		col = innerTableCust.getColumnModel().getColumn(colNo);
-		width = 100;
-		col.setPreferredWidth(width);
-		
-		// 주소
-		colNo = 4;
-		col = innerTableCust.getColumnModel().getColumn(colNo);
-		width = 150;
-		col.setPreferredWidth(width);
-		
-		
-		// 가입일
-		colNo = 5;
-		col = innerTableCust.getColumnModel().getColumn(colNo);
-		width = 150;
-		col.setPreferredWidth(width);
-		
-		// 탈퇴일
-		colNo = 6;
-		col = innerTableCust.getColumnModel().getColumn(colNo);
-		width = 150;
-		col.setPreferredWidth(width);
-		
-		
-		// 테이블 내용 지우기.
-		int i = outerTableCust.getRowCount();
-		for(int j=0; j<i; j++) {
-			outerTableCust.removeRow(0);
-		}
-		
-		innerTableCust.setAutoResizeMode(innerTableCust.AUTO_RESIZE_OFF);
-	}
+//	// ----  [[ 회원관리 ]] - Method -----
+//	private void tableInitCust() {
+//		// Table Column 명 정하기.
+//		outerTableCust.addColumn("이름");
+//		outerTableCust.addColumn("회원ID");
+//		outerTableCust.addColumn("회원PW");
+//		outerTableCust.addColumn("전화번호");
+//		outerTableCust.addColumn("주소");
+//		outerTableCust.addColumn("가입일");
+//		outerTableCust.addColumn("탈퇴일");
+//		outerTableCust.setColumnCount(7);
+//		
+//		// 이름
+//		int colNo = 0;
+//		TableColumn col = innerTableCust.getColumnModel().getColumn(colNo);
+//		int width = 80;
+//		col.setPreferredWidth(width);
+//		
+//		// 회원ID
+//		colNo = 1;
+//		col = innerTableCust.getColumnModel().getColumn(colNo);
+//		width = 80;
+//		col.setPreferredWidth(width);
+//
+//		
+//		// 회원PW
+//		colNo = 2;
+//		col = innerTableCust.getColumnModel().getColumn(colNo);
+//		width = 80;
+//		col.setPreferredWidth(width);
+//		
+//		
+//		// 전화번호
+//		colNo = 3;
+//		col = innerTableCust.getColumnModel().getColumn(colNo);
+//		width = 100;
+//		col.setPreferredWidth(width);
+//		
+//		// 주소
+//		colNo = 4;
+//		col = innerTableCust.getColumnModel().getColumn(colNo);
+//		width = 150;
+//		col.setPreferredWidth(width);
+//		
+//		
+//		// 가입일
+//		colNo = 5;
+//		col = innerTableCust.getColumnModel().getColumn(colNo);
+//		width = 150;
+//		col.setPreferredWidth(width);
+//		
+//		// 탈퇴일
+//		colNo = 6;
+//		col = innerTableCust.getColumnModel().getColumn(colNo);
+//		width = 150;
+//		col.setPreferredWidth(width);
+//		
+//		
+//		// 테이블 내용 지우기.
+//		int i = outerTableCust.getRowCount();
+//		for(int j=0; j<i; j++) {
+//			outerTableCust.removeRow(0);
+//		}
+//		
+//		innerTableCust.setAutoResizeMode(innerTableCust.AUTO_RESIZE_OFF);
+//	}
+//	
+//	private void searchCustAction() {
+//		int selectIndex = cbSearchCust.getSelectedIndex();
+//		CustDao dao= new CustDao();
+//		ArrayList<CustDto> dtoList = dao.selectCustList(selectIndex, tfSearchCust.getText().trim());
+//		
+//		int listCount = dtoList.size();
+//		
+//		for(int i=0; i<listCount; i++) {
+//			String[] qTxt = {dtoList.get(i).getCustname(), dtoList.get(i).getCustid(), dtoList.get(i).getCustpw(), dtoList.get(i).getPhone(), dtoList.get(i).getAddress(), dtoList.get(i).getActdate(), dtoList.get(i).getDactdate()};
+//			outerTableCust.addRow(qTxt);
+//		}
+//		
+//		// Table Column별 정렬하기.
+//		// Table Column(Cell) 가운데 정렬
+//		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+//		center.setHorizontalAlignment(SwingConstants.CENTER);
+//		
+//		TableColumnModel tcm = innerTableCust.getColumnModel();
+//		
+//		// 특정 Column(Cell) 가운데 정렬
+//		tcm.getColumn(0).setCellRenderer(center);
+//		tcm.getColumn(1).setCellRenderer(center);
+//		tcm.getColumn(2).setCellRenderer(center);
+//		tcm.getColumn(3).setCellRenderer(center);
+//		
+//		// Table Column(Cell) 우측 정렬
+////		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+////		right.setHorizontalAlignment(SwingConstants.RIGHT);
+//		
+//		// 특정 Column(Cell) 우측 정렬
+//		tcm.getColumn(4).setCellRenderer(center);
+//		tcm.getColumn(5).setCellRenderer(center);		
+//		tcm.getColumn(6).setCellRenderer(center);		
+//	}	// End of searchAction()
 	
-	private void searchCustAction() {
-		int selectIndex = cbSearchCust.getSelectedIndex();
-		CustDao dao= new CustDao();
-		ArrayList<CustDto> dtoList = dao.selectCustList(selectIndex, tfSearchCust.getText().trim());
-		
-		int listCount = dtoList.size();
-		
-		for(int i=0; i<listCount; i++) {
-			String[] qTxt = {dtoList.get(i).getCustname(), dtoList.get(i).getCustid(), dtoList.get(i).getCustpw(), dtoList.get(i).getPhone(), dtoList.get(i).getAddress(), dtoList.get(i).getActdate(), dtoList.get(i).getDactdate()};
-			outerTableCust.addRow(qTxt);
-		}
-		
-		// Table Column별 정렬하기.
-		// Table Column(Cell) 가운데 정렬
-		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-		center.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		TableColumnModel tcm = innerTableCust.getColumnModel();
-		
-		// 특정 Column(Cell) 가운데 정렬
-		tcm.getColumn(0).setCellRenderer(center);
-		tcm.getColumn(1).setCellRenderer(center);
-		tcm.getColumn(2).setCellRenderer(center);
-		tcm.getColumn(3).setCellRenderer(center);
-		
-		// Table Column(Cell) 우측 정렬
-//		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
-//		right.setHorizontalAlignment(SwingConstants.RIGHT);
-		
-		// 특정 Column(Cell) 우측 정렬
-		tcm.getColumn(4).setCellRenderer(center);
-		tcm.getColumn(5).setCellRenderer(center);		
-		tcm.getColumn(6).setCellRenderer(center);		
-	}	// End of searchAction()
+	private void toAdmin() {
+		frmAdmin.setVisible(false);
+		Account account = new Account();
+		account.main(null);
+	}
 }

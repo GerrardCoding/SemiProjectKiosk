@@ -62,7 +62,6 @@ public class Product_Search {
 	private JButton btnLogout;
 	private JScrollPane scrollPane;
 	private JTable innerTableProductSearch;
-	private JButton btnCart;
 	private JButton btnPutCart;
 	
 	
@@ -129,7 +128,6 @@ public class Product_Search {
 		frame.getContentPane().add(getLblUserType());
 		frame.getContentPane().add(getBtnLogout());
 		frame.getContentPane().add(getScrollPane());
-		frame.getContentPane().add(getBtnCart());
 		frame.getContentPane().add(getBtnPutCart());
 	}
 	private JLabel getLblUserImage() {
@@ -278,20 +276,6 @@ public class Product_Search {
 			innerTableProductSearch.setModel(outerTable);
 		}
 		return innerTableProductSearch;
-	}
-	private JButton getBtnCart() {
-		if (btnCart == null) {
-			btnCart = new JButton(" 장바구니로 이동");
-			btnCart.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					cartScreen();
-				}
-			});
-			btnCart.setIcon(new ImageIcon(Product_Search.class.getResource("/com/javalec/images/쇼핑카트.gif")));
-			btnCart.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-			btnCart.setBounds(600, 630, 250, 70);
-		}
-		return btnCart;
 	}
 	
 	private JButton getBtnPutCart() {
@@ -535,7 +519,7 @@ public class Product_Search {
 		// 전달받은 값 사용
 	    String modelnum = dto.getModelnum();
 		
-		detailedScreen();
+//		detailedScreen();
 	}
 	
 	
@@ -550,14 +534,6 @@ public class Product_Search {
 	// 제품 상세 내용 화면으로 이동하기
 	private void detailedScreen() {
 		Product_Detailed window = new Product_Detailed();
-		window.main(null);
-		frame.setVisible(false);
-	}
-	
-	
-	// 장바구니 화면으로 이동하기
-	private void cartScreen() {
-		Shop_Cart window = new Shop_Cart();
 		window.main(null);
 		frame.setVisible(false);
 	}

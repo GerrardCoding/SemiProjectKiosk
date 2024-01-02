@@ -349,6 +349,7 @@ public class Main {
 	// 회원가입 시
 	private void signAction() {
 		frame.setVisible(false);
+		
 		Sign sign = new Sign();
 		sign.setVisible(true);
 	}
