@@ -13,6 +13,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.javalec.base.Main;
+import com.javalec.sumin.base.MyPage;
+
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Component;
@@ -66,8 +69,9 @@ public class Product_Search {
 	// --- Table ----
 	private final DefaultTableModel outerTable = new DefaultTableModel();
 	
-	// --- File 정리 ----
-	ArrayList<Product_Search_Dto> dtoList = null;
+	
+//	// --- File 정리 ----
+//	ArrayList<Product_Search_Dto> dtoList = null;
 	
 	
 	/**
@@ -131,6 +135,14 @@ public class Product_Search {
 	private JLabel getLblUserImage() {
 		if (lblUserImage == null) {
 			lblUserImage = new JLabel("");
+			lblUserImage.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton() == 1) {
+						mypageScreen();
+					}
+				}
+			});
 			lblUserImage.setToolTipText("<html><font face='맑은 고딕' size='5'><b>마이페이지로 이동합니다.</b></font></html>");
 			lblUserImage.setIcon(new ImageIcon(Product_Search.class.getResource("/com/javalec/images/원모양_사용자.gif")));
 			lblUserImage.setHorizontalAlignment(SwingConstants.CENTER);
@@ -214,7 +226,7 @@ public class Product_Search {
 	}
 	private JLabel getLblUserType() {
 		if (lblUserType == null) {
-			lblUserType = new JLabel("다오니");
+			lblUserType = new JLabel("JOJO");
 			lblUserType.setForeground(new Color(255, 255, 255));
 			lblUserType.setHorizontalAlignment(SwingConstants.TRAILING);
 			lblUserType.setFont(new Font("맑은 고딕", Font.BOLD, 18));
@@ -225,6 +237,11 @@ public class Product_Search {
 	private JButton getBtnLogout() {
 		if (btnLogout == null) {
 			btnLogout = new JButton("로그아웃");
+			btnLogout.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					homeScreen();
+				}
+			});
 			btnLogout.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 			btnLogout.setBackground(new Color(255, 128, 128));
 			btnLogout.setBounds(920, 43, 90, 25);
@@ -251,6 +268,7 @@ public class Product_Search {
 				public void mouseClicked(MouseEvent e) {
 					if(e.getButton() == 1) {
 						tableClick();
+						detailedScreen();
 					}
 				}
 			});
@@ -264,6 +282,11 @@ public class Product_Search {
 	private JButton getBtnCart() {
 		if (btnCart == null) {
 			btnCart = new JButton(" 장바구니로 이동");
+			btnCart.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					cartScreen();
+				}
+			});
 			btnCart.setIcon(new ImageIcon(Product_Search.class.getResource("/com/javalec/images/쇼핑카트.gif")));
 			btnCart.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 			btnCart.setBounds(600, 630, 250, 70);
@@ -274,6 +297,10 @@ public class Product_Search {
 	private JButton getBtnPutCart() {
 		if (btnPutCart == null) {
 			btnPutCart = new JButton(" 장바구니에 담기");
+			btnPutCart.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
 			btnPutCart.setIcon(new ImageIcon(Product_Search.class.getResource("/com/javalec/images/쇼핑카트.gif")));
 			btnPutCart.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 			btnPutCart.setBounds(250, 630, 250, 70);
@@ -286,59 +313,59 @@ public class Product_Search {
 	// Talbe 초기화 하기
 	private void tableInit() {
 		// Table Column명 정하기
-		outerTable.addColumn("제품사진");
+//		outerTable.addColumn("제품사진");
 		outerTable.addColumn("제조사");
 		outerTable.addColumn("제품명");
 		outerTable.addColumn("색상");
 		outerTable.addColumn("크기");
 		outerTable.addColumn("구매 수량");
-		outerTable.addColumn("");
-		outerTable.setColumnCount(7);
+//		outerTable.addColumn("");
+		outerTable.setColumnCount(5);
 		
 		
 		// Table Column 크기 정하기
-		// 제품사진
-		int colNo = 0;
-		TableColumn col = innerTableProductSearch.getColumnModel().getColumn(colNo);
-		int width = 300;
-		col.setPreferredWidth(width);
+//		// 제품사진
+//		int colNo = 0;
+//		TableColumn col = innerTableProductSearch.getColumnModel().getColumn(colNo);
+//		int width = 300;
+//		col.setPreferredWidth(width);
 		
 		// 제조사
+		int colNo = 0;
+		TableColumn col = innerTableProductSearch.getColumnModel().getColumn(colNo);
+		int width = 100;
+		col.setPreferredWidth(width);
+		
+		// 제품명
 		colNo = 1;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
 		width = 150;
 		col.setPreferredWidth(width);
 		
-		// 제품명
+		// 색상
 		colNo = 2;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
-		width = 200;
-		col.setPreferredWidth(width);
-		
-		// 색상
-		colNo = 3;
-		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
-		width = 150;
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		// 크기
-		colNo = 4;
+		colNo = 3;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
 		width = 100;
 		col.setPreferredWidth(width);
 		
 		// 구매수량
-		colNo = 5;
+		colNo = 4;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
 		width = 100;
 		col.setPreferredWidth(width);
 		
-		// 체크박스
-		colNo = 6;
-		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
-		width = 50;
-		col.setPreferredWidth(width);
-		col.setCellRenderer(new MyDefaultTableCellRenderer());
+//		// 체크박스
+//		colNo = 6;
+//		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
+//		width = 50;
+//		col.setPreferredWidth(width);
+//		col.setCellRenderer(new MyDefaultTableCellRenderer());
 		
 		innerTableProductSearch.setAutoResizeMode(innerTableProductSearch.AUTO_RESIZE_ALL_COLUMNS);
 		
@@ -361,18 +388,19 @@ public class Product_Search {
 		
 		for(int i=0; i<listCount; i++) {
 			String temp = Integer.toString(dtoList.get(i).getStosize());
-//			String[] qTxt = {dtoList.get(i).getModelnum(),
+			
+			String[] qTxt = {dtoList.get(i).getBrand(),
+					 		 dtoList.get(i).getModelname(),
+					 		 dtoList.get(i).getColor(),
+					 		 temp};
+			
+//			// Image를 DB에서 불러와서 Table에 표시하기.
+//			ImageIcon icon = new ImageIcon("./" + dtoList.get(i).getFilename());
+//			Object[] qTxt = {icon,
 //							 dtoList.get(i).getBrand(),
 //							 dtoList.get(i).getModelname(),
 //							 dtoList.get(i).getColor(),
 //							 temp};
-			
-			ImageIcon icon = new ImageIcon("./" + Integer.toString(ShareVar.filename + 1));
-			Object[] qTxt = {icon,
-							 dtoList.get(i).getBrand(),
-							 dtoList.get(i).getModelname(),
-							 dtoList.get(i).getColor(),
-							 temp};
 			
 			outerTable.addRow(qTxt);
 		}
@@ -391,22 +419,36 @@ public class Product_Search {
 		tcm.getColumn(2).setCellRenderer(center);
 		tcm.getColumn(3).setCellRenderer(center);
 		
-		// Table Column(Cell) 우측 정렬
-		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
-		right.setHorizontalAlignment(SwingConstants.RIGHT);
+//		// Table Column(Cell) 우측 정렬
+//		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
+//		right.setHorizontalAlignment(SwingConstants.RIGHT);
+//		
+//		// 특정 Column(Cell) 우측 정렬
+//		tcm.getColumn(4).setCellRenderer(right);
+//		tcm.getColumn(5).setCellRenderer(right);
 		
-		// 특정 Column(Cell) 우측 정렬
-		tcm.getColumn(4).setCellRenderer(right);
-		tcm.getColumn(5).setCellRenderer(right);
+//		// Table 여섯 번째 Column에 체크박스 추가하기.
+//		innerTableProductSearch.getColumnModel().getColumn(6).setCellRenderer(new MyDefaultTableCellRenderer());
+//		innerTableProductSearch.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new JCheckBox()));
+//		
+////		DefaultTableCellRenderer renderer = new MyDefaultTableCellRenderer();
+////		innerTableProductSearch.getColumn("").setCellRenderer(renderer);
+////		
+////		innerTableProductSearch.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 		
-		// Table 여섯 번째 Column에 체크박스 추가하기.
-		DefaultTableCellRenderer renderer = new MyDefaultTableCellRenderer();
-		innerTableProductSearch.getColumn("").setCellRenderer(renderer);
-		
-		innerTableProductSearch.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 		
 		
 	}
+	
+	
+//	// Image 처리하기 : filename이 틀려야 보여주기가 가능하다.
+//	private void closingAction() {
+//		
+//		for(int i=0; i<dtoList.size(); i++) {
+//			File file = new File("./" + dtoList.get(i).getFilename());
+//			file.delete();
+//		}
+//	}
 	
 	
 	// Table 내 검색 조건 분류한다.
@@ -482,6 +524,38 @@ public class Product_Search {
 		dto.getModelnum();
 		
 		
+	}
+	
+	
+	// 첫 화면(Home)으로 돌아가기
+	private void homeScreen() {
+		Main window = new Main();
+		window.main(null);
+		frame.setVisible(false);
+	}
+	
+	
+	// 제품 상세 내용 화면으로 이동하기
+	private void detailedScreen() {
+		Product_Detailed window = new Product_Detailed();
+		window.main(null);
+		frame.setVisible(false);
+	}
+	
+	
+	// 장바구니 화면으로 이동하기
+	private void cartScreen() {
+		Shop_Cart window = new Shop_Cart();
+		window.main(null);
+		frame.setVisible(false);
+	}
+	
+	
+	// 마이페이지 화면으로 돌아가기
+	private void mypageScreen() {
+		MyPage window = new MyPage();
+		window.main(null);
+		frame.setVisible(false);
 	}
 	
 	
