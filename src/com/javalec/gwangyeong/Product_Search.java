@@ -258,23 +258,23 @@ public class Product_Search {
 	}
 	private JTable getInnerTableProductSearch() {
 		if (innerTableProductSearch == null) {
-			innerTableProductSearch = new JTable() {
-				public Class getColumnClass(int column) {
-					return (column == 0) ? Icon.class : Object.class;
-				}
-			};
+			innerTableProductSearch = new JTable();
+//			{
+//				public Class getColumnClass(int column) {
+//					return (column == 0) ? Icon.class : Object.class;
+//				}
+//			};
 			innerTableProductSearch.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if(e.getButton() == 1) {
 						tableClick();
-						detailedScreen();
 					}
 				}
 			});
 			innerTableProductSearch.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			innerTableProductSearch.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-			innerTableProductSearch.setRowHeight(150);	// Cell 행 높이 지정하기.
+			innerTableProductSearch.setRowHeight(100);	// Cell 행 높이 지정하기.
 			innerTableProductSearch.setModel(outerTable);
 		}
 		return innerTableProductSearch;
@@ -314,13 +314,14 @@ public class Product_Search {
 	private void tableInit() {
 		// Table Column명 정하기
 //		outerTable.addColumn("제품사진");
+		outerTable.addColumn("제품번호");
 		outerTable.addColumn("제조사");
 		outerTable.addColumn("제품명");
 		outerTable.addColumn("색상");
 		outerTable.addColumn("크기");
 		outerTable.addColumn("구매 수량");
 //		outerTable.addColumn("");
-		outerTable.setColumnCount(5);
+		outerTable.setColumnCount(6);
 		
 		
 		// Table Column 크기 정하기
@@ -330,32 +331,38 @@ public class Product_Search {
 //		int width = 300;
 //		col.setPreferredWidth(width);
 		
-		// 제조사
+		// 제품번호
 		int colNo = 0;
 		TableColumn col = innerTableProductSearch.getColumnModel().getColumn(colNo);
-		int width = 100;
+		int width = 70;
+		col.setPreferredWidth(width);
+		
+		// 제조사
+		colNo = 1;
+		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
+		width = 100;
 		col.setPreferredWidth(width);
 		
 		// 제품명
-		colNo = 1;
+		colNo = 2;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
 		width = 150;
 		col.setPreferredWidth(width);
 		
 		// 색상
-		colNo = 2;
-		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
-		width = 100;
-		col.setPreferredWidth(width);
-		
-		// 크기
 		colNo = 3;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
 		width = 100;
 		col.setPreferredWidth(width);
 		
-		// 구매수량
+		// 크기
 		colNo = 4;
+		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
+		width = 100;
+		col.setPreferredWidth(width);
+		
+		// 구매수량
+		colNo = 5;
 		col = innerTableProductSearch.getColumnModel().getColumn(colNo);
 		width = 100;
 		col.setPreferredWidth(width);
@@ -389,7 +396,8 @@ public class Product_Search {
 		for(int i=0; i<listCount; i++) {
 			String temp = Integer.toString(dtoList.get(i).getStosize());
 			
-			String[] qTxt = {dtoList.get(i).getBrand(),
+			String[] qTxt = {dtoList.get(i).getModelnum(),
+							 dtoList.get(i).getBrand(),
 					 		 dtoList.get(i).getModelname(),
 					 		 dtoList.get(i).getColor(),
 					 		 temp};
@@ -418,6 +426,7 @@ public class Product_Search {
 		tcm.getColumn(1).setCellRenderer(center);
 		tcm.getColumn(2).setCellRenderer(center);
 		tcm.getColumn(3).setCellRenderer(center);
+		tcm.getColumn(4).setCellRenderer(center);
 		
 //		// Table Column(Cell) 우측 정렬
 //		DefaultTableCellRenderer right = new DefaultTableCellRenderer();
@@ -518,12 +527,15 @@ public class Product_Search {
 		int i = innerTableProductSearch.getSelectedRow();
 		String wkModelnum = (String) innerTableProductSearch.getValueAt(i, 0);
 		
+		// Product_Search_Dao 클래스의 생성자를 통해 값을 전달
 		Product_Search_Dao dao = new Product_Search_Dao(wkModelnum);
 		Product_Search_Dto dto = dao.tableClick();
 		
-		dto.getModelnum();
 		
+		// 전달받은 값 사용
+	    String modelnum = dto.getModelnum();
 		
+		detailedScreen();
 	}
 	
 	

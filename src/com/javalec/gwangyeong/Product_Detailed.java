@@ -22,6 +22,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Product_Detailed {
 
@@ -63,6 +65,7 @@ public class Product_Detailed {
 				try {
 					Product_Detailed window = new Product_Detailed();
 					window.frame.setVisible(true);
+					window.importAction();	// 초기에 importAction() 메소드 호출하기.
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -406,6 +409,12 @@ public class Product_Detailed {
 		frame.setVisible(false);
 	}
 	
+	
+	// Product_Search 클래스에서 불러온 값 출력하기
+	private void importAction() {
+		Product_Search searchpage = new Product_Search();
+		
+	}
 	
 	
 	
