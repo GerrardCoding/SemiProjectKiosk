@@ -43,6 +43,19 @@ public class Product_Search_Dto {
 	}
 	
 	
+	public Product_Search_Dto(String modelnum, String brand, String modelname, String color, int stosize, int stoprice,
+			int stoqty) {
+		super();
+		this.modelnum = modelnum;
+		this.brand = brand;
+		this.modelname = modelname;
+		this.color = color;
+		this.stosize = stosize;
+		this.stoprice = stoprice;
+		this.stoqty = stoqty;
+	}
+	
+	
 	//--------------------------------------------------------------------------------------------------------------------------------
 	
 	// 생성자를 Dao Class로 보내주기 위하여 Getter, Setter 사용한다.
@@ -103,6 +116,17 @@ public class Product_Search_Dto {
 	
 	public void setStoqty(int stoqty) {
 		this.stoqty = stoqty;
+	}
+	
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	
+	public String getFilename() {
+		return filename;
+	}
+	
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 	
 	

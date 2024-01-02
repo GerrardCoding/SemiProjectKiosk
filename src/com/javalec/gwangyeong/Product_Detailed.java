@@ -10,10 +10,18 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import com.javalec.base.Main;
+import com.javalec.sumin.base.MyPage;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.DropMode;
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Product_Detailed {
 
@@ -135,7 +143,7 @@ public class Product_Detailed {
 	}
 	private JLabel getLblUserType() {
 		if (lblUserType == null) {
-			lblUserType = new JLabel("다오니");
+			lblUserType = new JLabel("JOJO");
 			lblUserType.setForeground(Color.WHITE);
 			lblUserType.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 			lblUserType.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -155,6 +163,14 @@ public class Product_Detailed {
 	private JLabel getLblUserImage() {
 		if (lblUserImage == null) {
 			lblUserImage = new JLabel("");
+			lblUserImage.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(e.getButton() == 1) {
+						mypageScreen();
+					}
+				}
+			});
 			lblUserImage.setIcon(new ImageIcon(Product_Detailed.class.getResource("/com/javalec/images/원모양_사용자.gif")));
 			lblUserImage.setBounds(996, 20, 48, 48);
 		}
@@ -163,6 +179,11 @@ public class Product_Detailed {
 	private JButton getBtnLogout() {
 		if (btnLogout == null) {
 			btnLogout = new JButton("로그아웃");
+			btnLogout.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					homeScreen();
+				}
+			});
 			btnLogout.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 			btnLogout.setBackground(new Color(255, 128, 128));
 			btnLogout.setBounds(890, 43, 90, 25);
@@ -366,4 +387,29 @@ public class Product_Detailed {
 		}
 		return tfProductBrand;
 	}
-}
+	
+	
+	
+	// --- Functions ----
+	// 첫 화면(Home)으로 돌아가기
+	private void homeScreen() {
+		Main window = new Main();
+		window.main(null);
+		frame.setVisible(false);
+	}
+	
+	
+	// 마이페이지 화면으로 돌아가기
+	private void mypageScreen() {
+		MyPage window = new MyPage();
+		window.main(null);
+		frame.setVisible(false);
+	}
+	
+	
+	
+	
+	
+	
+	
+}	// End

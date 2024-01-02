@@ -10,11 +10,16 @@ import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+
+import com.javalec.base.Main;
+
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Shop_Cart {
 
@@ -109,7 +114,7 @@ public class Shop_Cart {
 	}
 	private JLabel getLblUserType() {
 		if (lblUserType == null) {
-			lblUserType = new JLabel("다오니");
+			lblUserType = new JLabel("JOJO");
 			lblUserType.setForeground(Color.WHITE);
 			lblUserType.setHorizontalAlignment(SwingConstants.TRAILING);
 			lblUserType.setFont(new Font("맑은 고딕", Font.BOLD, 18));
@@ -137,6 +142,11 @@ public class Shop_Cart {
 	private JButton getBtnLogout() {
 		if (btnLogout == null) {
 			btnLogout = new JButton("로그아웃");
+			btnLogout.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					homeScreen();
+				}
+			});
 			btnLogout.setBackground(new Color(255, 128, 128));
 			btnLogout.setFont(new Font("맑은 고딕", Font.BOLD, 12));
 			btnLogout.setBounds(920, 43, 90, 25);
@@ -204,4 +214,21 @@ public class Shop_Cart {
 		}
 		return tfPurchaseQTY;
 	}
-}
+	
+	
+	
+	// --- Functions ----
+	// 첫 화면(Home)으로 돌아가기
+	private void homeScreen() {
+		Main window = new Main();
+		window.main(null);
+		frame.setVisible(false);
+	}
+	
+	
+	
+	
+	
+	
+	
+}	// End
