@@ -24,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public class Product_Detailed {
 
@@ -409,10 +410,20 @@ public class Product_Detailed {
 		frame.setVisible(false);
 	}
 	
-	
 	// Product_Search 클래스에서 불러온 값 출력하기
 	private void importAction() {
-		Product_Search searchpage = new Product_Search();
+//		Product_Search search = new Product_Search();
+		
+		
+		int i = innerTableProductSearch.getSelectedRow();
+		String wkModelnum = (String) innerTableProductSearch.getValueAt(i, 0);
+		
+		// Product_Search_Dao 클래스의 생성자를 통해 값을 전달
+		Product_Search_Dao dao = new Product_Search_Dao(wkModelnum);
+		Product_Search_Dto dto = dao.tableClick();
+		
+		Product_Search_Dao daoList = new Product_Search_Dao();
+		ArrayList<Product_Search_Dto> dtoList = dao.selectList();
 		
 	}
 	

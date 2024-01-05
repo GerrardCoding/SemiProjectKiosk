@@ -531,7 +531,6 @@ public class Product_Search {
 		Product_Search_Dao dao = new Product_Search_Dao(wkModelnum);
 		Product_Search_Dto dto = dao.tableClick();
 		
-		
 		// 전달받은 값 사용
 	    String modelnum = dto.getModelnum();
 		
@@ -552,6 +551,8 @@ public class Product_Search {
 		Product_Detailed window = new Product_Detailed();
 		window.main(null);
 		frame.setVisible(false);
+		
+		
 	}
 	
 	
